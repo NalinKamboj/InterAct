@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Inter-Act</string>
+    <string name="main_IA_type">Interaction Type</string>
+    <string name="main_send_button">Inter-Act!</string>
+    <string name="main_radio_feedback">Feedback</string>
+    <string name="main_radio_appreciation">Appreciation</string>
+    <string name="main_event_name">Event Name</string>
+    <string name="all_description">Description</string>
+    <string-array name="event_types">
+        <item>On The Floor Meeting</item>
+        <item>Planning</item>
+        <item>Review</item>
+        <item>Retrospective</item>
+        <item>Refinement</item>
+        <item>General Meeting</item>
+        <item>One-to-one</item>
+        <item>TownHall</item>
+        <item>Custom Event</item>
+    </string-array>
+</resources>

@@ -6,6 +6,7 @@
     <string name="main_radio_appreciation">Appreciation</string>
     <string name="main_event_name">Event Name</string>
     <string name="all_description">Description</string>
+    <string name="main_suggestion_hint">Enter Suggestions Here</string>
     <string-array name="event_types">
         <item>On The Floor Meeting</item>
         <item>Planning</item>

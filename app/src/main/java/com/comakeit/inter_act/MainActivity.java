@@ -27,19 +27,22 @@ public class MainActivity extends AppCompatActivity {
     private EditText mDescriptionEditText;
     private EditText mRecipientEditText;
     private EditText mEventEditText;
+    private EditText mSuggestionEditText;
     private Spinner mEventSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String eventName = "";
+//        final String eventName = "";
 
         mSendButton = findViewById(R.id.main_send_button);
         mDescriptionEditText = findViewById(R.id.descriptionEditText);
+        mDescriptionEditText.setVisibility(View.GONE);  //Initally making the TextBox disappear
         mRecipientEditText = findViewById(R.id.recipientEditText);
         mEventEditText = findViewById(R.id.eventNameEditText);
         mEventSpinner = findViewById(R.id.eventSpinner);
+        mSuggestionEditText = findViewById(R.id.suggestionEditText);
 
         //Adapter for Spinner
         ArrayAdapter<CharSequence> eventAdapter = ArrayAdapter.createFromResource(this, R.array.event_types, android.R.layout.simple_spinner_item);
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     mEventEditText.setVisibility(View.VISIBLE);
                 }
                 else
-                    mEventEditText.setVisibility(View.INVISIBLE);
+                    mEventEditText.setVisibility(View.GONE);
             }
 
             @Override
@@ -86,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 if(rb != null){
                     mDescriptionTextSwitcher.setText(rb.getText());
                     mDescriptionEditText.setVisibility(View.VISIBLE);
+                    if(rb.getText().toString().equals("Feedback")){
+                        mSuggestionEditText.setVisibility(View.VISIBLE);
+                    }else
+                        mSuggestionEditText.setVisibility(View.GONE);
                 }
             }
         });
@@ -100,9 +107,13 @@ public class MainActivity extends AppCompatActivity {
                 else if(mRecipientEditText.getText().toString().trim().length()==0)
                     Toast.makeText(MainActivity.this, "Please enter the RECIPIENT", Toast.LENGTH_SHORT).show();
                 else{
+                    String suggestion = "";
                     String TO = mRecipientEditText.getText().toString();
                     RadioButton rb = findViewById(mRadioGroup.getCheckedRadioButtonId());
                     String type = rb.getText().toString();
+                    if(type.equals("Feedback") && mSuggestionEditText.getText().toString().trim().length() != 0){
+                        suggestion = mSuggestionEditText.getText().toString();
+                    }
                     String event;
                     if(mEventEditText.getVisibility()==View.VISIBLE)
                         event = "\"" + mEventEditText.getText().toString() + "\"";
@@ -110,17 +121,17 @@ public class MainActivity extends AppCompatActivity {
                         event = "\"" + mEventSpinner.getSelectedItem().toString() + "\"";
 //                    String event = "\"" + eventName + "\"";
                     String desc = mDescriptionEditText.getText().toString();
-                    sendEmail(TO, type, event, desc);
+                    sendEmail(TO, type, event, desc, suggestion);
                 }
             }
         });
 
     }
 
-    protected void sendEmail(String TO, String iatype, String event, String description){
+    protected void sendEmail(String TO, String iatype, String event, String description, String suggestion){
         Log.i("Send Email","Trying to send email...");
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        String message = description;       //Currently, the message is same as description but that will probably change soon...
+        String message = description + "\n Suggestion: " + suggestion;
 //        String recipient = "mailto:"+TO;
 //        Log.i("Send email", recipient);
         emailIntent.setData(Uri.parse("mailto:"));
@@ -129,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
         emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         try{
-            startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));
+            startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));        //TODO Intent chooser doesn't open as overlay, YET
             finish();
             Log.i("Send email", "Email sent!");
         }catch (android.content.ActivityNotFoundException ex){

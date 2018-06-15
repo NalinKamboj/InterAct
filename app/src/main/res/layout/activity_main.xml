@@ -58,6 +58,8 @@
             android:id="@+id/eventNameEditText"
             android:inputType="text"
             android:visibility="gone"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
@@ -100,6 +102,16 @@
             android:visibility="gone"
             android:textSize="18sp"
             android:layout_margin="1dp"/>
+        <EditText
+            android:hint="@string/main_suggestion_hint"
+            android:id="@+id/suggestionEditText"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:padding="2dp"
+            android:background="@color/colorGrey"
+            android:textSize="18sp"/>
         <Button
             android:id="@+id/main_send_button"
             android:layout_width="wrap_content"

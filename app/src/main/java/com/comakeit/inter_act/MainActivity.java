@@ -128,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+
     protected void sendEmail(String TO, String iatype, String event, String description, String suggestion){
         Log.i("Send Email","Trying to send email...");
         Intent emailIntent = new Intent(Intent.ACTION_SEND);

@@ -24,10 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup mRadioGroup;
     private TextSwitcher mDescriptionTextSwitcher;
     private Button mSendButton;
-    private EditText mDescriptionEditText;
-    private EditText mRecipientEditText;
-    private EditText mEventEditText;
-    private EditText mSuggestionEditText;
+    private EditText mDescriptionEditText, mRecipientEditText, mEventEditText, mSuggestionEditText;
     private Spinner mEventSpinner;
 
     @Override
@@ -37,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 //        final String eventName = "";
 
         mSendButton = findViewById(R.id.main_send_button);
+        mSendButton.setClickable(false);
+
         mDescriptionEditText = findViewById(R.id.descriptionEditText);
         mDescriptionEditText.setVisibility(View.GONE);  //Initally making the TextBox disappear
         mRecipientEditText = findViewById(R.id.recipientEditText);
@@ -107,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 else if(mRecipientEditText.getText().toString().trim().length()==0)
                     Toast.makeText(MainActivity.this, "Please enter the RECIPIENT", Toast.LENGTH_SHORT).show();
                 else{
+//                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
                     String suggestion = "";
                     String TO = mRecipientEditText.getText().toString();
                     RadioButton rb = findViewById(mRadioGroup.getCheckedRadioButtonId());
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));        //TODO Intent chooser doesn't open as overlay, YET
             finish();
-            Log.i("Send email", "Email sent!");
+//            Log.i("Send email", "Email sent!");
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
         }

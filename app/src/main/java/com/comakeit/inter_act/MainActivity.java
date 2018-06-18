@@ -1,6 +1,8 @@
 package com.comakeit.inter_act;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,12 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private Button mSendButton;
     private EditText mDescriptionEditText, mRecipientEditText, mEventEditText, mSuggestionEditText;
     private Spinner mEventSpinner;
+    private String AUTH_TOKEN_PREF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        final String eventName = "";
+
 
         mSendButton = findViewById(R.id.main_send_button);
         mSendButton.setClickable(false);
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         mEventEditText = findViewById(R.id.eventNameEditText);
         mEventSpinner = findViewById(R.id.eventSpinner);
         mSuggestionEditText = findViewById(R.id.suggestionEditText);
+
+        authenticateToken();
 
         //Adapter for Spinner
         ArrayAdapter<CharSequence> eventAdapter = ArrayAdapter.createFromResource(this, R.array.event_types, android.R.layout.simple_spinner_item);
@@ -131,6 +137,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+    }
+
+    /**
+     * Utility function for checking the app's token for accessing the REST services
+     */
+    public void authenticateToken(){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.auth_token_pref), Context.MODE_PRIVATE);
+        AUTH_TOKEN_PREF = getResources().getString(R.string.auth_token_pref);
+        String AUTH_TOKEN = sharedPreferences.getString(AUTH_TOKEN_PREF, "");
+
+        if(AUTH_TOKEN.equals("")){
+            AUTH_TOKEN = "PRVTOK1.6";
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(AUTH_TOKEN_PREF, AUTH_TOKEN).apply();
+        }
+
+        Toast.makeText(getApplicationContext(), "Authorization Token "+ AUTH_TOKEN, Toast.LENGTH_SHORT).show();
     }
 
 

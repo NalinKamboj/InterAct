@@ -56,7 +56,8 @@ public class DateTimePickerFragment extends Fragment {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        timeTextView.setText(i + ":" + i1);
+                        String display = String.format("%02d",i) + ":" + String.format("%02d",i1);
+                        timeTextView.setText(display);     //TODO Fix warning. Priority: Low
                         mCalendar.set(Calendar.HOUR, i);
                         mCalendar.set(Calendar.MINUTE, i1);
                         ((MainActivity)getActivity()).setDate(mCalendar);

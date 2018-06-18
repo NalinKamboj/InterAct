@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -178,6 +180,28 @@ public class MainActivity extends AppCompatActivity {
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void createReport(String to, String IA_Type, String event, String description, String suggestion){
+        JSONObject report = new JSONObject();
+        Calendar calendar = Calendar.getInstance(); //Local var for IA Timestamp
+        /*
+        try{
+            report.put("From", from);   //Should be generated within app
+            report.put("To", to);
+            report.put("Event Name", event);
+            report.put("Event Date", eventDate);    //TODO Timestamp?
+            report.put("Event Time", eventTime);
+            report.put("IsAnonymous", anonymous);
+            report.put("IA ID", IA_ID);
+            report.put("IA Type", IA_Type);
+            report.put("IA Time", IA_Time);
+            report.put("Description", description);
+            report.put("Suggestion", suggestion);
+        } catch (JSONException e){
+            //TODO Auto-generated catch block
+            e.printStackTrace();
+        }*/
     }
 
     public void setDate(Calendar calendar){

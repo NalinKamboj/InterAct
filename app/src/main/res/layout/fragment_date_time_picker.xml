@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAlignment="center"
+        android:background="@drawable/rounded_corner_grey"
+        android:foreground="?selectableItemBackground"
         android:layout_margin="5dp"
         android:clickable="true"
         android:focusable="true"
@@ -27,6 +29,8 @@
         android:clickable="true"
         android:focusable="true"
         android:elevation="2dp"
+        android:background="@drawable/rounded_corner_grey"
+        android:foreground="?selectableItemBackground"
         android:textStyle="bold|italic"
         android:textAlignment="center"
         android:text="@string/all_add_time"/>

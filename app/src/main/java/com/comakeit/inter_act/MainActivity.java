@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
     private RadioGroup mRadioGroup;
     private TextSwitcher mDescriptionTextSwitcher;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mDescriptionEditText, mRecipientEditText, mEventEditText, mSuggestionEditText;
     private Spinner mEventSpinner;
     private String AUTH_TOKEN_PREF;
+    private Calendar mEventCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,5 +178,10 @@ public class MainActivity extends AppCompatActivity {
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void setDate(Calendar calendar){
+        mEventCalendar = calendar;
+        Log.i("MainActvity:  ", "DATE" + mEventCalendar.get(Calendar.DAY_OF_MONTH) + mEventCalendar.get(Calendar.MONTH) + mEventCalendar.get(Calendar.YEAR));
     }
 }

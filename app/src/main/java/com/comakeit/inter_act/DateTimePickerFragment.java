@@ -14,7 +14,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-//TODO Pass DATE and TIME to hosting activity
+//TODO Fragment isn't completely modular YET. Change the way info is passed back to activity in future for more reusable form
 
 public class DateTimePickerFragment extends Fragment {
     private TextView dateTextView, timeTextView;
@@ -31,6 +31,8 @@ public class DateTimePickerFragment extends Fragment {
         mYear = mCalendar.get(Calendar.YEAR);
         mMonth = mCalendar.get(Calendar.MONTH);
         mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+        mMinute = mCalendar.get(Calendar.MINUTE);
 
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +42,8 @@ public class DateTimePickerFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         dateTextView.setText(i2 + "-" + (i1 + 1) + "-" + i);
+                        mCalendar.set(i,i1,i2);
+                        ((MainActivity)getActivity()).setDate(mCalendar);
                     }
                 }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -53,6 +57,9 @@ public class DateTimePickerFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         timeTextView.setText(i + ":" + i1);
+                        mCalendar.set(Calendar.HOUR, i);
+                        mCalendar.set(Calendar.MINUTE, i1);
+                        ((MainActivity)getActivity()).setDate(mCalendar);
                     }
                 }, mHour, mMinute, true);
                 timePickerDialog.show();

@@ -64,6 +64,12 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_margin="1dp"/>
+        <fragment
+            android:id="@+id/date_time_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            class="com.comakeit.inter_act.DateTimePickerFragment">
+        </fragment>
         <TextView
             android:id="@+id/interactionTypeTextView"
             android:layout_width="wrap_content"

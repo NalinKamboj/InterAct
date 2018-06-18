@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/fragment_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:textStyle="italic|bold"
+        android:textSize="18sp"
+        android:text="@string/all_select_date"/>
+    <TextView
+        android:id="@+id/fragment_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="18sp"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:textStyle="bold|italic"
+        android:textAlignment="center"
+        android:text="@string/all_add_time"/>
+</LinearLayout>

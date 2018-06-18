@@ -12,6 +12,8 @@
     <string name="all_email">Email</string>
     <string name="all_password">Password</string>
     <string name="auth_token_pref">AuthenticationToken</string>
+    <string name="all_select_date">Select Date</string>
+    <string name="all_add_time">Add Time</string>
     <string-array name="event_types">
         <item>On The Floor Meeting</item>
         <item>Planning</item>

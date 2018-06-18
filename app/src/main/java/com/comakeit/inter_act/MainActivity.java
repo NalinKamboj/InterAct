@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mSendButton.setClickable(false);
 
         mDescriptionEditText = findViewById(R.id.descriptionEditText);
-        mDescriptionEditText.setVisibility(View.GONE);  //Initally making the TextBox disappear
+        mDescriptionEditText.setVisibility(View.GONE);  //Initially making the TextBox disappear
         mRecipientEditText = findViewById(R.id.recipientEditText);
         mEventEditText = findViewById(R.id.eventNameEditText);
         mEventSpinner = findViewById(R.id.eventSpinner);

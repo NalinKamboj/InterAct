@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class UserDetails extends Application{
     protected static String ACCESS_TOKEN;
     protected static String userID;
-    protected static HashMap<String, Integer> employees;
+    protected static HashMap<String, Integer> employeesMap;
 
     public static String getUserName() {
         return userName;
@@ -22,7 +22,7 @@ public class UserDetails extends Application{
     public UserDetails(){
         userID = null;
         ACCESS_TOKEN = null;
-        employees = null;
+        employeesMap = new HashMap<String, Integer>();
     }
 
     public String getACCESS_TOKEN() {

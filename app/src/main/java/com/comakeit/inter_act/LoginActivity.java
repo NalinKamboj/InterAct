@@ -8,6 +8,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mAutoCompleteTextView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -88,9 +89,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         retrieveTokenTask.execute();
 
         // Set up the login form.
-        mEmailView = findViewById(R.id.login_username_textview);
+        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
 //        populateAutoComplete();
-        mEmailView.setOnClickListener(new OnClickListener() {
+        mAutoCompleteTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 populateAutoComplete();
@@ -108,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
+        final List<String> names = new ArrayList<>();
         //TODO Listen to the warning and make this class static
         class RetrieveEmployees extends AsyncTask<String, String, String> {
             private String[] employees;
@@ -138,21 +140,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     httpURLConnection.disconnect();
                 }
                 JSONObject object = null;
-                String[] names = null;
                 try{
 //                    String[] results = result.toString().split();
                     JSONArray jsonArray = new JSONArray(result.toString());
                     object = jsonArray.getJSONObject(0);
-                    UserDetails.employees.put(object.getString("name"),object.getInt("id"));
                     for(int i=1; object!=null; i++){
+                        UserDetails.employeesMap.put(object.getString("name"),object.getInt("id"));
+                        Log.i("1 OBJECT", object.toString());
+                        names.add(object.getString("name"));
                         object = jsonArray.getJSONObject(i);
-//                        Log.i("1 OBJECT", object.toString());
                     }
 //                    object = new JSONObject(result.toString());
                     Log.i("GETTING EMPS: ", jsonArray.toString());
 //                    token = object.getString("access_token");
                 } catch (org.json.JSONException e){
-                    Log.e("GETTING EMPS EXC", "Malformed JSON:");
+                    Log.e("Getting Employees", "Malformed JSON " + object.toString());
                 }
 //                Log.i("Retrieved Token: ", token);
 //                UserDetails.setToken(token);
@@ -166,6 +168,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         RetrieveEmployees retrieveEmployees = new RetrieveEmployees();
         retrieveEmployees.execute();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, names);
+        mAutoCompleteTextView.setAdapter(adapter);
+        mAutoCompleteTextView.setThreshold(1);
+        mAutoCompleteTextView.setTextColor(Color.BLUE);
     }
 
     private boolean mayRequestContacts() {
@@ -176,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mAutoCompleteTextView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -215,11 +221,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mAutoCompleteTextView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String email = mAutoCompleteTextView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -234,12 +240,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mAutoCompleteTextView.setError(getString(R.string.error_field_required));
+            focusView = mAutoCompleteTextView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mAutoCompleteTextView.setError(getString(R.string.error_invalid_email));
+            focusView = mAutoCompleteTextView;
             cancel = true;
         }
 
@@ -342,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mAutoCompleteTextView.setAdapter(adapter);
     }
 
 

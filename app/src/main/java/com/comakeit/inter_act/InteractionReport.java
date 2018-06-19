@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.Calendar;
 
 public class InteractionReport {
-    private String fromUser, toUser, interactionID, eventName, IAType, description, suggestion;
+    private String fromUser, toUser, interactionID, eventName, IAType, message;
     private boolean isAnonymous;
     private Calendar eventCalendar, IACalendar;
 
@@ -33,15 +33,30 @@ public class InteractionReport {
         }
         */
 
-        fromUser = "nalin.1997@gmail.com";
+        this.fromUser = "nalin.1997@gmail.com";
         String[] parts = fromUser.split("@");
-        IACalendar = Calendar.getInstance();
-        interactionID = parts[0] + IACalendar.get(Calendar.DAY_OF_MONTH)+IACalendar.get(Calendar.MONTH) + IACalendar.get(Calendar.YEAR) + IACalendar.get(Calendar.HOUR)
+        this.IACalendar = Calendar.getInstance();
+        this.interactionID = parts[0] + IACalendar.get(Calendar.DAY_OF_MONTH)+IACalendar.get(Calendar.MONTH) + IACalendar.get(Calendar.YEAR) + IACalendar.get(Calendar.HOUR)
                 + IACalendar.get(Calendar.MINUTE) + IACalendar.get(Calendar.SECOND);
         Log.i("Reporting Report ID: ", interactionID);
+        this.toUser = "";
+        this.eventName = "";
+        this.IAType = "";
+        this.message = "";
+        this.isAnonymous = false;
+        this.eventCalendar = null;
     }
 
+    public boolean validateReport(InteractionReport report){
+        return !(report.toUser.equals("") || report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
+    }
 
+    public void sendReport(Context context, InteractionReport report){
+        //validating report again
+        if(!report.validateReport(report))
+            return;
+
+    }
 
     /* All getters and setters */
     public String getFromUser() {
@@ -84,20 +99,12 @@ public class InteractionReport {
         this.IAType = IAType;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(String suggestion) {
-        this.suggestion = suggestion;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isAnonymous() {

@@ -1,10 +1,8 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,8 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import org.json.JSONObject;
-
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mDescriptionEditText, mRecipientEditText, mEventEditText, mSuggestionEditText;
     private Spinner mEventSpinner;
     private String AUTH_TOKEN_PREF;
+    private String AUTH_TOKEN;
     private Calendar mEventCalendar;
 
     @Override
@@ -132,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         event = "\"" + mEventSpinner.getSelectedItem().toString() + "\"";
 //                    String event = "\"" + eventName + "\"";
                     String desc = mDescriptionEditText.getText().toString();
-                    sendEmail(TO, type, event, desc, suggestion);
+                    sendReport(TO, type, event, desc, suggestion);
                 }
             }
         });
@@ -150,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     public void authenticateToken(){
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.auth_token_pref), Context.MODE_PRIVATE);
         AUTH_TOKEN_PREF = getResources().getString(R.string.auth_token_pref);
-        String AUTH_TOKEN = sharedPreferences.getString(AUTH_TOKEN_PREF, "");
+        AUTH_TOKEN = sharedPreferences.getString(AUTH_TOKEN_PREF, "");
 
         if(AUTH_TOKEN.equals("")){
             AUTH_TOKEN = "PRVTOK1.6";
@@ -162,49 +159,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void sendEmail(String TO, String iatype, String event, String description, String suggestion){
-        Log.i("Send Email","Trying to send email...");
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        String message = description + "\n Suggestion: " + suggestion;
+    protected void sendReport(String TO, String iatype, String event, String description, String suggestion){
+//        Log.i("Send Email","Trying to send email...");
+//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 //        String recipient = "mailto:"+TO;
 //        Log.i("Send email", recipient);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{TO});
-        emailIntent.setType("message/rfc822");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-
+//        emailIntent.setData(Uri.parse("mailto:"));
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{TO});
+//        emailIntent.setType("message/rfc822");
+//        emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+        String message = description + "\n Suggestion: " + suggestion;
         InteractionReport report = new InteractionReport(MainActivity.this);
+        report.setToUser(TO);
+        report.setAnonymous(false);
+        report.setMessage(message);
+        report.setIAType(iatype);
+        report.setEventName(event);
+        report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
 
+        if(report.validateReport(report))
+            Log.i("Report Validation: ", "Report successfully validated");
+        else
+            Log.i("Report Validation: ", "Report NOT validated");
         /*
         try{
-            startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));        //TODO Intent chooser doesn't open as overlay, YET
+            startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));    //TODO intent chooser as overlay. PRIORITY: VERY LOW
             finish();
 //            Log.i("Send email", "Email sent!");
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
-        }*/
-    }
-
-    private void createReport(String to, String IA_Type, String event, String description, String suggestion){
-        JSONObject report = new JSONObject();
-        Calendar calendar = Calendar.getInstance(); //Local var for IA Timestamp
-        /*
-        try{
-            report.put("From", from);   //Should be generated within app
-            report.put("To", to);
-            report.put("Event Name", event);
-            report.put("Event Date", eventDate);    //TODO Timestamp?
-            report.put("Event Time", eventTime);
-            report.put("IsAnonymous", anonymous);
-            report.put("IA ID", IA_ID);
-            report.put("IA Type", IA_Type);
-            report.put("IA Time", IA_Time);
-            report.put("Description", description);
-            report.put("Suggestion", suggestion);
-        } catch (JSONException e){
-            //TODO Auto-generated catch block
-            e.printStackTrace();
         }*/
     }
 

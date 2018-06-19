@@ -17,7 +17,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,14 +28,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +47,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private final String AUTH_URL = getResources().getString(R.string.authentication_url);
-    private final String AUTH_KEY = getResources().getString(R.string.authentication_key_basic);
     private String AUTH_TOKEN;
+    private String AUTH_URL;
+    private String AUTH_KEY;
 
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
@@ -80,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        AUTH_URL = getResources().getString(R.string.authentication_url);
+        AUTH_KEY = getResources().getString(R.string.authentication_key_basic);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -101,7 +94,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+//                attemptLogin();
+                RetrieveTokenTask retrieveTokenTask = new RetrieveTokenTask(AUTH_KEY, AUTH_URL);
+                retrieveTokenTask.execute();
             }
         });
 
@@ -360,39 +355,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
-    }
-
-    @NonNull
-    private String getToken(){
-        StringBuilder result = new StringBuilder();
-        HttpURLConnection httpURLConnection = null;
-        try{
-            URL authURL = new URL(AUTH_URL);
-            httpURLConnection = (HttpURLConnection) authURL.openConnection();
-            httpURLConnection.setRequestProperty("Content-Type", "application/json");
-            httpURLConnection.setRequestProperty("Authorization", AUTH_KEY);
-
-            InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while((line = bufferedReader.readLine())!= null){
-                result.append(line);
-            }
-        } catch(java.io.IOException IOException){
-            Log.i("Login Activity: ","IO Exception while retrieving token");
-        } finally {
-            assert httpURLConnection != null;
-            httpURLConnection.disconnect();
-        }
-        JSONObject object;
-        try{
-            object = new JSONObject(result.toString());
-            Log.i("GETTING TOKEN: ", object.toString());
-        } catch (org.json.JSONException e){
-            Log.e("GETTING TOKEN EXC", "Malformed JSON:");
-        }
-        
-        return result.toString();
     }
 }
 

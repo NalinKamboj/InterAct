@@ -2,9 +2,12 @@ package com.comakeit.inter_act;
 
 import android.app.Application;
 
+import java.util.HashMap;
+
 public class UserDetails extends Application{
     protected static String ACCESS_TOKEN;
     protected static String userID;
+    protected static HashMap<String, Integer> employees;
 
     public static String getUserName() {
         return userName;
@@ -19,6 +22,7 @@ public class UserDetails extends Application{
     public UserDetails(){
         userID = null;
         ACCESS_TOKEN = null;
+        employees = null;
     }
 
     public String getACCESS_TOKEN() {

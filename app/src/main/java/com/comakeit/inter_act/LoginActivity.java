@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -140,8 +141,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String[] names = null;
                 try{
 //                    String[] results = result.toString().split();
-                    object = new JSONObject(result.toString());
-                    Log.i("GETTING EMPS: ", object.toString());
+                    JSONArray jsonArray = new JSONArray(result.toString());
+                    object = jsonArray.getJSONObject(0);
+                    UserDetails.employees.put(object.getString("name"),object.getInt("id"));
+                    for(int i=1; object!=null; i++){
+                        object = jsonArray.getJSONObject(i);
+//                        Log.i("1 OBJECT", object.toString());
+                    }
+//                    object = new JSONObject(result.toString());
+                    Log.i("GETTING EMPS: ", jsonArray.toString());
 //                    token = object.getString("access_token");
                 } catch (org.json.JSONException e){
                     Log.e("GETTING EMPS EXC", "Malformed JSON:");
@@ -149,6 +157,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                Log.i("Retrieved Token: ", token);
 //                UserDetails.setToken(token);
                 return result.toString();
+            }
+            @Override
+            protected void onPostExecute(String s){
+
             }
         }
 

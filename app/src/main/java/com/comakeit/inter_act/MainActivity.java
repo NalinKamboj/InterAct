@@ -173,13 +173,17 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
         emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+        InteractionReport report = new InteractionReport(MainActivity.this);
+
+        /*
         try{
             startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));        //TODO Intent chooser doesn't open as overlay, YET
             finish();
 //            Log.i("Send email", "Email sent!");
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     private void createReport(String to, String IA_Type, String event, String description, String suggestion){

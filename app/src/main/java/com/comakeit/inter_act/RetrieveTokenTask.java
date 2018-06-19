@@ -21,6 +21,8 @@ public class RetrieveTokenTask extends AsyncTask<String, String, String> {
         this.AUTH_URL = url;
     }
     protected String doInBackground(String...values){
+//        UserDetails userDetails = (UserDetails);
+
         StringBuilder result = new StringBuilder();
         HttpURLConnection httpURLConnection = null;
         try{
@@ -53,8 +55,14 @@ public class RetrieveTokenTask extends AsyncTask<String, String, String> {
         } catch (org.json.JSONException e){
             Log.e("GETTING TOKEN EXC", "Malformed JSON:");
         }
-        Log.i("Retrieved Token: ", token);
-        UserDetails.setToken(token);
+        Log.i("Retrieved Token", token);
+//        UserDetails.setToken(token);
         return token;
+    }
+
+    @Override
+    protected void onPostExecute(String s){
+        super.onPostExecute(s);
+        UserDetails.ACCESS_TOKEN = s;
     }
 }

@@ -17,17 +17,24 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private String AUTH_TOKEN;
+    private String EMPLOYEES_URL;
     private String AUTH_URL;
     private String AUTH_KEY;
 
@@ -71,45 +78,82 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        EMPLOYEES_URL = getResources().getString(R.string.url_employees);
         AUTH_URL = getResources().getString(R.string.authentication_url);
         AUTH_KEY = getResources().getString(R.string.authentication_key_basic);
 
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        //Retrieve unique token from server on creation
+        RetrieveTokenTask retrieveTokenTask = new RetrieveTokenTask(AUTH_KEY, AUTH_URL);
+        retrieveTokenTask.execute();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        // Set up the login form.
+        mEmailView = findViewById(R.id.login_username_textview);
+//        populateAutoComplete();
+        mEmailView.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                populateAutoComplete();
             }
         });
-
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 //                attemptLogin();
-                RetrieveTokenTask retrieveTokenTask = new RetrieveTokenTask(AUTH_KEY, AUTH_URL);
-                retrieveTokenTask.execute();
+                Toast.makeText(getApplicationContext(), "Session token: "+UserDetails.ACCESS_TOKEN,Toast.LENGTH_SHORT).show();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
+        //TODO Listen to the warning and make this class static
+        class RetrieveEmployees extends AsyncTask<String, String, String> {
+            private String[] employees;
+            protected String doInBackground(String...values){
+                StringBuilder result = new StringBuilder();
+                HttpURLConnection httpURLConnection = null;
+                try{
+                    String mainURL = EMPLOYEES_URL + UserDetails.ACCESS_TOKEN;
+                    URL authURL = new URL(mainURL);
+                    Log.i("EMPLOYEES",mainURL);
+                    httpURLConnection = (HttpURLConnection) authURL.openConnection();
+                    httpURLConnection.setRequestMethod("GET");
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setRequestProperty("Accept", "application/json");
+                    httpURLConnection.setRequestProperty("Connection", "keep-alive");
+
+                    InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while((line = bufferedReader.readLine())!= null){
+                        result.append(line);
+                    }
+                    Log.i("EMPLOYEES",result.toString());
+                } catch(java.io.IOException IOException){
+                    Log.i("Retrieving Emp: ","IO Exception while retrieving emp");
+                } finally {
+                    assert httpURLConnection != null;
+                    httpURLConnection.disconnect();
+                }
+                JSONObject object = null;
+                String[] names = null;
+                try{
+//                    String[] results = result.toString().split();
+                    object = new JSONObject(result.toString());
+                    Log.i("GETTING EMPS: ", object.toString());
+//                    token = object.getString("access_token");
+                } catch (org.json.JSONException e){
+                    Log.e("GETTING EMPS EXC", "Malformed JSON:");
+                }
+//                Log.i("Retrieved Token: ", token);
+//                UserDetails.setToken(token);
+                return result.toString();
+            }
         }
 
-        getLoaderManager().initLoader(0, null, this);
+        RetrieveEmployees retrieveEmployees = new RetrieveEmployees();
+        retrieveEmployees.execute();
     }
 
     private boolean mayRequestContacts() {

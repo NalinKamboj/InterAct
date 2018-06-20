@@ -1,5 +1,6 @@
 package com.comakeit.inter_act;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import java.util.List;
 public class TempFormActivity extends AppCompatActivity {
     private AutoCompleteTextView mAutoCompleteTextView;
     private EditText mFeedbackEditText, mActionsEditText;   //Both should be multiline
-    private String FEEDBACKS_URL;
+    private String FEEDBACK_URL;
     private Button sendFormButton;
     private int TO_ID = -1;
 
@@ -33,7 +34,7 @@ public class TempFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp_form);
 
-        FEEDBACKS_URL = getResources().getString(R.string.url_feedbacks);
+        FEEDBACK_URL = getResources().getString(R.string.url_feedbacks);
         mAutoCompleteTextView = findViewById(R.id.temp_to_text_view);
         mActionsEditText = findViewById(R.id.temp_actions_edit_text);
         mFeedbackEditText = findViewById(R.id.temp_feedback_edit_text);
@@ -60,6 +61,10 @@ public class TempFormActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Sending feedback...", Toast.LENGTH_SHORT).show();
                         SendDataTask sendDataTask = new SendDataTask();
                         sendDataTask.execute();
+
+                        Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
             }
@@ -71,7 +76,7 @@ public class TempFormActivity extends AppCompatActivity {
             String postData = "";
             HttpURLConnection httpURLConnection = null;
             try{
-                String mainURL = FEEDBACKS_URL + UserDetails.ACCESS_TOKEN;
+                String mainURL = FEEDBACK_URL + UserDetails.ACCESS_TOKEN;
                 URL authURL = new URL(mainURL);
                 Log.i("Feedback URL ",mainURL);
                 httpURLConnection = (HttpURLConnection) authURL.openConnection();
@@ -92,13 +97,23 @@ public class TempFormActivity extends AppCompatActivity {
                 BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
                 StringBuffer jsonString = new StringBuffer();
                 String line;
+                int statusCode = -1;
+                statusCode = httpURLConnection.getResponseCode();
 
                 while((line = br.readLine()) != null){
                     jsonString.append(line);
                 }
                 br.close();
                 Log.i("Feedback Sender", postData);
-                Log.i("Feedback Received", jsonString.toString());
+                Log.i("Feedback Received", jsonString.toString() + "RESPONSE CODE: " + statusCode);
+//                if(statusCode != -1){
+//                    switch (statusCode){
+//                        case 200:
+//                            Toast.makeText(getApplicationContext(), "Feedback Successfully Submitted!", Toast.LENGTH_SHORT).show();
+//                        case 400:
+//                            Toast.makeText(getApplicationContext(), "Feedback not submitted. Bad Request", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
             } catch(java.io.IOException IOException){
                 Log.i("Sending FB","IO Exception while sending.");
             } finally {

@@ -1,5 +1,6 @@
 package com.comakeit.inter_act;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,8 +52,7 @@ public class LoginActivity extends AppCompatActivity{
 
     // UI references.
     private AutoCompleteTextView mAutoCompleteTextView;
-    private View mProgressView;
-
+    private Button mLoginButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,31 +68,31 @@ public class LoginActivity extends AppCompatActivity{
 
         // Set up the login form.
         mAutoCompleteTextView = findViewById(R.id.login_username_textview);
-//        populateAutoComplete();
         mAutoCompleteTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 populateAutoComplete();
             }
         });
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mLoginButton = findViewById(R.id.email_sign_in_button);
+
+        mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-//                attemptLogin();
-//                Toast.makeText(getApplicationContext(), "Session token: "+UserDetails.ACCESS_TOKEN,Toast.LENGTH_SHORT).show();
                 if(mAutoCompleteTextView.getText().toString().trim().equals(""))
                     Toast.makeText(getApplicationContext(), "Please enter a valid Username", Toast.LENGTH_SHORT).show();
                 else {
                     if(!UserDetails.employeesMap.isEmpty()){
                         UserDetails.userID = UserDetails.employeesMap.get(mAutoCompleteTextView.getText().toString().trim());
                         UserDetails.setUserName(mAutoCompleteTextView.getText().toString().trim());
-                        Log.i("Login Activity", "USER ID IS SET AS " + UserDetails.userID);
-                    }
+                        Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else
+                        Toast.makeText(getApplicationContext(), "Could not find users", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        mProgressView = findViewById(R.id.login_progress);
     }
 
     private void populateAutoComplete() {

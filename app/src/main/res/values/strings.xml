@@ -133,4 +133,5 @@
     <string name="authentication_url"><![CDATA[http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/oauth/token?grant_type=password&username=tosadminuser&password=tosadminuser]]></string>
     <string name="authentication_key_basic">Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0</string>
     <string name="url_employees">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/employees/?access_token=</string>
+    <string name="url_feedbacks">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/feedbacks/?access_token=</string>
 </resources>

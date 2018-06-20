@@ -134,4 +134,8 @@
     <string name="authentication_key_basic">Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0</string>
     <string name="url_employees">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/employees/?access_token=</string>
     <string name="url_feedbacks">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/feedbacks/?access_token=</string>
+    <string name="menu_new_interaction">New InterAction</string>
+    <string name="menu_received_interaction">Received InterActions</string>
+    <string name="menu_sent_interaction">Sent InterActions</string>
+    <string name="all_settings">Settings</string>
 </resources>

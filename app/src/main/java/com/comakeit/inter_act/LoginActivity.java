@@ -1,58 +1,55 @@
 package com.comakeit.inter_act;
 
-import android.graphics.Color;
-import android.os.AsyncTask;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.view.View;
 import android.widget.Button;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity{
+    private static final String TAG = "LoginActivity";
+    private static final int REQUEST_SIGNUP = 0;
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private String EMPLOYEES_URL;
-    private String AUTH_URL;
-    private String AUTH_KEY;
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-
-    // UI references.
-    private AutoCompleteTextView mAutoCompleteTextView;
+    private EditText mEmailEditText, mPasswordEditText;
     private Button mLoginButton;
+    private TextView mSignUpTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mEmailEditText = findViewById(R.id.login_email_edit_text);
+        mPasswordEditText = findViewById(R.id.login_password_edit_text);
+        mLoginButton = findViewById(R.id.login_button);
+        mSignUpTextView = findViewById(R.id.login_signup_text_view);
+
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+        mSignUpTextView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);  //startActivityForResult(intent, REQUEST_SIGNUP);
+            }
+        });
         /*
         EMPLOYEES_URL = getResources().getString(R.string.url_employees);
         AUTH_URL = getResources().getString(R.string.authentication_url);
@@ -62,15 +59,15 @@ public class LoginActivity extends AppCompatActivity{
         RetrieveTokenTask retrieveTokenTask = new RetrieveTokenTask(AUTH_KEY, AUTH_URL);
         retrieveTokenTask.execute();
 
-        // Set up the login form.
-//        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
+         Set up the login form.
+        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
         mAutoCompleteTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 populateAutoComplete();
             }
         });
-//        mLoginButton = findViewById(R.id.email_sign_in_button);
+        mLoginButton = findViewById(R.id.email_sign_in_button);
 
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -92,6 +89,91 @@ public class LoginActivity extends AppCompatActivity{
         */
     }
 
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = mEmailEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString();
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mEmailEditText.setError("Enter a valid email address");
+            valid = false;
+        } else {
+            mEmailEditText.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            mPasswordEditText.setError("Password must be between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            mPasswordEditText.setError(null);
+        }
+
+        return valid;
+    }
+
+    public void login() {
+        Log.d(TAG, "Login");
+
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
+
+        mLoginButton.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.LoginActivityStyle);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
+        String email = mEmailEditText.getText().toString();
+        String password = mPasswordEditText.getText().toString();
+
+        // TODO: Implement your own authentication logic here.
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess();
+                        // onLoginFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SIGNUP) {
+            if (resultCode == RESULT_OK) {
+
+                // TODO: Implement successful signup logic here
+                // By default we just finish the Activity and log them in automatically
+                this.finish();
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // disable going back to the MainActivity
+        moveTaskToBack(true);
+    }
+
+    public void onLoginSuccess() {
+        mLoginButton.setEnabled(true);
+        finish();
+    }
+
+    public void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        mLoginButton.setEnabled(true);
+    }
+    /*
     private void populateAutoComplete() {
         final List<String> names = new ArrayList<>();
         //TODO Listen to the warning and make this class static
@@ -148,5 +230,6 @@ public class LoginActivity extends AppCompatActivity{
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setTextColor(Color.BLUE);
     }
+    */
 }
 

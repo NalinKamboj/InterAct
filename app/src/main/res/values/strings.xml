@@ -116,7 +116,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Sign in to TOS</string>
+    <string name="title_activity_login">InterAct</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

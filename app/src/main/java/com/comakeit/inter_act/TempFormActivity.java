@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -26,6 +30,8 @@ public class TempFormActivity extends AppCompatActivity {
     private EditText mFeedbackEditText, mActionsEditText;   //Both should be multiline
     private String FEEDBACK_URL;
     private Button sendFormButton;
+    private Toolbar mToolbar;
+    private NavigationView mNavigationView;
     private int TO_ID = -1;
 
 
@@ -39,6 +45,21 @@ public class TempFormActivity extends AppCompatActivity {
         mActionsEditText = findViewById(R.id.temp_actions_edit_text);
         mFeedbackEditText = findViewById(R.id.temp_feedback_edit_text);
         sendFormButton = findViewById(R.id.temp_send_button);
+        mToolbar = findViewById(R.id.simple_toolbar);
+        mNavigationView = findViewById(R.id.temp_navigation_view);
+
+        setSupportActionBar(mToolbar);
+
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
+                        return true;
+                    }
+                }
+        );
 
         mAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override

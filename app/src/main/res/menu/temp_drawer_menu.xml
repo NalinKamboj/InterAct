@@ -14,9 +14,11 @@
             android:icon="@drawable/ic_sent_interaction"
             android:title="@string/menu_sent_interaction" />
     </group>
-    <item
-        android:checkable="true"
-        android:id="@+id/nav_manage"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/all_settings" />
+    <group>
+        <item
+            android:checkable="true"
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/all_settings" />
+    </group>
 </menu>

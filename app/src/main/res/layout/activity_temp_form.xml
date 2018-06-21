@@ -5,12 +5,15 @@
     android:id="@+id/temp_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:paddingTop="10dp"
+    android:fitsSystemWindows="true"
+    tools:context=".TempFormActivity"
+    tools:openDrawer="start">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".TempFormActivity">
+    android:orientation="vertical">
+    <include layout="@layout/simple_toolbar"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,16 +72,19 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:layout_gravity="end"
-        android:background="@color/colorGreenDark"
+        android:background="@color/colorSecondary"
         android:padding="15dp"
         android:layout_margin="15dp"/>
 </LinearLayout>
     <android.support.design.widget.NavigationView
+        android:id="@+id/temp_navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:layout_gravity="start"
-        android:id="@+id/temp_navigation_view"
         app:menu="@menu/temp_drawer_menu"
+        app:itemTextColor="@color/menu_text_color"
+        app:itemBackground="@drawable/rounded_menu_background"
+        app:itemIconTint="@color/menu_text_color"
         app:headerLayout="@layout/temp_navigation_header"/>
 </android.support.v4.widget.DrawerLayout>

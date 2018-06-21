@@ -1,12 +1,16 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private String AUTH_TOKEN_PREF;
     private String AUTH_TOKEN;
     private Calendar mEventCalendar;
+//    private Toolbar mToolbar;     //TODO Work on TOOLBAR
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,34 @@ public class MainActivity extends AppCompatActivity {
         mEventEditText = findViewById(R.id.eventNameEditText);
         mEventSpinner = findViewById(R.id.eventSpinner);
         mSuggestionEditText = findViewById(R.id.suggestionEditText);
+
+//        mToolbar = findViewById(R.id.simple_toolbar);
+        mNavigationView = findViewById(R.id.main_navigation_view);
+        mNavigationView.setCheckedItem(R.id.menu_main_form);
+        //Navigation View Stuff
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        item.setChecked(true);
+                        switch (item.getItemId()){
+                            case R.id.menu_new_interaction:
+                                Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
+                                startActivity(intent);
+                                finish();
+                                break;
+                            case R.id.menu_main_form:
+                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent1);
+                                finish();
+                                break;
+                        }
+
+                        return true;
+                    }
+                }
+        );
+
 
         authenticateToken();
 

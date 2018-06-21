@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/menu_group_interaction"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/menu_new_interaction"
             android:icon="@drawable/ic_new_interaction"
@@ -16,9 +17,17 @@
     </group>
     <group>
         <item
+            android:id="@+id/menu_main_form"
+            android:title="Main InterAction Form"/>
+    </group>
+    <group android:id="@+id/menu_group_settings"
+        android:checkableBehavior="single">
+        <item
             android:checkable="true"
-            android:id="@+id/nav_manage"
+            android:id="@+id/menu_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/all_settings" />
+        <item android:id="@+id/menu_logout"
+            android:title="Logout"/>
     </group>
 </menu>

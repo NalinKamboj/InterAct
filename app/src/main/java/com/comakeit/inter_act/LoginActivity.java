@@ -1,17 +1,13 @@
 package com.comakeit.inter_act;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,7 +53,7 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        /*
         EMPLOYEES_URL = getResources().getString(R.string.url_employees);
         AUTH_URL = getResources().getString(R.string.authentication_url);
         AUTH_KEY = getResources().getString(R.string.authentication_key_basic);
@@ -67,14 +63,14 @@ public class LoginActivity extends AppCompatActivity{
         retrieveTokenTask.execute();
 
         // Set up the login form.
-        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
+//        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
         mAutoCompleteTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 populateAutoComplete();
             }
         });
-        mLoginButton = findViewById(R.id.email_sign_in_button);
+//        mLoginButton = findViewById(R.id.email_sign_in_button);
 
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -93,6 +89,7 @@ public class LoginActivity extends AppCompatActivity{
                 }
             }
         });
+        */
     }
 
     private void populateAutoComplete() {

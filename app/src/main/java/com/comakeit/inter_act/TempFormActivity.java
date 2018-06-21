@@ -45,16 +45,30 @@ public class TempFormActivity extends AppCompatActivity {
         mActionsEditText = findViewById(R.id.temp_actions_edit_text);
         mFeedbackEditText = findViewById(R.id.temp_feedback_edit_text);
         sendFormButton = findViewById(R.id.temp_send_button);
+
+
+        //Navigation view stuff...
         mToolbar = findViewById(R.id.simple_toolbar);
         mNavigationView = findViewById(R.id.temp_navigation_view);
-
+        mNavigationView.setCheckedItem(R.id.menu_new_interaction);
         setSupportActionBar(mToolbar);
-
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
+                        item.setChecked(true);
+                        switch (item.getItemId()){
+                            case R.id.menu_new_interaction:
+                                Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
+                                startActivity(intent);
+                                finish();
+                                break;
+                            case R.id.menu_main_form:
+                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent1);
+                                finish();
+                                break;
+                        }
 
                         return true;
                     }

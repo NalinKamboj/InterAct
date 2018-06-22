@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:paddingTop="10dp"
     android:fitsSystemWindows="true"
-    tools:context=".TempFormActivity"
-    tools:openDrawer="start">
+    tools:context=".Activities.TempFormActivity">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"

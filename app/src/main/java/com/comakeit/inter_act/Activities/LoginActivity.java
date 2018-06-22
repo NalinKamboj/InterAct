@@ -1,4 +1,4 @@
-package com.comakeit.inter_act;
+package com.comakeit.inter_act.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.comakeit.inter_act.R;
 
 /**
  * A login screen that offers login via email/password.

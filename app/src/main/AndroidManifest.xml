@@ -15,14 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name=".Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ScrollingFormActivity"
+            android:name=".Activities.ScrollingFormActivity"
             android:label="@string/title_activity_scrolling_form"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/LoginActivityStyle">
             <intent-filter>
@@ -31,9 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"
+        <activity android:name=".Activities.RegisterActivity"
             android:theme="@style/LoginActivityStyle"/>
-        <activity android:name=".TempFormActivity"
+        <activity android:name=".Activities.TempFormActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

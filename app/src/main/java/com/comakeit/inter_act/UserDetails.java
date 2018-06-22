@@ -2,42 +2,56 @@ package com.comakeit.inter_act;
 
 import android.app.Application;
 
-import java.util.HashMap;
-
 public class UserDetails extends Application{
-    protected static String ACCESS_TOKEN;
-    protected static int userID;
-    protected static HashMap<String, Integer> employeesMap;
+    private String userName;
+    private String userEmail;
+    private int userID;
+    public static String ACCESS_TOKEN;
+    private String userPassword;
+//    private static int userID;
+//    protected static HashMap<String, Integer> employeesMap;
 
-    public static String getUserName() {
-        return userName;
+    public String getUserName() {
+        return this.userName;
     }
 
-    public static void setUserName(String userName) {
-        UserDetails.userName = userName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    private static String userName;
+    public boolean checkPassword(String word){
+        return word.trim().equals(userPassword);
+    }
+
+    public void setUserPassword(String word){
+        userPassword = word.trim();
+    }
 
     public UserDetails(){
         userID = -1;
+        userName="";
+        userEmail="";
         ACCESS_TOKEN = null;
-        employeesMap = new HashMap<String, Integer>();
+//        employeesMap = new HashMap<String, Integer>();
     }
 
-    public String getACCESS_TOKEN() {
-        return ACCESS_TOKEN;
+    public String getUserEmail(){
+        return userEmail;
     }
 
-    public void setACCESS_TOKEN(String ACCESS_TOKEN) {
-        ACCESS_TOKEN = ACCESS_TOKEN;
+    public void setUserEmail(String email) {
+        this.userEmail = email;
     }
 
     public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
-        userID = userID;
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public String getUserPassword(){
+        return userPassword;
     }
 }

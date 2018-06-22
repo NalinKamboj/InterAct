@@ -1,4 +1,4 @@
-package com.comakeit.inter_act;
+package com.comakeit.inter_act.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,9 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.comakeit.inter_act.InteractionReport;
+import com.comakeit.inter_act.R;
 
 import java.util.Calendar;
 

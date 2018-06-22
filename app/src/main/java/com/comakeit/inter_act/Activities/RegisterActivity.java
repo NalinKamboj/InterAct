@@ -1,8 +1,9 @@
-package com.comakeit.inter_act;
+package com.comakeit.inter_act.Activities;
 
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,12 +14,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comakeit.inter_act.R;
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private Button mSignUpButton;
     private TextView mLoginLinkTextView;
     private EditText mEmailEditText, mFirstNameEditText, mLastNameEditText, mPasswordEditText, mConfirmPasswordEditText;
-    private Drawable mCorrectDrawable;
+    private Drawable mCorrectDrawable, mCorrectDrawable2, mCorrectDrawable3, mCorrectDrawable4, mCorrectDrawable5;
+    private TextInputLayout mEmailInputLayout, mFirstNameInputLayout, mLastNameInputLayout, mPasswordInputLayout, mConfirmPasswordInputLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,13 +36,14 @@ public class RegisterActivity extends AppCompatActivity {
         mEmailEditText = findViewById(R.id.register_email_edit_text);
         mLoginLinkTextView = findViewById(R.id.register_login_text_view);
         mCorrectDrawable = getResources().getDrawable(R.drawable.ic_correct, null);
+        mCorrectDrawable.setBounds(0,0, mCorrectDrawable.getIntrinsicWidth(), mCorrectDrawable.getIntrinsicHeight());
         mCorrectDrawable.setTint(getResources().getColor(R.color.colorGreen, null));
 
-        mEmailEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-        mFirstNameEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-        mLastNameEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-        mPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-        mConfirmPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+        mEmailInputLayout = findViewById(R.id.register_email_input_layout);
+        mFirstNameInputLayout = findViewById(R.id.register_first_name_input_layout);
+        mLastNameInputLayout = findViewById(R.id.register_last_name_input_layout);
+        mPasswordInputLayout = findViewById(R.id.register_password_input_layout);
+        mConfirmPasswordInputLayout = findViewById(R.id.register_confirm_password_input_layout);
 
         mEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -48,7 +53,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                validateEmail();
+                if(validateEmail()){
+                    mEmailInputLayout.setErrorEnabled(false);
+                    mEmailEditText.setCompoundDrawables(null, null, mCorrectDrawable, null);
+                }
             }
 
             @Override
@@ -64,7 +72,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                validateFirstName();
+                if(validateFirstName()){
+                    mFirstNameInputLayout.setErrorEnabled(false);
+                    mFirstNameEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
+                }
             }
 
             @Override
@@ -80,7 +91,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                validateLastName();
+                if (validateLastName()){
+                    mLastNameInputLayout.setErrorEnabled(false);
+                    mLastNameEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
+                }
             }
 
             @Override
@@ -96,7 +110,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                validatePassword();
+                if(validatePassword()){
+                    mPasswordInputLayout.setErrorEnabled(false);
+                    mPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
+                }
             }
 
             @Override
@@ -112,7 +129,11 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                validateConfirmPassword();
+                if(!validateConfirmPassword()){
+                    mConfirmPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+                    mConfirmPasswordInputLayout.setErrorEnabled(true);
+                    mConfirmPasswordInputLayout.setError("Passwords do not match");
+                }
             }
 
             @Override
@@ -190,11 +211,9 @@ public class RegisterActivity extends AppCompatActivity {
         String first_name = mFirstNameEditText.getText().toString().trim();
         if (first_name.isEmpty() || first_name.length() < 3) {
             mFirstNameEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-            mFirstNameEditText.setError("Enter at least 3 characters");
+            mFirstNameInputLayout.setErrorEnabled(true);
+            mFirstNameInputLayout.setError("At least 3 letters");
             valid = false;
-        } else {
-            mFirstNameEditText.setError(null);
-            mFirstNameEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
         }
         return valid;
     }
@@ -204,13 +223,10 @@ public class RegisterActivity extends AppCompatActivity {
         String last_name = mLastNameEditText.getText().toString().trim();
         if (last_name.isEmpty() || last_name.length() < 3) {
             mLastNameEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-            mLastNameEditText.setError("Enter at least 3 characters");
+            mLastNameInputLayout.setErrorEnabled(true);
+            mLastNameInputLayout.setError("At least 3 letters");
             valid = false;
-        } else {
-            mLastNameEditText.setError(null);
-            mLastNameEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
         }
-
         return valid;
     }
 
@@ -219,13 +235,10 @@ public class RegisterActivity extends AppCompatActivity {
         String email = mEmailEditText.getText().toString();
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-            mEmailEditText.setError("Enter a valid email address");
+            mEmailInputLayout.setErrorEnabled(true);
+            mEmailInputLayout.setError("Enter a valid email address");
             valid = false;
-        } else {
-            mEmailEditText.setError(null);
-            mEmailEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
         }
-
         return valid;
     }
     public boolean validatePassword(){
@@ -233,32 +246,25 @@ public class RegisterActivity extends AppCompatActivity {
         String password = mPasswordEditText.getText().toString().trim();
         if (password.isEmpty() || password.length() < 4 || password.length() > 18) {
             mPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-            mPasswordEditText.setError("Passowrd should be between 4 and 18 characters");
+            mPasswordInputLayout.setErrorEnabled(true);
+            mPasswordInputLayout.setError("Must be between 4 and 18 letters");
             valid = false;
-        } else {
-            mPasswordEditText.setError(null);
-            mPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
         }
         return valid;
     }
     public boolean validateConfirmPassword(){
-        boolean valid = true;
+        boolean valid = false;
         String confirm_password = mConfirmPasswordEditText.getText().toString().trim();
         if(validatePassword() && confirm_password.equals(mPasswordEditText.getText().toString().trim())) {
-            mConfirmPasswordEditText.setError(null);
+            valid = true;
+            mConfirmPasswordInputLayout.setErrorEnabled(false);
             mConfirmPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, mCorrectDrawable, null);
-        } else
-            mConfirmPasswordEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+        }
         return valid;
     }
 
     public boolean validate() {
         boolean valid = true;
-
-
-
-
-
         return valid;
     }
 }

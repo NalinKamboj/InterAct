@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
     android:theme="@style/LoginActivityStyle"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    tools:context=".Activities.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"

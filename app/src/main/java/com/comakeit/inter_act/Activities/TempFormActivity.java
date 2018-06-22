@@ -1,29 +1,18 @@
-package com.comakeit.inter_act;
+package com.comakeit.inter_act.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import com.comakeit.inter_act.R;
 
 public class TempFormActivity extends AppCompatActivity {
     private AutoCompleteTextView mAutoCompleteTextView;
@@ -78,10 +67,10 @@ public class TempFormActivity extends AppCompatActivity {
         mAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateAutoComplete();
+//                populateAutoComplete();
             }
         });
-
+        /*
         sendFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +78,7 @@ public class TempFormActivity extends AppCompatActivity {
                         mActionsEditText.getText().toString().trim().equals(""))
                     Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                 else{
-                    TO_ID = UserDetails.employeesMap.get(mAutoCompleteTextView.getText().toString());
+//                    TO_ID = UserDetails.employeesMap.get(mAutoCompleteTextView.getText().toString());
                     if(TO_ID == -1)
                         Toast.makeText(getApplicationContext(), "Please enter a valid recipient", Toast.LENGTH_SHORT).show();
                     else{
@@ -104,8 +93,10 @@ public class TempFormActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
+        */
+    }
+    /*
     class SendDataTask extends AsyncTask<String, String, String> {      //TODO Make this static (and the one in LoginActivity) to prevent leaks as suggested
         protected String doInBackground(String...values){
             String postData = "";
@@ -167,4 +158,5 @@ public class TempFormActivity extends AppCompatActivity {
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setTextColor(Color.BLUE);
     }
+    */
 }

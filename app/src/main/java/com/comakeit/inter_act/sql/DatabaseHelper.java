@@ -26,33 +26,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_INTERACTION = "interactions";
 
     // User Table Columns names
-    private static final String COLUMN_USER_ID = "user_id";
+//    private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_NAME = "user_name";
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_PASSWORD = "user_password";
 
     //Interactions table Columns names
     private static final String COLUMN_INTERACTION_ID = "interaction_id";
-    private static final String COLUMN_FROM_USER_ID = "from_user_id";
-    private static final String COLUMN_TO_USER_ID = "to_user_id";
+    private static final String COLUMN_I_FROM_USER_EMAIL = "from_user_email";
+    private static final String COLUMN_I_TO_USER_EMAIL = "to_user_email";
     private static final String COLUMN_EVENT_NAME = "event_name";
     private static final String COLUMN_EVENT_TIMESTAMP = "event_timestamp";
     private static final String COLUMN_IS_ANONYMOUS = "is_anonymous";
+    private static final String COLUMN_INTERACTION_TYPE = "interaction_type";
     private static final String COLUMN_DESCRIPTION = "description";     //Suggestion will be a part of description in case of feedback
     private static final String COLUMN_INTERACTION_TIMESTAMP = "interaction_timestamp";
-    private static final String COLUMN_ACKNOWLEDGEMENT = "acknowledges";
+    private static final String COLUMN_ACKNOWLEDGEMENT = "acknowledged";
     private static final String COLUMN_ACK_TIMESTAMP = "ack_timestamp";
 
     // create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
-            + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
+            + COLUMN_USER_NAME + " TEXT PRIMARY KEY, " + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
     // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
-    private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_FROM_USER_ID
-            + " INTEGER," + COLUMN_TO_USER_ID + " INTEGER," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TEXT," + COLUMN_IS_ANONYMOUS + " INTEGER," + COLUMN_DESCRIPTION + " TEXT,"
-            + COLUMN_INTERACTION_TIMESTAMP + " TEXT," + COLUMN_ACKNOWLEDGEMENT + " TEXT, " + COLUMN_ACK_TIMESTAMP + " TEXT)";
+    //create interaction table sql query
+    private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_I_FROM_USER_EMAIL
+            + " INTEGER," + COLUMN_I_TO_USER_EMAIL + " INTEGER," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TEXT," + COLUMN_IS_ANONYMOUS + " INTEGER,"
+            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " TEXT," + COLUMN_INTERACTION_TIMESTAMP + " TEXT," + COLUMN_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, "
+            + COLUMN_ACK_TIMESTAMP + " TEXT DEFAULT NULL)";
+    //drop interaction table sql query
     private String DROP_INTERACTION_TABLE = "DROP TABLE IF EXISTS " + TABLE_INTERACTION;
 
     /**
@@ -67,7 +70,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        Log.i("SQL ON CREATE", CREATE_USER_TABLE);
         db.execSQL(CREATE_INTERACTION_TABLE);
+        Log.i("SQL ON CREATE", CREATE_INTERACTION_TABLE);
     }
 
 
@@ -96,30 +101,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
-        String getID = "SELECT " + COLUMN_USER_ID + " FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = '" + user.getUserEmail().toUpperCase();
-        Cursor cursor = db.rawQuery(getID, null);
-        if(cursor!=null)
-            cursor.moveToFirst();
-        int id = 0;
-        try{
-            id = cursor.getInt(0);
-        } catch (java.lang.NullPointerException e){
-            Log.e("ADD USER DB HELPER", "NPE at userID cursor");
-        }
-        UserDetails.setUserID(id);
+//        UserDetails.setUserID(id);
         db.close();
     }
 
     /**
      * This method is to create an InterAction Record
      * @param interaction @Nonnull InterAction to be added to DB
-     * @param userDetails   @Nonnull Details of user creating the InterAction
      */
-    public void addTnterAction(Interaction interaction, UserDetails userDetails){
+    public void addTnterAction(Interaction interaction){
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
+        values.put(COLUMN_I_TO_USER_EMAIL, interaction.getToUser().toUpperCase());
+        values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
+        values.put(COLUMN_EVENT_NAME, interaction.getEventName());
+        values.put(COLUMN_EVENT_TIMESTAMP, interaction.getEventCalendar().toString());
+        values.put(COLUMN_DESCRIPTION, interaction.getMessage());
+        values.put(COLUMN_IS_ANONYMOUS, interaction.isAnonymous());
+        values.put(COLUMN_INTERACTION_TYPE, interaction.getIAType());
+        values.put(COLUMN_INTERACTION_TIMESTAMP, interaction.getIACalendar().toString());
+
+        database.insert(TABLE_INTERACTION, null, values);
+        database.close();
     }
 
     /**
@@ -130,7 +135,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<UserDetails> getAllUser() {         //TODO This fucntion will wreck havoc cuz UserDetails has all static members! PRIORITY: HIGH
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID,
                 COLUMN_USER_EMAIL,
                 COLUMN_USER_NAME,
                 COLUMN_USER_PASSWORD
@@ -161,7 +165,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 UserDetails user = new UserDetails();
-                UserDetails.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
                 UserDetails.setUserName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
                 UserDetails.setUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
                 UserDetails.setUserPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
@@ -185,13 +188,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getUserName());
-        values.put(COLUMN_USER_EMAIL, user.getUserEmail());
-        values.put(COLUMN_USER_PASSWORD, user.getUserPassword());
+        values.put(COLUMN_USER_NAME, UserDetails.getUserName());
+        values.put(COLUMN_USER_EMAIL, UserDetails.getUserEmail());
+        values.put(COLUMN_USER_PASSWORD, UserDetails.getUserPassword());
 
         // updating row
-        db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
-                new String[]{String.valueOf(user.getUserID())});
+        db.update(TABLE_USER, values, COLUMN_USER_EMAIL + " = ?",
+                new String[]{String.valueOf(UserDetails.getUserID())});
         db.close();
     }
 
@@ -203,7 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteUser(UserDetails user) {
         SQLiteDatabase db = this.getWritableDatabase();
         // delete user record by id
-        db.delete(TABLE_USER, COLUMN_USER_ID + " = ?",
+        db.delete(TABLE_USER, COLUMN_USER_EMAIL + " = ?",
                 new String[]{String.valueOf(user.getUserID())});
         db.close();
     }
@@ -218,7 +221,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID
+                COLUMN_USER_EMAIL
         };
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -263,7 +266,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID
+                COLUMN_USER_EMAIL
         };
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -293,7 +296,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursorCount > 0) {
             return true;
         }
-
         return false;
     }
 }

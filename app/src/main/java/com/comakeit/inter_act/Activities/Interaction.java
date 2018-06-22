@@ -1,14 +1,15 @@
 package com.comakeit.inter_act.Activities;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.comakeit.inter_act.UserDetails;
+import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.Calendar;
 
 public class Interaction {
-    private String fromUserEmail, toUserEmail, interactionID, eventName, IAType, message;
+    private String fromUserEmail, toUserEmail, eventName, IAType, message;
+    int interactionID;
     private boolean isAnonymous;
     private Calendar eventCalendar, IACalendar;
     protected UserDetails mUserDetails;
@@ -35,11 +36,11 @@ public class Interaction {
             fromUser = "";
         }
         */
-
+        this.interactionID = -1;
         this.fromUserEmail = UserDetails.getUserEmail();
         String[] parts = fromUserEmail.split("@");
         this.IACalendar = Calendar.getInstance();
-        Log.i("Reporting Report ID: ", interactionID);
+//        Log.i("Reporting Report ID: ", interactionID);
         this.toUserEmail = "";
         this.eventName = "";
         this.IAType = "";
@@ -48,13 +49,17 @@ public class Interaction {
         this.eventCalendar = null;
     }
 
-    public boolean validateReport(Interaction report){
-        return !(report.toUserEmail.equals("") || report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
+    public boolean validateReport(Interaction report, Context context){
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        if(databaseHelper.checkUser(report.toUserEmail.toUpperCase()))
+            return !(report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
+        else
+            return false;
     }
 
     public void publishReport(Context context, Interaction report){
         //validating report again
-        if(!report.validateReport(report))
+        if(!report.validateReport(report, context))
             return;
     }
 
@@ -67,12 +72,8 @@ public class Interaction {
         this.toUserEmail = toUser;
     }
 
-    public String getInteractionID() {
-        return interactionID;
-    }
-
-    public void setInteractionID(String interactionID) {
-        this.interactionID = interactionID;
+    public void setInteractionID(int ID) {
+        this.interactionID = ID;
     }
 
     public String getEventName() {

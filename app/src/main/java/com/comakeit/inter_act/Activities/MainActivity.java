@@ -1,14 +1,17 @@
 package com.comakeit.inter_act.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.Calendar;
 
@@ -215,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void sendReport(String TO, String iatype, String event, String description, String suggestion){
+    protected void sendReport(String toEmail, String iatype, String event, String description, String suggestion){
 //        Log.i("Send Email","Trying to send email...");
 //        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 //        String recipient = "mailto:"+TO;
@@ -227,17 +231,21 @@ public class MainActivity extends AppCompatActivity {
 //        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         String message = description + "\n Suggestion: " + suggestion;
         Interaction report = new Interaction(MainActivity.this);
-        report.setToUser(TO);
+        report.setToUser(toEmail);
         report.setAnonymous(false);
         report.setMessage(message);
         report.setIAType(iatype);
         report.setEventName(event);
         report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
 
-        if(report.validateReport(report))
+        if(report.validateReport(report, getApplicationContext()))
             Log.i("Report Validation: ", "Report successfully validated");
         else
             Log.i("Report Validation: ", "Report NOT validated");
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+        databaseHelper.addTnterAction(report);
+        showDialog();
         /*
         try{
             startActivity(Intent.createChooser(emailIntent, "Send Interaction..."));    //TODO intent chooser as overlay. PRIORITY: VERY LOW
@@ -246,6 +254,43 @@ public class MainActivity extends AppCompatActivity {
         }catch (android.content.ActivityNotFoundException ex){
             Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_LONG).show();
         }*/
+    }
+
+    public void showDialog(){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this).setTitle("InterAction Sent!").setMessage("Send another?");
+        dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Intent newForm = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(newForm);
+                finish();
+            }
+        });
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        // Hide after some seconds
+        final Handler handler  = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (alert.isShowing()) {
+                    alert.dismiss();
+                }
+            }
+        };
+
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                handler.removeCallbacks(runnable);
+                Intent newForm = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(newForm);
+                finish();
+            }
+        });
+
+        handler.postDelayed(runnable, 10000);
     }
 
     public void setDate(Calendar calendar){

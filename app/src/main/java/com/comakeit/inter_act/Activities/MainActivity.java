@@ -7,6 +7,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.comakeit.inter_act.InteractionReport;
 import com.comakeit.inter_act.R;
 
 import java.util.Calendar;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mSendButton;
     private EditText mDescriptionEditText, mRecipientEditText, mEventEditText, mSuggestionEditText;
     private Spinner mEventSpinner;
+    private DrawerLayout mDrawerLayout;
     private String AUTH_TOKEN_PREF;
     private String AUTH_TOKEN;
     private Calendar mEventCalendar;
@@ -45,22 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        final String eventName = "";
-
-
-        mSendButton = findViewById(R.id.main_send_button);
-        mSendButton.setClickable(false);
-
-        mDescriptionEditText = findViewById(R.id.descriptionEditText);
-        mDescriptionEditText.setVisibility(View.GONE);  //Initially making the TextBox disappear
-        mRecipientEditText = findViewById(R.id.recipientEditText);
-        mEventEditText = findViewById(R.id.eventNameEditText);
-        mEventSpinner = findViewById(R.id.eventSpinner);
-        mSuggestionEditText = findViewById(R.id.suggestionEditText);
-
-//        mToolbar = findViewById(R.id.simple_toolbar);
-        mNavigationView = findViewById(R.id.main_navigation_view);
-        mNavigationView.setCheckedItem(R.id.menu_main_form);
+        initViews();
+        authenticateToken();
         //Navigation View Stuff
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -78,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent1);
                                 finish();
                                 break;
+                            case R.id.menu_logout:
+                                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(logoutIntent);
+                                finish();
+                                break;
+                            case R.id.menu_received_interaction:
+                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                break;
+                            case R.id.menu_sent_interaction:
+                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                break;
                         }
 
                         return true;
@@ -86,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-        authenticateToken();
 
         //Adapter for Spinner
         ArrayAdapter<CharSequence> eventAdapter = ArrayAdapter.createFromResource(this, R.array.event_types, android.R.layout.simple_spinner_item);
@@ -177,6 +175,23 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
     }
+
+    private void initViews(){
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
+        mSendButton = findViewById(R.id.main_send_button);
+        mSendButton.setClickable(false);
+
+        mDescriptionEditText = findViewById(R.id.descriptionEditText);
+        mDescriptionEditText.setVisibility(View.GONE);  //Initially making the TextBox disappear
+        mRecipientEditText = findViewById(R.id.recipientEditText);
+        mEventEditText = findViewById(R.id.eventNameEditText);
+        mEventSpinner = findViewById(R.id.eventSpinner);
+        mSuggestionEditText = findViewById(R.id.suggestionEditText);
+
+        mNavigationView = findViewById(R.id.main_navigation_view);
+        mNavigationView.setCheckedItem(R.id.menu_main_form);
+    }
+
 
     /**
      * Utility function for checking the app's token for accessing the REST services

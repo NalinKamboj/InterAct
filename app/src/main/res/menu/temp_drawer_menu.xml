@@ -28,6 +28,7 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/all_settings" />
         <item android:id="@+id/menu_logout"
-            android:title="Logout"/>
+            android:title="Logout"
+            android:icon="@drawable/ic_logout_icon"/>
     </group>
 </menu>

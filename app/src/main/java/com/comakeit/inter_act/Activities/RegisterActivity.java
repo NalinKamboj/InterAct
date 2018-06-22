@@ -1,8 +1,10 @@
 package com.comakeit.inter_act.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -11,39 +13,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.UserDetails;
+import com.comakeit.inter_act.sql.DatabaseHelper;
+
+import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
+    private final AppCompatActivity mActivity = RegisterActivity.this;
     private Button mSignUpButton;
     private TextView mLoginLinkTextView;
     private EditText mEmailEditText, mFirstNameEditText, mLastNameEditText, mPasswordEditText, mConfirmPasswordEditText;
-    private Drawable mCorrectDrawable, mCorrectDrawable2, mCorrectDrawable3, mCorrectDrawable4, mCorrectDrawable5;
+    private Drawable mCorrectDrawable;
     private TextInputLayout mEmailInputLayout, mFirstNameInputLayout, mLastNameInputLayout, mPasswordInputLayout, mConfirmPasswordInputLayout;
+    private DatabaseHelper mDatabaseHelper;
+    private UserDetails mUserDetails;
+    private ScrollView mRegisterScrollView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        mSignUpButton = findViewById(R.id.register_signup_button);
-        mPasswordEditText = findViewById(R.id.register_password_edit_text);
-        mConfirmPasswordEditText = findViewById(R.id.register_confirm_password_edit_text);
-        mFirstNameEditText = findViewById(R.id.register_first_name_edit_text);
-        mLastNameEditText = findViewById(R.id.register_last_name_edit_text);
-        mEmailEditText = findViewById(R.id.register_email_edit_text);
-        mLoginLinkTextView = findViewById(R.id.register_login_text_view);
-        mCorrectDrawable = getResources().getDrawable(R.drawable.ic_correct, null);
-        mCorrectDrawable.setBounds(0,0, mCorrectDrawable.getIntrinsicWidth(), mCorrectDrawable.getIntrinsicHeight());
-        mCorrectDrawable.setTint(getResources().getColor(R.color.colorGreen, null));
-
-        mEmailInputLayout = findViewById(R.id.register_email_input_layout);
-        mFirstNameInputLayout = findViewById(R.id.register_first_name_input_layout);
-        mLastNameInputLayout = findViewById(R.id.register_last_name_input_layout);
-        mPasswordInputLayout = findViewById(R.id.register_password_input_layout);
-        mConfirmPasswordInputLayout = findViewById(R.id.register_confirm_password_input_layout);
+        initViews();
+        mDatabaseHelper = new DatabaseHelper(mActivity);
+        mUserDetails = new UserDetails();
 
         mEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -141,14 +139,27 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                if(validateEmail() && validateFirstName() && validateLastName() && validatePassword() && validateConfirmPassword()){
+                    mUserDetails.setUserName(mFirstNameEditText.getText().toString().trim().toUpperCase()
+                            + " " + mLastNameEditText.getText().toString().trim().toUpperCase());
+                    mUserDetails.setUserPassword(mPasswordEditText.getText().toString().trim());
+                    mUserDetails.setUserEmail(mEmailEditText.getText().toString().trim().toUpperCase());
+                    Random random = new Random();
+                    int id = random.nextInt(1000) + 1;
+                    mUserDetails.setUserID(id);
+
+                    mDatabaseHelper.addUser(mUserDetails);
+                    Snackbar.make(mRegisterScrollView, getString(R.string.register_successful), Snackbar.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else
+                    Snackbar.make(mRegisterScrollView, getString(R.string.register_unsuccessful), Snackbar.LENGTH_LONG).show();
             }
         });
-
         mLoginLinkTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +167,26 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void initViews(){
+        mRegisterScrollView = findViewById(R.id.register_scroll_view);
+        mSignUpButton = findViewById(R.id.register_signup_button);
+        mPasswordEditText = findViewById(R.id.register_password_edit_text);
+        mConfirmPasswordEditText = findViewById(R.id.register_confirm_password_edit_text);
+        mFirstNameEditText = findViewById(R.id.register_first_name_edit_text);
+        mLastNameEditText = findViewById(R.id.register_last_name_edit_text);
+        mEmailEditText = findViewById(R.id.register_email_edit_text);
+        mLoginLinkTextView = findViewById(R.id.register_login_text_view);
+        mCorrectDrawable = getResources().getDrawable(R.drawable.ic_correct, null);
+        mCorrectDrawable.setBounds(0,0, mCorrectDrawable.getIntrinsicWidth(), mCorrectDrawable.getIntrinsicHeight());
+        mCorrectDrawable.setTint(getResources().getColor(R.color.colorGreen, null));
+
+        mEmailInputLayout = findViewById(R.id.register_email_input_layout);
+        mFirstNameInputLayout = findViewById(R.id.register_first_name_input_layout);
+        mLastNameInputLayout = findViewById(R.id.register_last_name_input_layout);
+        mPasswordInputLayout = findViewById(R.id.register_password_input_layout);
+        mConfirmPasswordInputLayout = findViewById(R.id.register_confirm_password_input_layout);
     }
 
     public void signup() {
@@ -193,7 +224,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }, 3000);
     }
 
-
     public void onSignupSuccess() {
         mSignUpButton.setEnabled(true);
         setResult(RESULT_OK, null);
@@ -217,7 +247,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return valid;
     }
-
     public boolean validateLastName(){
         boolean valid = true;
         String last_name = mLastNameEditText.getText().toString().trim();
@@ -229,7 +258,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return valid;
     }
-
     public boolean validateEmail(){
         boolean valid = true;
         String email = mEmailEditText.getText().toString();
@@ -262,7 +290,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return valid;
     }
-
     public boolean validate() {
         boolean valid = true;
         return valid;

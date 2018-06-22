@@ -3,55 +3,43 @@ package com.comakeit.inter_act.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.sql.DatabaseHelper;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "LoginActivity";
+    private final AppCompatActivity mActivity = LoginActivity.this;
     private static final int REQUEST_SIGNUP = 0;
 
+    private ScrollView mScrollView;
     private EditText mEmailEditText, mPasswordEditText;
+    private TextInputLayout mEmailInputLayout, mPasswordInputLayout;
     private Button mLoginButton;
     private TextView mSignUpTextView;
+    private DatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mEmailEditText = findViewById(R.id.login_email_edit_text);
-        mPasswordEditText = findViewById(R.id.login_password_edit_text);
-        mLoginButton = findViewById(R.id.login_button);
-        mSignUpTextView = findViewById(R.id.login_signup_text_view);
-
-
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-
-        mSignUpTextView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);  //startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
+        initViews();
+        initListeners();
+        mDatabaseHelper = new DatabaseHelper(this);
         /*
         EMPLOYEES_URL = getResources().getString(R.string.url_employees);
         AUTH_URL = getResources().getString(R.string.authentication_url);
@@ -91,12 +79,34 @@ public class LoginActivity extends AppCompatActivity{
         */
     }
 
+    @Override
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.login_button:
+                verifyFromSQLite();
+                break;
+            case R.id.login_signup_text_view:
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);  //startActivityForResult(intent, REQUEST_SIGNUP);
+                break;
+
+        }
+    }
+
+    private void verifyFromSQLite(){
+        if(mDatabaseHelper.checkUser(mEmailEditText.getText().toString().trim().toUpperCase(), mPasswordEditText.getText().toString().trim())){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else
+            Snackbar.make(mScrollView, getString(R.string.all_invalid_credentials), Snackbar.LENGTH_LONG).show();
+    }
+
     public boolean validate() {
         boolean valid = true;
-
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString();
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailEditText.setError("Enter a valid email address");
             valid = false;
@@ -146,6 +156,20 @@ public class LoginActivity extends AppCompatActivity{
                 }, 3000);
     }
 
+    private void initViews(){
+        mScrollView = findViewById(R.id.activity_login_scroll_view);
+        mEmailEditText = findViewById(R.id.login_email_edit_text);
+        mPasswordEditText = findViewById(R.id.login_password_edit_text);
+        mLoginButton = findViewById(R.id.login_button);
+        mSignUpTextView = findViewById(R.id.login_signup_text_view);
+        mEmailInputLayout = findViewById(R.id.login_email_input_layout);
+        mPasswordInputLayout = findViewById(R.id.login_password_input_layout);
+    }
+
+    private void initListeners(){
+        mLoginButton.setOnClickListener(this);
+        mSignUpTextView.setOnClickListener(this);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

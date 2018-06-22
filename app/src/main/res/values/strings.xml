@@ -138,4 +138,8 @@
     <string name="menu_received_interaction">Received InterActions</string>
     <string name="menu_sent_interaction">Sent InterActions</string>
     <string name="all_settings">Settings</string>
+    <string name="all_invalid_credentials">Invalid credentials</string>
+    <string name="register_successful">Registration successful</string>
+    <string name="register_unsuccessful">Registration unsuccessful</string>
+    <string name="all_under_dev">This feature is coming soon!</string>
 </resources>

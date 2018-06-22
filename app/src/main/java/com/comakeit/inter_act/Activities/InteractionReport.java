@@ -1,4 +1,4 @@
-package com.comakeit.inter_act;
+package com.comakeit.inter_act.Activities;
 
 import android.content.Context;
 import android.util.Log;

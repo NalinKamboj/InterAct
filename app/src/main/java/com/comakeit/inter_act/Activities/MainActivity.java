@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 //        emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
 //        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         String message = description + "\n Suggestion: " + suggestion;
-        InteractionReport report = new InteractionReport(MainActivity.this);
+        Interaction report = new Interaction(MainActivity.this);
         report.setToUser(TO);
         report.setAnonymous(false);
         report.setMessage(message);

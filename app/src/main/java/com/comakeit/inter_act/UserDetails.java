@@ -3,27 +3,26 @@ package com.comakeit.inter_act;
 import android.app.Application;
 
 public class UserDetails extends Application{
-    private String userName;
-    private String userEmail;
-    private int userID;
+    private static String userName;
+    private static String userEmail;
+    private static int userID;
     public static String ACCESS_TOKEN;
-    private String userPassword;
+    private static String userPassword;
 //    private static int userID;
 //    protected static HashMap<String, Integer> employeesMap;
 
-    public String getUserName() {
-        return this.userName;
+    public static String getUserName() {
+        return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public static void setUserName(String name) {
+        userName = name;
     }
-
     public boolean checkPassword(String word){
         return word.trim().equals(userPassword);
     }
 
-    public void setUserPassword(String word){
+    public static void setUserPassword(String word){
         userPassword = word.trim();
     }
 
@@ -32,26 +31,25 @@ public class UserDetails extends Application{
         userName="";
         userEmail="";
         ACCESS_TOKEN = null;
-//        employeesMap = new HashMap<String, Integer>();
     }
 
-    public String getUserEmail(){
+    public static String getUserEmail(){
         return userEmail;
     }
 
-    public void setUserEmail(String email) {
-        this.userEmail = email;
+    public static void setUserEmail(String email) {
+        userEmail = email;
     }
 
-    public int getUserID() {
+    public static int getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public static void setUserID(int id) {
+        userID = id;
     }
 
-    public String getUserPassword(){
+    public static String getUserPassword(){
         return userPassword;
     }
 }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.comakeit.inter_act.Activities.Interaction;
 import com.comakeit.inter_act.UserDetails;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // User table name
     private static final String TABLE_USER = "user";
+    //Interaction table name
+    private static final String TABLE_INTERACTION = "interactions";
 
     // User Table Columns names
     private static final String COLUMN_USER_ID = "user_id";
@@ -27,12 +31,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_PASSWORD = "user_password";
 
+    //Interactions table Columns names
+    private static final String COLUMN_INTERACTION_ID = "interaction_id";
+    private static final String COLUMN_FROM_USER_ID = "from_user_id";
+    private static final String COLUMN_TO_USER_ID = "to_user_id";
+    private static final String COLUMN_EVENT_NAME = "event_name";
+    private static final String COLUMN_EVENT_TIMESTAMP = "event_timestamp";
+    private static final String COLUMN_IS_ANONYMOUS = "is_anonymous";
+    private static final String COLUMN_DESCRIPTION = "description";     //Suggestion will be a part of description in case of feedback
+    private static final String COLUMN_INTERACTION_TIMESTAMP = "interaction_timestamp";
+    private static final String COLUMN_ACKNOWLEDGEMENT = "acknowledges";
+    private static final String COLUMN_ACK_TIMESTAMP = "ack_timestamp";
+
     // create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
             + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
     // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+
+    private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_FROM_USER_ID
+            + " INTEGER," + COLUMN_TO_USER_ID + " INTEGER," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TEXT," + COLUMN_IS_ANONYMOUS + " INTEGER," + COLUMN_DESCRIPTION + " TEXT,"
+            + COLUMN_INTERACTION_TIMESTAMP + " TEXT," + COLUMN_ACKNOWLEDGEMENT + " TEXT, " + COLUMN_ACK_TIMESTAMP + " TEXT)";
+    private String DROP_INTERACTION_TABLE = "DROP TABLE IF EXISTS " + TABLE_INTERACTION;
 
     /**
      * Constructor
@@ -46,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_INTERACTION_TABLE);
     }
 
 
@@ -54,10 +76,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Drop User Table if exist
         db.execSQL(DROP_USER_TABLE);
-
+        db.execSQL(DROP_INTERACTION_TABLE);
         // Create tables again
         onCreate(db);
-
     }
 
     /**
@@ -69,13 +90,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getUserName());
-        values.put(COLUMN_USER_EMAIL, user.getUserEmail());
-        values.put(COLUMN_USER_PASSWORD, user.getUserPassword());
+        values.put(COLUMN_USER_NAME, UserDetails.getUserName());
+        values.put(COLUMN_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
+        values.put(COLUMN_USER_PASSWORD, UserDetails.getUserPassword());
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
+        String getID = "SELECT " + COLUMN_USER_ID + " FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = '" + user.getUserEmail().toUpperCase();
+        Cursor cursor = db.rawQuery(getID, null);
+        if(cursor!=null)
+            cursor.moveToFirst();
+        int id = 0;
+        try{
+            id = cursor.getInt(0);
+        } catch (java.lang.NullPointerException e){
+            Log.e("ADD USER DB HELPER", "NPE at userID cursor");
+        }
+        UserDetails.setUserID(id);
         db.close();
+    }
+
+    /**
+     * This method is to create an InterAction Record
+     * @param interaction @Nonnull InterAction to be added to DB
+     * @param userDetails   @Nonnull Details of user creating the InterAction
+     */
+    public void addTnterAction(Interaction interaction, UserDetails userDetails){
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
     }
 
     /**
@@ -83,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return list
      */
-    public List<UserDetails> getAllUser() {
+    public List<UserDetails> getAllUser() {         //TODO This fucntion will wreck havoc cuz UserDetails has all static members! PRIORITY: HIGH
         // array of columns to fetch
         String[] columns = {
                 COLUMN_USER_ID,
@@ -117,10 +161,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 UserDetails user = new UserDetails();
-                user.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
-                user.setUserName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
-                user.setUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
-                user.setUserPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+                UserDetails.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
+                UserDetails.setUserName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
+                UserDetails.setUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+                UserDetails.setUserPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());

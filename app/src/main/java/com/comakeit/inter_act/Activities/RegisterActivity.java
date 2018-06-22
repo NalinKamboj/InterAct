@@ -21,8 +21,6 @@ import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
-import java.util.Random;
-
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private final AppCompatActivity mActivity = RegisterActivity.this;
@@ -143,14 +141,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateEmail() && validateFirstName() && validateLastName() && validatePassword() && validateConfirmPassword()){
-                    mUserDetails.setUserName(mFirstNameEditText.getText().toString().trim().toUpperCase()
+                    UserDetails.setUserName(mFirstNameEditText.getText().toString().trim().toUpperCase()
                             + " " + mLastNameEditText.getText().toString().trim().toUpperCase());
-                    mUserDetails.setUserPassword(mPasswordEditText.getText().toString().trim());
-                    mUserDetails.setUserEmail(mEmailEditText.getText().toString().trim().toUpperCase());
-                    Random random = new Random();
-                    int id = random.nextInt(1000) + 1;
-                    mUserDetails.setUserID(id);
-
+                    UserDetails.setUserPassword(mPasswordEditText.getText().toString().trim());
+                    UserDetails.setUserEmail(mEmailEditText.getText().toString().trim().toUpperCase());
+//                    Random random = new Random();
+//                    int id = random.nextInt(1000) + 1;
+//                    UserDetails.setUserID(id);
                     mDatabaseHelper.addUser(mUserDetails);
                     Snackbar.make(mRegisterScrollView, getString(R.string.register_successful), Snackbar.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

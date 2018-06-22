@@ -3,14 +3,17 @@ package com.comakeit.inter_act.Activities;
 import android.content.Context;
 import android.util.Log;
 
+import com.comakeit.inter_act.UserDetails;
+
 import java.util.Calendar;
 
-public class InteractionReport {
-    private String fromUser, toUser, interactionID, eventName, IAType, message;
+public class Interaction {
+    private String fromUserEmail, toUserEmail, interactionID, eventName, IAType, message;
     private boolean isAnonymous;
     private Calendar eventCalendar, IACalendar;
+    protected UserDetails mUserDetails;
 
-    InteractionReport(Context context){
+    Interaction(Context context){
         /*TODO Obtain username, hardcoding username for now. PRIORITY: HIGHEST
         AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccounts();
@@ -33,13 +36,11 @@ public class InteractionReport {
         }
         */
 
-        this.fromUser = "nalin.1997@gmail.com";
-        String[] parts = fromUser.split("@");
+        this.fromUserEmail = UserDetails.getUserEmail();
+        String[] parts = fromUserEmail.split("@");
         this.IACalendar = Calendar.getInstance();
-        this.interactionID = parts[0] + IACalendar.get(Calendar.DAY_OF_MONTH)+IACalendar.get(Calendar.MONTH) + IACalendar.get(Calendar.YEAR) + IACalendar.get(Calendar.HOUR)
-                + IACalendar.get(Calendar.MINUTE) + IACalendar.get(Calendar.SECOND);
         Log.i("Reporting Report ID: ", interactionID);
-        this.toUser = "";
+        this.toUserEmail = "";
         this.eventName = "";
         this.IAType = "";
         this.message = "";
@@ -47,32 +48,23 @@ public class InteractionReport {
         this.eventCalendar = null;
     }
 
-    public boolean validateReport(InteractionReport report){
-        return !(report.toUser.equals("") || report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
+    public boolean validateReport(Interaction report){
+        return !(report.toUserEmail.equals("") || report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
     }
 
-    public void sendReport(Context context, InteractionReport report){
+    public void publishReport(Context context, Interaction report){
         //validating report again
         if(!report.validateReport(report))
             return;
-
     }
 
     /* All getters and setters */
-    public String getFromUser() {
-        return fromUser;
-    }
-
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
-    }
-
     public String getToUser() {
-        return toUser;
+        return toUserEmail;
     }
 
     public void setToUser(String toUser) {
-        this.toUser = toUser;
+        this.toUserEmail = toUser;
     }
 
     public String getInteractionID() {

@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void verifyFromSQLite(){
         if(mDatabaseHelper.checkUser(mEmailEditText.getText().toString().trim().toUpperCase(), mPasswordEditText.getText().toString().trim())){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
             startActivity(intent);
             finish();
         } else

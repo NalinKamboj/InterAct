@@ -8,14 +8,14 @@
     tools:context=".Activities.ScrollingFormActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/new_interaction_app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/new_interaction_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -24,7 +24,7 @@
             app:toolbarId="@+id/toolbar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/new_interaction_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -36,12 +36,15 @@
     <include layout="@layout/content_scrolling_form" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/new_interaction_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorSecondaryLight"
+        android:tint="@color/colorPrimaryDark"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
+        app:layout_anchor="@id/new_interaction_app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:rippleColor="@color/colorPrimaryDark"
+        app:srcCompat="@android:drawable/ic_menu_send" />
 
 </android.support.design.widget.CoordinatorLayout>

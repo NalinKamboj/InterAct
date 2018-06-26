@@ -7,10 +7,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.comakeit.inter_act.R;
 
@@ -20,6 +20,8 @@ public class TempFormActivity extends AppCompatActivity {
     private String FEEDBACK_URL;
     private Button sendFormButton;
     private Toolbar mToolbar;
+    private Spinner mEventSpinner;
+    private EditText mEventEditText;
     private NavigationView mNavigationView;
     private int TO_ID = -1;
 
@@ -30,17 +32,8 @@ public class TempFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_temp_form);
 
         FEEDBACK_URL = getResources().getString(R.string.url_feedbacks);
-        mAutoCompleteTextView = findViewById(R.id.temp_to_text_view);
-        mActionsEditText = findViewById(R.id.temp_actions_edit_text);
-        mFeedbackEditText = findViewById(R.id.temp_feedback_edit_text);
-        sendFormButton = findViewById(R.id.temp_send_button);
 
 
-        //Navigation view stuff...
-        mToolbar = findViewById(R.id.simple_toolbar);
-        mNavigationView = findViewById(R.id.temp_navigation_view);
-        mNavigationView.setCheckedItem(R.id.menu_new_interaction);
-        setSupportActionBar(mToolbar);
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -64,12 +57,12 @@ public class TempFormActivity extends AppCompatActivity {
                 }
         );
 
-        mAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        mAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
 //                populateAutoComplete();
-            }
-        });
+//            }
+//        });
         /*
         sendFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +89,17 @@ public class TempFormActivity extends AppCompatActivity {
 
         */
     }
+
+    private void initViews(){
+        mToolbar = findViewById(R.id.simple_toolbar);
+        mNavigationView = findViewById(R.id.temp_navigation_view);
+        mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
+        mEventEditText = findViewById(R.id.new_interaction_event_edit_text);
+
+        mNavigationView.setCheckedItem(R.id.menu_new_interaction);
+        setSupportActionBar(mToolbar);
+    }
+
     /*
     class SendDataTask extends AsyncTask<String, String, String> {      //TODO Make this static (and the one in LoginActivity) to prevent leaks as suggested
         protected String doInBackground(String...values){

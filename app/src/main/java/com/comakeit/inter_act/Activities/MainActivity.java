@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         item.setChecked(true);
                         switch (item.getItemId()){
                             case R.id.menu_new_interaction:
-                                Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
                                 startActivity(intent);
                                 finish();
                                 break;
@@ -220,15 +220,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void sendReport(String toEmail, String iatype, String event, String description, String suggestion){
-//        Log.i("Send Email","Trying to send email...");
-//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-//        String recipient = "mailto:"+TO;
-//        Log.i("Send email", recipient);
-//        emailIntent.setData(Uri.parse("mailto:"));
-//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{TO});
-//        emailIntent.setType("message/rfc822");
-//        emailIntent.putExtra(Intent.EXTRA_SUBJECT,iatype+" regarding "+event);
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         String message = description + "\n Suggestion: " + suggestion;
         Interaction report = new Interaction(MainActivity.this);
         report.setToUser(toEmail);

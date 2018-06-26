@@ -4,10 +4,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:timePickerDialogTheme">@style/TimeDialog</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondaryDark</item>
-        <item name="colorSecondary">@color/colorSecondaryDark</item>
-        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:colorBackground">@color/colorSecondaryLight</item>
@@ -17,8 +16,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorSecondary">@color/colorSecondaryDark</item>
-        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -33,12 +30,21 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorSecondary">@color/colorSecondaryDark</item>
-        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorHint">@color/colorGrey</item>
         <item name="android:textColorHighlight">@color/colorGrey</item>
         <item name="android:textColorSecondary">@color/colorGrey</item>
+    </style>
+    <!-- TODO FIX THIS STUPID THEME SOMEHOW -->
+    <style name="TimeDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:colorBackground">@color/colorWhite</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:headerBackground">#000000</item>
+        <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
+        <item name="android:button">@color/colorWhite</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorSecondary</item>
+        <item name="android:textColor">@color/colorSecondaryDark</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

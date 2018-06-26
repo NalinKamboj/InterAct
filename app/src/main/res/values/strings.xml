@@ -25,7 +25,7 @@
         <item>TownHall</item>
         <item>Custom Event</item>
     </string-array>
-    <string name="title_activity_scrolling_form">ScrollingFormActivity</string>
+    <string name="title_activity_scrolling_form">New InterAction</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -142,4 +142,11 @@
     <string name="register_successful">Registration successful</string>
     <string name="register_unsuccessful">Registration unsuccessful</string>
     <string name="all_under_dev">This feature is coming soon!</string>
+    <string name="all_custom_event_name">Custom Event Name</string>
+    <string name="all_event_name">Event Name</string>
+    <string name="to_email_content_description">To Email Logo</string>
+    <string name="all_feedback">Feedback</string>
+    <string name="all_appreciation">Appreciation</string>
+    <string name="all_anonymous">Anonymous</string>
+    <string name="all_not_anonymous">Not Anonymous</string>
 </resources>

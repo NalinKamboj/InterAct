@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.comakeit.inter_act.Activities.Interaction;
+import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.UserDetails;
 
 import java.text.SimpleDateFormat;
@@ -124,12 +124,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
         values.put(COLUMN_EVENT_NAME, interaction.getEventName());
         values.put(COLUMN_EVENT_TIMESTAMP, eventTime);
-        values.put(COLUMN_DESCRIPTION, interaction.getMessage());
+        values.put(COLUMN_DESCRIPTION, interaction.getDescription());
         values.put(COLUMN_IS_ANONYMOUS, isAnonymous);
         values.put(COLUMN_INTERACTION_TYPE, interaction.getIAType());
         values.put(COLUMN_INTERACTION_TIMESTAMP, interaction.getIACalendar().toString());
         Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
-        + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getMessage() + "BLA...");
+        + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getDescription() + "BLA...");
 
         database.insert(TABLE_INTERACTION, null, values);
         database.close();
@@ -171,6 +171,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else
             Log.i("DB RECEIVE", "NO ROWS IN IA DB");
         cursor.close();
+    }
+
+    public List<Interaction> getReceivedInteraction() { //TODO Include arguments for filtering InterActions PRIORITY: LOW
+        List<Interaction> interactionList = new ArrayList<>();
+        SQLiteDatabase database = this.getReadableDatabase();
+        String[] columns = {
+                COLUMN_I_FROM_USER_EMAIL,
+                COLUMN_DESCRIPTION,
+                COLUMN_EVENT_NAME
+        };
+
+        String[] args = {UserDetails.getUserEmail().toUpperCase()};
+        Log.i("CURRENT USER: ", UserDetails.getUserEmail().toUpperCase());
+        Cursor cursor = database.query(TABLE_INTERACTION,
+                columns,
+                COLUMN_I_TO_USER_EMAIL + "=?",
+                args,
+                null,
+                null,
+                null);
+
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                Interaction interaction = new Interaction();
+                interaction.setFromUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL)));
+                interaction.setEventName(cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_NAME)));
+                interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                interactionList.add(interaction);
+                cursor.moveToNext();
+            }
+        } else
+            Log.i("DB RECEIVE", "NO ROWS IN IA DB");
+        cursor.close();
+
+        return interactionList;
     }
 
 

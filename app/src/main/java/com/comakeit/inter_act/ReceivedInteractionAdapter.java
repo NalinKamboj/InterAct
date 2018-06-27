@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.comakeit.inter_act.Activities.Interaction;
-
 import java.util.List;
 
 public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInteractionAdapter.MyViewHolder> {
@@ -40,7 +38,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         Interaction interaction = mInteractionList.get(position);
         holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
-        holder.message.setText(interaction.getMessage());
+        holder.message.setText(interaction.getDescription());
     }
 
     @Override

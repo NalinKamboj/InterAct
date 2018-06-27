@@ -1,20 +1,19 @@
-package com.comakeit.inter_act.Activities;
+package com.comakeit.inter_act;
 
 import android.content.Context;
 
-import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.Calendar;
 
 public class Interaction {
-    private String fromUserEmail, toUserEmail, eventName, IAType, message;
+    private String fromUserEmail, toUserEmail, eventName, IAType, description;
     int interactionID;
     private boolean isAnonymous;
     private Calendar eventCalendar, IACalendar;
     protected UserDetails mUserDetails;
 
-    Interaction(Context context){
+    public Interaction(){
         /*TODO Obtain username, hardcoding username for now. PRIORITY: HIGHEST
         AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccounts();
@@ -44,7 +43,7 @@ public class Interaction {
         this.toUserEmail = "";
         this.eventName = "";
         this.IAType = "";
-        this.message = "";
+        this.description = "";
         this.isAnonymous = false;
         this.eventCalendar = null;
     }
@@ -52,7 +51,7 @@ public class Interaction {
     public boolean validateReport(Interaction report, Context context){
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         if(databaseHelper.checkUser(report.toUserEmail.toUpperCase()))
-            return !(report.eventName.equals("") || report.IAType.equals("") || report.message.equals("") || eventCalendar == null);
+            return !(report.eventName.equals("") || report.IAType.equals("") || report.description.equals("") || eventCalendar == null);
         else
             return false;
     }
@@ -92,12 +91,12 @@ public class Interaction {
         this.IAType = IAType;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isAnonymous() {
@@ -114,6 +113,14 @@ public class Interaction {
 
     public void setEventCalendar(Calendar eventCalendar) {
         this.eventCalendar = eventCalendar;
+    }
+
+    public void setFromUserEmail(String email) {
+        this.fromUserEmail = email;
+    }
+
+    public void setToUserEmail(String email) {
+        this.toUserEmail = email;
     }
 
     public Calendar getIACalendar() {

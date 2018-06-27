@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +29,7 @@ import android.widget.ToggleButton;
 import android.widget.ViewSwitcher;
 
 import com.comakeit.inter_act.DateTimePickerFragment;
+import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
@@ -66,20 +66,17 @@ public class ScrollingFormActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                                 break;
-                            case R.id.menu_main_form:
-                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent1);
-                                finish();
-                                break;
                             case R.id.menu_logout:
                                 Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(logoutIntent);
                                 finish();
                                 break;
                             case R.id.menu_received_interaction:
-                                DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-                                databaseHelper.tempFunc(getApplicationContext());
-                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+//                                DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+//                                databaseHelper.tempFunc(getApplicationContext());
+//                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                Intent receivedInteractionIntent = new Intent(getApplicationContext(), ReceivedInteractionActivity.class);
+                                startActivity(receivedInteractionIntent);
                                 break;
                             case R.id.menu_sent_interaction:
                                 Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
@@ -184,7 +181,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
                         event = "\"" + mEventEditText.getText().toString() + "\"";
                     else
                         event = "\"" + mEventSpinner.getSelectedItem().toString() + "\"";
-                    String desc = mDescriptionEditText.getText().toString() + "\n Suggestion: " + suggestion;
+                    String desc = mDescriptionEditText.getText().toString() + "\nSuggestion: " + suggestion;
                     sendReport(TO_EMAIL, type, event, desc, mAnonymousSwitchCompat.isChecked());
                 }
             }
@@ -215,12 +212,12 @@ public class ScrollingFormActivity extends AppCompatActivity {
 
     protected void sendReport(String toEmail, String iatype, String event, String description, boolean isAnonymous){
 //        String message = description + "\n Suggestion: " + suggestion;
-        Interaction report = new Interaction(ScrollingFormActivity.this);
+        Interaction report = new Interaction();
 
         //Create a report
         report.setToUser(toEmail);
         report.setAnonymous(isAnonymous);
-        report.setMessage(description);
+        report.setDescription(description);
         report.setIAType(iatype);
         report.setEventName(event);
         report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH

@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
@@ -67,11 +68,6 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.menu_new_interaction:
                                 Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
                                 startActivity(intent);
-                                finish();
-                                break;
-                            case R.id.menu_main_form:
-                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent1);
                                 finish();
                                 break;
                             case R.id.menu_logout:
@@ -197,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionEditText = findViewById(R.id.suggestionEditText);
 
         mNavigationView = findViewById(R.id.main_navigation_view);
-        mNavigationView.setCheckedItem(R.id.menu_main_form);
+//        mNavigationView.setCheckedItem(R.id.menu_main_form);
     }
 
 
@@ -221,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected void sendReport(String toEmail, String iatype, String event, String description, String suggestion){
         String message = description + "\n Suggestion: " + suggestion;
-        Interaction report = new Interaction(MainActivity.this);
+        Interaction report = new Interaction();
         report.setToUser(toEmail);
         report.setAnonymous(false);
-        report.setMessage(message);
+        report.setDescription(message);
         report.setIAType(iatype);
         report.setEventName(event);
         report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH

@@ -45,11 +45,6 @@ public class TempFormActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                                 break;
-                            case R.id.menu_main_form:
-                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent1);
-                                finish();
-                                break;
                         }
 
                         return true;

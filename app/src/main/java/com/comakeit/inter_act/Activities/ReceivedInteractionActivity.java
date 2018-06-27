@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.comakeit.inter_act.Interaction;
@@ -27,8 +26,6 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_received_interaction);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.received_interaction_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +38,7 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.received_interaction_recycler_view);
         prepareReceivedInteraction();
-        mAdapter = new ReceivedInteractionAdapter(mInteractionList);
+        mAdapter = new ReceivedInteractionAdapter(getApplicationContext(),mInteractionList);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

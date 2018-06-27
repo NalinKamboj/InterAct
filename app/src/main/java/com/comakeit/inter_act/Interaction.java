@@ -7,7 +7,8 @@ import com.comakeit.inter_act.sql.DatabaseHelper;
 import java.util.Calendar;
 
 public class Interaction {
-    private String fromUserEmail, toUserEmail, eventName, IAType, description;
+    private String fromUserEmail, toUserEmail, eventName, description;
+    int IAType; //0 for FB and 1 for AP
     int interactionID;
     private boolean isAnonymous;
     private Calendar eventCalendar, IACalendar;
@@ -42,7 +43,7 @@ public class Interaction {
 //        Log.i("Reporting Report ID: ", interactionID);
         this.toUserEmail = "";
         this.eventName = "";
-        this.IAType = "";
+        this.IAType = 0;
         this.description = "";
         this.isAnonymous = false;
         this.eventCalendar = null;
@@ -51,7 +52,7 @@ public class Interaction {
     public boolean validateReport(Interaction report, Context context){
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         if(databaseHelper.checkUser(report.toUserEmail.toUpperCase()))
-            return !(report.eventName.equals("") || report.IAType.equals("") || report.description.equals("") || eventCalendar == null);
+            return !(report.eventName.equals("") || report.description.equals("") || eventCalendar == null);
         else
             return false;
     }
@@ -83,11 +84,11 @@ public class Interaction {
         this.eventName = eventName;
     }
 
-    public String getIAType() {
+    public int getIAType() {
         return IAType;
     }
 
-    public void setIAType(String IAType) {
+    public void setIAType(int IAType) {
         this.IAType = IAType;
     }
 

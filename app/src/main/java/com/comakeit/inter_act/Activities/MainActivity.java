@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         report.setToUser(toEmail);
         report.setAnonymous(false);
         report.setDescription(message);
-        report.setIAType(iatype);
+//        report.setIAType(iatype);
         report.setEventName(event);
         report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
 

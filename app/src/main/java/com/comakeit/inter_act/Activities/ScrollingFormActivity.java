@@ -107,7 +107,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mDescriptionEditText = findViewById(R.id.new_interaction_description_edit_text);
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
         mInteractionTextInputLayout = findViewById(R.id.new_interaction_description_input_layout);
-        mSuggestionEditText.setVisibility(View.GONE);
+        mSuggestionEditText.setVisibility(View.VISIBLE);
 
 
         //Create the Date and Time picker fragment
@@ -122,11 +122,11 @@ public class ScrollingFormActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(mInteractionToggleButton.isChecked()){
-                    mSuggestionEditText.setVisibility(View.VISIBLE);
-                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
-                } else{
                     mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
                     mSuggestionEditText.setVisibility(View.GONE);
+                } else{
+                    mSuggestionEditText.setVisibility(View.VISIBLE);
+                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
                 }
             }
         });
@@ -166,14 +166,14 @@ public class ScrollingFormActivity extends AppCompatActivity {
                     Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank", Toast.LENGTH_SHORT).show();
                 else if(mEmailEditText.getText().toString().trim().length()==0)
                     Toast.makeText(ScrollingFormActivity.this, "Please enter the RECIPIENT", Toast.LENGTH_SHORT).show();
-                else if(mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().equals(""))
+                else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().equals(""))
                     Toast.makeText(ScrollingFormActivity.this, "Suggestion can't be left blank", Toast.LENGTH_SHORT).show();
                 else{
 //                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
                     String suggestion = "";
                     String TO_EMAIL = mEmailEditText.getText().toString().toUpperCase();
-                    String type = mInteractionToggleButton.isChecked()?"AP":"FB";
-                    if(type.equals("FB")){
+                    int type = mInteractionToggleButton.isChecked()?1:0;
+                    if(type == 0){
                         suggestion = mSuggestionEditText.getText().toString();
                     }
                     String event;
@@ -210,7 +210,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mEventSpinner.setAdapter(eventAdapter);
     }
 
-    protected void sendReport(String toEmail, String iatype, String event, String description, boolean isAnonymous){
+    protected void sendReport(String toEmail, int iatype, String event, String description, boolean isAnonymous){
 //        String message = description + "\n Suggestion: " + suggestion;
         Interaction report = new Interaction();
 
@@ -228,7 +228,14 @@ public class ScrollingFormActivity extends AppCompatActivity {
             Log.i("Report Validation: ", "Report NOT validated");
 
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-        databaseHelper.addTnterAction(report);
+        if(databaseHelper.addTnterAction(report)==-1)
+            Snackbar.make(mDrawerLayout, "Could not insert InterAction", Snackbar.LENGTH_SHORT).show();
+        else {
+            Snackbar.make(mDrawerLayout, "InterAction Sent!", Snackbar.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
+            startActivity(intent);
+            finish();
+        }
 //        showDialog();
     }
 }

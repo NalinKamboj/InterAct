@@ -56,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //create interaction table sql query
     private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_I_FROM_USER_EMAIL
             + " TEXT," + COLUMN_I_TO_USER_EMAIL + " TEXT," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TIMESTAMP," + COLUMN_IS_ANONYMOUS + " INTEGER,"
-            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " TEXT," + COLUMN_INTERACTION_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " INT DEFAULT 0," + COLUMN_INTERACTION_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
             + COLUMN_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, " + COLUMN_ACK_TIMESTAMP + " DATETIME DEFAULT NULL)";
     //drop interaction table sql query
     private String DROP_INTERACTION_TABLE = "DROP TABLE IF EXISTS " + TABLE_INTERACTION;
@@ -112,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * This method is to create an InterAction Record
      * @param interaction @Nonnull InterAction to be added to DB
      */
-    public void addTnterAction(Interaction interaction){
+    public long addTnterAction(Interaction interaction){
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -131,8 +131,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
         + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getDescription() + "BLA...");
 
-        database.insert(TABLE_INTERACTION, null, values);
+        long response = database.insert(TABLE_INTERACTION, null, values);
         database.close();
+        return response;
     }
 
     public String extractTime(Calendar calendar){

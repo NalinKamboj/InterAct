@@ -149,4 +149,5 @@
     <string name="all_appreciation">Appreciation</string>
     <string name="all_anonymous">Anonymous</string>
     <string name="all_not_anonymous">Not Anonymous</string>
+    <string name="all_pick_time">Time</string>
 </resources>

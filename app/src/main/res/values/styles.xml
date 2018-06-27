@@ -36,15 +36,8 @@
         <item name="android:textColorSecondary">@color/colorGrey</item>
     </style>
     <!-- TODO FIX THIS STUPID THEME SOMEHOW -->
-    <style name="TimeDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:colorBackground">@color/colorWhite</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:headerBackground">#000000</item>
-        <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
-        <item name="android:button">@color/colorWhite</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorSecondary</item>
-        <item name="android:textColor">@color/colorSecondaryDark</item>
+    <style name="TimeDialog" parent="android:Widget.Material.TimePicker">
+        <item name="android:numbersTextColor">#FFFFFF</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

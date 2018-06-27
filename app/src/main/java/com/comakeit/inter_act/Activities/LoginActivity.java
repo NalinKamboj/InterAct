@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 /**
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void verifyFromSQLite(){
         if(mDatabaseHelper.checkUser(mEmailEditText.getText().toString().trim().toUpperCase(), mPasswordEditText.getText().toString().trim())){
+            UserDetails.setUserEmail(mEmailEditText.getText().toString().trim().toUpperCase());
             Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
             startActivity(intent);
             finish();

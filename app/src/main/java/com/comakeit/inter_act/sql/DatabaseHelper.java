@@ -10,7 +10,10 @@ import android.util.Log;
 import com.comakeit.inter_act.Activities.Interaction;
 import com.comakeit.inter_act.UserDetails;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -52,9 +55,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //create interaction table sql query
     private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_I_FROM_USER_EMAIL
-            + " INTEGER," + COLUMN_I_TO_USER_EMAIL + " INTEGER," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TEXT," + COLUMN_IS_ANONYMOUS + " INTEGER,"
-            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " TEXT," + COLUMN_INTERACTION_TIMESTAMP + " TEXT," + COLUMN_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, "
-            + COLUMN_ACK_TIMESTAMP + " TEXT DEFAULT NULL)";
+            + " TEXT," + COLUMN_I_TO_USER_EMAIL + " TEXT," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TIMESTAMP," + COLUMN_IS_ANONYMOUS + " INTEGER,"
+            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " TEXT," + COLUMN_INTERACTION_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+            + COLUMN_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, " + COLUMN_ACK_TIMESTAMP + " DATETIME DEFAULT NULL)";
     //drop interaction table sql query
     private String DROP_INTERACTION_TABLE = "DROP TABLE IF EXISTS " + TABLE_INTERACTION;
 
@@ -113,18 +116,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        int isAnonymous = interaction.isAnonymous()?1:0;
+        Log.i("DB HELPER IA TYPE", "Anonymous " + isAnonymous);
+        String eventTime = extractTime(interaction.getEventCalendar());
 
         values.put(COLUMN_I_TO_USER_EMAIL, interaction.getToUser().toUpperCase());
         values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
         values.put(COLUMN_EVENT_NAME, interaction.getEventName());
-        values.put(COLUMN_EVENT_TIMESTAMP, interaction.getEventCalendar().toString());
+        values.put(COLUMN_EVENT_TIMESTAMP, eventTime);
         values.put(COLUMN_DESCRIPTION, interaction.getMessage());
-        values.put(COLUMN_IS_ANONYMOUS, interaction.isAnonymous());
+        values.put(COLUMN_IS_ANONYMOUS, isAnonymous);
         values.put(COLUMN_INTERACTION_TYPE, interaction.getIAType());
         values.put(COLUMN_INTERACTION_TIMESTAMP, interaction.getIACalendar().toString());
+        Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
+        + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getMessage() + "BLA...");
 
         database.insert(TABLE_INTERACTION, null, values);
         database.close();
+    }
+
+    public String extractTime(Calendar calendar){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
+        Date date = calendar.getTime();
+        Log.i("DB HELPER EXTRACT TIME", "TIME: " + simpleDateFormat.format(date));
+        return simpleDateFormat.format(date);
     }
 
     /**
@@ -132,6 +147,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return list
      */
+    public void tempFunc(Context context){
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        String[] columns = {
+                COLUMN_I_FROM_USER_EMAIL,
+                COLUMN_DESCRIPTION,
+                COLUMN_EVENT_NAME
+        };
+
+        String[] args = {UserDetails.getUserEmail().toUpperCase()};
+        Cursor cursor = database.query(TABLE_INTERACTION,
+                columns,
+                COLUMN_I_TO_USER_EMAIL + "=?",
+                args,
+                null,
+                null,
+                null);
+
+        if(cursor.moveToFirst()){
+            Log.i("DB RECEIVE ", "OMG WORKED! Interaction 1 FROM: " + cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL))
+                    + " DESC: " + cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+        } else
+            Log.i("DB RECEIVE", "NO ROWS IN IA DB");
+        cursor.close();
+    }
+
+
     public List<UserDetails> getAllUser() {         //TODO This fucntion will wreck havoc cuz UserDetails has all static members! PRIORITY: HIGH
         // array of columns to fetch
         String[] columns = {

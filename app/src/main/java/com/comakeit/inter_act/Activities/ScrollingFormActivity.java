@@ -1,15 +1,21 @@
 package com.comakeit.inter_act.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,12 +42,53 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private FloatingActionButton mFloatingActionButton;
     private TextInputLayout mInteractionTextInputLayout;
     private SwitchCompat mAnonymousSwitchCompat;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_form);
 
         initViews();
+
+        Menu menu = mNavigationView.getMenu();
+        menu.findItem(R.id.menu_new_interaction).setChecked(true);
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        item.setChecked(true);
+                        switch (item.getItemId()){
+                            case R.id.menu_new_interaction:
+                                Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
+                                startActivity(intent);
+                                finish();
+                                break;
+                            case R.id.menu_main_form:
+                                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent1);
+                                finish();
+                                break;
+                            case R.id.menu_logout:
+                                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(logoutIntent);
+                                finish();
+                                break;
+                            case R.id.menu_received_interaction:
+                                DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+                                databaseHelper.tempFunc(getApplicationContext());
+                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                break;
+                            case R.id.menu_sent_interaction:
+                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                break;
+                        }
+
+                        return true;
+                    }
+                }
+        );
     }
 
     private void initViews(){
@@ -49,6 +96,8 @@ public class ScrollingFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Initialize all widgets and elements
+        mNavigationView = findViewById(R.id.scrolling_navigation_view);
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
         mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
@@ -142,7 +191,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
 
         //Adapter for Spinner
         ArrayAdapter<CharSequence> eventAdapter = ArrayAdapter.createFromResource(this, R.array.event_types, android.R.layout.simple_spinner_item);
-        eventAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        eventAdapter.setDropDownViewResource(R.layout.spinner_item);
         mEventSpinner.setSelection(0);
         mEventSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -160,13 +209,6 @@ public class ScrollingFormActivity extends AppCompatActivity {
             }
         });
         mEventSpinner.setAdapter(eventAdapter);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     protected void sendReport(String toEmail, String iatype, String event, String description, boolean isAnonymous){

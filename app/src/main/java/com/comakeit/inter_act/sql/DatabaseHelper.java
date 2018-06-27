@@ -154,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] columns = {
                 COLUMN_I_FROM_USER_EMAIL,
                 COLUMN_DESCRIPTION,
-                COLUMN_EVENT_NAME
+                COLUMN_EVENT_NAME,
         };
 
         String[] args = {UserDetails.getUserEmail().toUpperCase()};
@@ -180,8 +180,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] columns = {
                 COLUMN_I_FROM_USER_EMAIL,
                 COLUMN_DESCRIPTION,
-                COLUMN_EVENT_NAME
+                COLUMN_EVENT_NAME,
+                COLUMN_INTERACTION_TYPE
         };
+        String order = "datetime(" + COLUMN_INTERACTION_TIMESTAMP + ") DESC";
 
         String[] args = {UserDetails.getUserEmail().toUpperCase()};
         Log.i("CURRENT USER: ", UserDetails.getUserEmail().toUpperCase());
@@ -191,14 +193,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 args,
                 null,
                 null,
-                null);
-
+                order);
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 Interaction interaction = new Interaction();
                 interaction.setFromUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL)));
                 interaction.setEventName(cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_NAME)));
                 interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_INTERACTION_TYPE)));
                 interactionList.add(interaction);
                 cursor.moveToNext();
             }

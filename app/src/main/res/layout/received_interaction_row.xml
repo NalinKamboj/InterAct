@@ -7,7 +7,7 @@
     android:focusable="true"
     android:clickable="true"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corner_green"
+    android:background="@drawable/rounded_corner_amber"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginTop="8dp"

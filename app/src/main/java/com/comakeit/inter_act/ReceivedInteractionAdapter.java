@@ -46,7 +46,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         holder.eventName.setText(interaction.getEventName());
         holder.message.setText(interaction.getDescription());
         if(interaction.getIAType() == 1)
-            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_amber));
+            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
 
     }
 

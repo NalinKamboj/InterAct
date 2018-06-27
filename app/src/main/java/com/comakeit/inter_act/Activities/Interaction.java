@@ -120,6 +120,10 @@ public class Interaction {
         return IACalendar;
     }
 
+    public String getFromUserEmail(){
+        return this.fromUserEmail;
+    }
+
     public void setIACalendar(Calendar IACalendar) {
         this.IACalendar = IACalendar;
     }

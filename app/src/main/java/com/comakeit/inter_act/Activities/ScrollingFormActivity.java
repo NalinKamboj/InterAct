@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -110,6 +111,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
         mInteractionTextInputLayout = findViewById(R.id.new_interaction_description_input_layout);
         mSuggestionEditText.setVisibility(View.GONE);
+
 
         //Create the Date and Time picker fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

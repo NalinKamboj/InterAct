@@ -15,11 +15,6 @@
             android:icon="@drawable/ic_sent_interaction"
             android:title="@string/menu_sent_interaction" />
     </group>
-    <group>
-        <item
-            android:id="@+id/menu_main_form"
-            android:title="Main InterAction Form"/>
-    </group>
     <group android:id="@+id/menu_group_settings"
         android:checkableBehavior="single">
         <item

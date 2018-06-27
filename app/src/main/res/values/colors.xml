@@ -15,4 +15,6 @@
     <color name="colorTextPrimary">#000000</color>
     <color name="colorTextSecondary">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorRoundedGreen">#3cba54</color>
+    <color name="colorRoundedBabyPink">#e4405f</color>
 </resources>

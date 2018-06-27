@@ -150,4 +150,7 @@
     <string name="all_anonymous">Anonymous</string>
     <string name="all_not_anonymous">Not Anonymous</string>
     <string name="all_pick_time">Time</string>
+    <string name="title_activity_received_interaction">ReceivedInteractionActivity</string>
+    <string name="navigation_drawer_open">Oopsie</string>
+    <string name="navigation_drawer_close">Noopsie</string>
 </resources>

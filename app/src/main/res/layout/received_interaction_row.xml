@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:id="@+id/received_interaction_row_layout"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corner_green"
+    android:padding="24dp">
+        <TextView
+            android:drawableStart="@drawable/ic_contact"
+            android:drawingCacheQuality="high"
+            android:drawablePadding="20dp"
+            android:drawableTint="@color/colorWhite"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/interaction_row_from_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:text="Sample Username"
+            android:textStyle="bold"/>
+    <TextView
+        android:layout_marginTop="@dimen/row_padding_vertical"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:drawableStart="@drawable/ic_event"
+        android:drawablePadding="20dp"
+        android:drawableTint="@color/colorWhite"
+        android:id="@+id/interaction_row_event_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:layout_marginTop="@dimen/row_padding_vertical"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:drawableStart="@drawable/ic_feedback"
+        android:drawablePadding="20dp"
+        android:drawableTint="@color/colorWhite"
+        android:id="@+id/interaction_row_description_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="4"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+</LinearLayout>

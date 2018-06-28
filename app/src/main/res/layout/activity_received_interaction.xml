@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:paddingTop="10dp"
+    android:fitsSystemWindows="true"
     tools:context=".Activities.ReceivedInteractionActivity">
 
-    <include layout="@layout/content_received_interaction" />
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorWhite"
+        tools:context=".Activities.ReceivedInteractionActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/received_interaction_fab"
+        <include layout="@layout/content_received_interaction" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/received_interaction_fab"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:elevation="8dp"
+            android:tint="@color/colorWhite"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_add"
+            tools:ignore="RtlHardcoded" />
+    </android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/received_interaction_navigation_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_logout_icon" />
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        android:background="@color/colorWhite"
+        app:menu="@menu/temp_drawer_menu"
+        app:itemTextColor="@color/menu_text_color"
+        app:itemBackground="@drawable/rounded_menu_background"
+        app:itemIconTint="@color/menu_text_color"
+        app:headerLayout="@layout/temp_navigation_header"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.v4.widget.DrawerLayout>

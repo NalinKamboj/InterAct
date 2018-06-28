@@ -50,9 +50,15 @@ public class ScrollingFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_form);
-
+        initNavigationDrawer();
         initViews();
+    }
 
+    private void initNavigationDrawer(){
+        mNavigationView = findViewById(R.id.scrolling_navigation_view);
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         Menu menu = mNavigationView.getMenu();
         menu.findItem(R.id.menu_new_interaction).setChecked(true);
         mNavigationView.setNavigationItemSelectedListener(
@@ -87,15 +93,13 @@ public class ScrollingFormActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
     }
 
     private void initViews(){
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //Initialize all widgets and elements
-        mNavigationView = findViewById(R.id.scrolling_navigation_view);
-        mDrawerLayout = findViewById(R.id.main_drawer_layout);
         mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
@@ -122,11 +126,11 @@ public class ScrollingFormActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(mInteractionToggleButton.isChecked()){
-                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
+                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
                     mSuggestionEditText.setVisibility(View.GONE);
                 } else{
                     mSuggestionEditText.setVisibility(View.VISIBLE);
-                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
+                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
                 }
             }
         });

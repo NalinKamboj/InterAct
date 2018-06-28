@@ -15,11 +15,13 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     public Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView fromEmail, eventName, message;
+        public TextView fromEmail, eventName, message, iaContext, interactionDate;
         public LinearLayout mLinearLayout;
 
         public MyViewHolder(View view){
             super(view);
+            iaContext = view.findViewById(R.id.interaction_row_context_text_view);
+            interactionDate = view.findViewById(R.id.interaction_row_date);
             mLinearLayout = view.findViewById(R.id.received_interaction_row_layout);
             fromEmail = view.findViewById(R.id.interaction_row_from_text_view);
             eventName = view.findViewById(R.id.interaction_row_event_text_view);
@@ -45,8 +47,10 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
         holder.message.setText(interaction.getDescription());
-        if(interaction.getIAType() == 1)
+        if(interaction.getIAType() == 1){
             holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
+            holder.interactionDate.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
+        }
 
     }
 

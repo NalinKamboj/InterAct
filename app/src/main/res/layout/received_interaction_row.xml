@@ -7,25 +7,30 @@
     android:focusable="true"
     android:clickable="true"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corner_amber"
+    android:background="@drawable/rounded_corner_pink"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginTop="8dp"
     android:elevation="3dp"
     android:layout_marginBottom="8dp">
-        <TextView
-            android:drawableStart="@drawable/ic_contact"
-            android:drawingCacheQuality="high"
-            android:drawablePadding="15dp"
-            android:drawableTint="@color/colorWhite"
-            android:textColor="@color/colorWhite"
-            android:id="@+id/interaction_row_from_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Sample Username"
-            android:textStyle="bold"/>
     <TextView
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/ic_contact"
+        android:drawingCacheQuality="high"
+        android:drawablePadding="15dp"
+        android:drawableTint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/interaction_row_from_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Sample Username"
+        android:textStyle="bold"/>
+    <TextView
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
         android:layout_marginTop="@dimen/row_padding_vertical"
         android:layout_marginBottom="@dimen/row_padding_vertical"
         android:drawableStart="@drawable/ic_event"
@@ -39,6 +44,8 @@
         android:textStyle="bold"
         android:textSize="18sp"/>
     <TextView
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
         android:layout_marginBottom="@dimen/row_padding_vertical"
         android:drawableStart="@drawable/ic_feedback"
         android:drawablePadding="15dp"
@@ -50,4 +57,29 @@
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         android:textSize="18sp"/>
+    <TextView
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:drawableStart="@drawable/ic_question_mark"
+        android:drawablePadding="15dp"
+        android:drawableTint="@color/colorWhite"
+        android:id="@+id/interaction_row_context_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="3"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/interaction_row_date"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:background="@drawable/rounded_bottom_pink"/>
 </LinearLayout>

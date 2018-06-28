@@ -13,10 +13,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.ReceivedInteractionAdapter;
+import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -58,6 +61,12 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         mNavigationView = findViewById(R.id.received_interaction_navigation_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        String parts[] = UserDetails.getUserEmail().split("@");
+        String welcome = "Welcome " + parts[0];
+        View headerView = mNavigationView.getHeaderView(0);
+        TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
+        navUserName.setText(welcome);
 
         Menu menu = mNavigationView.getMenu();
         menu.findItem(R.id.menu_received_interaction).setChecked(true);

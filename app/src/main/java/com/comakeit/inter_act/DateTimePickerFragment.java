@@ -38,7 +38,7 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View view) {
                 //Launch Date picker dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.TimeDialog, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         dateTextView.setText(i2 + "-" + (i1 + 1) + "-" + i);
@@ -53,7 +53,7 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
         timeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), R.style.TimeDialog, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         String display = String.format("%02d",i) + ":" + String.format("%02d",i1);

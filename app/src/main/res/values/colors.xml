@@ -15,8 +15,8 @@
     <color name="colorTextPrimary">#000000</color>
     <color name="colorTextSecondary">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorRoundedGreen">#3cba54</color>
+    <color name="colorRoundedGreen">#1ED760</color>
     <color name="colorRoundedBabyPink">#e4405f</color>
-    <color name="colorRoundedGreenDark">#19B450</color>
+    <color name="colorRoundedGreenDark">#19B44F</color>
     <color name="colorRoundedBabyPinkDark">#BF3650</color>
 </resources>

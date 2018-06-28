@@ -1,14 +1,17 @@
 package com.comakeit.inter_act.Activities;
 
 import android.content.Intent;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -31,9 +34,11 @@ import android.widget.ViewSwitcher;
 import com.comakeit.inter_act.DateTimePickerFragment;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class ScrollingFormActivity extends AppCompatActivity {
     private Spinner mEventSpinner;
@@ -45,6 +50,8 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private SwitchCompat mAnonymousSwitchCompat;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private Menu appBarMenu;
+    private NestedScrollView mNestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +64,35 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private void initNavigationDrawer(){
         mNavigationView = findViewById(R.id.scrolling_navigation_view);
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.new_interaction_toolbar);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+        String parts[] = UserDetails.getUserEmail().split("@");
+        String welcome = "Welcome " + parts[0];
+        View headerView = mNavigationView.getHeaderView(0);
+        TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
+        navUserName.setText(welcome);
+
+        AppBarLayout appBarLayout = findViewById(R.id.new_interaction_app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if(scrollRange == -1)
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                if(scrollRange + verticalOffset == 0) {
+                    isShow = true;
+                    showOption(R.id.action_send);
+                } else if (isShow) {
+                    isShow = false;
+                    hideOption(R.id.action_send);
+                }
+            }
+        });
+
         Menu menu = mNavigationView.getMenu();
         menu.findItem(R.id.menu_new_interaction).setChecked(true);
         mNavigationView.setNavigationItemSelectedListener(
@@ -97,9 +131,46 @@ public class ScrollingFormActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflate menu. This adds items to Action Bar if it is present
+        appBarMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_scrolling_form, menu);
+        hideOption(R.id.action_send);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_send) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void hideOption(int id) {
+        MenuItem item = appBarMenu.findItem(id);
+        item.setVisible(false);
+    }
+
+    private void showOption(int id) {
+        MenuItem item = appBarMenu.findItem(id);
+        item.setVisible(true);
+    }
+
     private void initViews(){
 
         //Initialize all widgets and elements
+        mNestedScrollView = findViewById(R.id.content_scrolling_form_parent_view);
         mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
@@ -123,12 +194,16 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mInteractionToggleButton.setChecked(false);
         mInteractionToggleButton.setHapticFeedbackEnabled(true);
         mInteractionToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            TransitionDrawable mTransition = (TransitionDrawable) mNestedScrollView.getBackground();
+
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(mInteractionToggleButton.isChecked()){
+                    mTransition.startTransition(250);       //Start transition here because button is initially NOT CHECKED.
                     mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
                     mSuggestionEditText.setVisibility(View.GONE);
                 } else{
+                    mTransition.reverseTransition(250);
                     mSuggestionEditText.setVisibility(View.VISIBLE);
                     mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
                 }
@@ -233,9 +308,9 @@ public class ScrollingFormActivity extends AppCompatActivity {
 
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
         if(databaseHelper.addTnterAction(report)==-1)
-            Snackbar.make(mDrawerLayout, "Could not insert InterAction", Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not send InterAction", Toast.LENGTH_SHORT).show();
         else {
-            Snackbar.make(mDrawerLayout, "InterAction Sent!", Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(this, "InterAction Sent!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
             startActivity(intent);
             finish();

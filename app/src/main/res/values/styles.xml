@@ -4,7 +4,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:timePickerDialogTheme">@style/TimeDialog</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondaryDark</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
@@ -36,10 +35,6 @@
         <item name="android:textColorHint">@color/colorGrey</item>
         <item name="android:textColorHighlight">@color/colorGrey</item>
         <item name="android:textColorSecondary">@color/colorGrey</item>
-    </style>
-    <!-- TODO FIX THIS STUPID THEME SOMEHOW -->
-    <style name="TimeDialog" parent="android:Widget.Material.TimePicker">
-        <item name="android:numbersTextColor">#FFFFFF</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

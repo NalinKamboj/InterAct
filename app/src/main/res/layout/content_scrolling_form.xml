@@ -2,10 +2,11 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_scrolling_form_parent_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="@color/colorWhite"
+    android:background="@drawable/red_green_transition"
     tools:context=".Activities.ScrollingFormActivity"
     tools:showIn="@layout/activity_scrolling_form">
     <LinearLayout
@@ -13,8 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:theme="@style/AppTheme"
-        android:padding="5dp"
-        android:background="@color/colorWhite">
+        android:padding="5dp">
 
         <!-- Layout for EMAIL -->
         <LinearLayout
@@ -30,19 +30,19 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_logout_icon"/>
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_contact"/>
 
             <!-- To Email Label -->
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/new_interaction_email_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/colorSecondaryDark">
+                android:textColorHint="@color/colorWhite">
                 <EditText android:id="@+id/new_interaction_email_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="To Email" />
+                    android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -66,13 +66,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_logout_icon"/>
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_event"/>
             <TextView
                 android:id="@+id/new_interaction_event_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/main_event_name"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"/>
             <Spinner
                 android:id="@+id/new_interaction_event_spinner"
@@ -126,23 +127,26 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_logout_icon"/>
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_feedback"/>
             <LinearLayout
                 android:layout_gravity="start"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ToggleButton
-                    android:layout_weight="7"
                     android:id="@+id/new_interaction_interaction_toggle_button"
-                    android:elevation="5dp"
-                    android:background="@color/colorSecondaryLight"
-                    android:layout_gravity="end|center_vertical"
-                    android:padding="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="7"
+                    android:background="@drawable/blue_ripple"
+                    android:textColor="@color/colorWhite"
+                    android:elevation="5dp"
+                    android:padding="8dp"
                     android:textOff="@string/all_feedback"
-                    android:textOn="@string/all_appreciation"/>
+                    android:textOn="@string/all_appreciation" />
                 <!-- To Email Label -->
                 <android.support.design.widget.TextInputLayout
                     android:layout_weight="4"
@@ -150,7 +154,7 @@
                     android:id="@+id/new_interaction_description_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/colorSecondaryDark">
+                    android:textColorHint="@color/colorWhite">
                     <EditText android:id="@+id/new_interaction_description_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -159,8 +163,7 @@
                         android:scrollbars="vertical"
                         android:scrollbarStyle="insideOverlay"
                         android:maxLines="4"
-                        android:inputType="textAutoComplete"
-                        android:hint="@string/all_feedback" />
+                        android:inputType="textAutoComplete"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -174,7 +177,7 @@
             android:layout_width="match_parent"
             android:hint="@string/main_suggestion_hint"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorSecondaryDark">
+            android:textColorHint="@color/colorWhite">
             <EditText android:id="@+id/new_interaction_suggestion_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,8 +186,7 @@
                 android:scrollbarStyle="insideOverlay"
                 android:minLines="1"
                 android:maxLines="3"
-                android:inputType="textAutoComplete"
-                android:hint="@string/all_feedback" />
+                android:inputType="textAutoComplete"/>
         </android.support.design.widget.TextInputLayout>
         <!-- Divider -->
         <View
@@ -192,6 +194,25 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_weight="4"
+            android:paddingStart="55dp"
+            android:paddingBottom="8dp"
+            android:id="@+id/new_interaction_context_input_layout"
+            android:layout_width="match_parent"
+            android:hint="@string/main_context_hint"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/colorWhite">
+            <EditText android:id="@+id/new_interaction_context_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideOverlay"
+                android:minLines="1"
+                android:maxLines="3"
+                android:inputType="textAutoComplete"/>
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
@@ -206,10 +227,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:text="@string/all_not_anonymous"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp" />
             <android.support.v7.widget.SwitchCompat
                 android:layout_gravity="end"
+                android:backgroundTint="@color/colorWhite"
                 android:textSize="18sp"
                 android:id="@+id/new_interaction_anonymous_switch"
                 android:layout_width="wrap_content"

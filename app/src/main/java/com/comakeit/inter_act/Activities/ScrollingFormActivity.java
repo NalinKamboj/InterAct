@@ -10,8 +10,8 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +20,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -42,7 +44,7 @@ import java.util.Objects;
 
 public class ScrollingFormActivity extends AppCompatActivity {
     private Spinner mEventSpinner;
-    private EditText mEventEditText, mDescriptionEditText, mSuggestionEditText, mEmailEditText;
+    private EditText mEventEditText, mDescriptionEditText, mSuggestionEditText, mEmailEditText, mContextEditText;
     private TextSwitcher mAnonymousTextSwitcher;
     private ToggleButton mInteractionToggleButton;
     private FloatingActionButton mFloatingActionButton;
@@ -51,12 +53,20 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Menu appBarMenu;
-    private NestedScrollView mNestedScrollView;
-
+    private Window window;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_form);
+
+        //Setting up flags to be able to change status bar color
+        window = this.getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedAmberDark));      //Changing status bar color
+
         initNavigationDrawer();
         initViews();
     }
@@ -170,7 +180,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private void initViews(){
 
         //Initialize all widgets and elements
-        mNestedScrollView = findViewById(R.id.content_scrolling_form_parent_view);
+        mContextEditText = findViewById(R.id.new_interaction_context_edit_text);
         mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
@@ -194,15 +204,17 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mInteractionToggleButton.setChecked(false);
         mInteractionToggleButton.setHapticFeedbackEnabled(true);
         mInteractionToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            TransitionDrawable mTransition = (TransitionDrawable) mNestedScrollView.getBackground();
+            TransitionDrawable mTransition = (TransitionDrawable) mInteractionToggleButton.getBackground();
 
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(mInteractionToggleButton.isChecked()){
+                    window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedGreenDark));      //Changing status bar color
                     mTransition.startTransition(250);       //Start transition here because button is initially NOT CHECKED.
                     mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
                     mSuggestionEditText.setVisibility(View.GONE);
                 } else{
+                    window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedAmberDark));      //Changing status bar color
                     mTransition.reverseTransition(250);
                     mSuggestionEditText.setVisibility(View.VISIBLE);
                     mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
@@ -241,27 +253,32 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mDescriptionEditText.getText().toString().trim().length()==0)
-                    Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank", Toast.LENGTH_SHORT).show();
-                else if(mEmailEditText.getText().toString().trim().length()==0)
-                    Toast.makeText(ScrollingFormActivity.this, "Please enter the RECIPIENT", Toast.LENGTH_SHORT).show();
-                else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().equals(""))
-                    Toast.makeText(ScrollingFormActivity.this, "Suggestion can't be left blank", Toast.LENGTH_SHORT).show();
+                if(mDescriptionEditText.getText().toString().trim().length() < 8)
+                    Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank or less than 8 characters"
+                            , Toast.LENGTH_SHORT).show();
+                else if(mEmailEditText.getText().toString().trim().length() < 3)
+                    Toast.makeText(ScrollingFormActivity.this, "Please enter a valid EMAIL", Toast.LENGTH_SHORT).show();
+                else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().length() < 8)
+                    Toast.makeText(ScrollingFormActivity.this, "Suggestion must be at least 8 characters", Toast.LENGTH_SHORT).show();
+                else if(mContextEditText.getText().toString().length() < 8)
+                    Toast.makeText(ScrollingFormActivity.this, "Context must be at least 8 characters", Toast.LENGTH_SHORT).show();
                 else{
 //                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
-                    String suggestion = "";
+                    String desc = mDescriptionEditText.getText().toString();;
+                    String suggestion;
+                    String context = mContextEditText.getText().toString().trim();
                     String TO_EMAIL = mEmailEditText.getText().toString().toUpperCase();
                     int type = mInteractionToggleButton.isChecked()?1:0;
                     if(type == 0){
                         suggestion = mSuggestionEditText.getText().toString();
+                        desc = mDescriptionEditText.getText().toString() + "\nSuggestion: " + suggestion;
                     }
                     String event;
                     if(mEventEditText.getVisibility()==View.VISIBLE)
                         event = "\"" + mEventEditText.getText().toString() + "\"";
                     else
                         event = "\"" + mEventSpinner.getSelectedItem().toString() + "\"";
-                    String desc = mDescriptionEditText.getText().toString() + "\nSuggestion: " + suggestion;
-                    sendReport(TO_EMAIL, type, event, desc, mAnonymousSwitchCompat.isChecked());
+                    sendReport(TO_EMAIL, type, event, desc, context, mAnonymousSwitchCompat.isChecked());
                 }
             }
         });
@@ -289,7 +306,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
         mEventSpinner.setAdapter(eventAdapter);
     }
 
-    protected void sendReport(String toEmail, int iatype, String event, String description, boolean isAnonymous){
+    protected void sendReport(String toEmail, int iatype, String event, String description, String context, boolean isAnonymous){
 //        String message = description + "\n Suggestion: " + suggestion;
         Interaction report = new Interaction();
 
@@ -299,6 +316,7 @@ public class ScrollingFormActivity extends AppCompatActivity {
         report.setDescription(description);
         report.setIAType(iatype);
         report.setEventName(event);
+        report.setContext(context);
         report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
 
         if(report.validateReport(report, getApplicationContext()))

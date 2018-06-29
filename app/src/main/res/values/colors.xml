@@ -19,4 +19,7 @@
     <color name="colorRoundedBabyPink">#e4405f</color>
     <color name="colorRoundedGreenDark">#19B44F</color>
     <color name="colorRoundedBabyPinkDark">#BF3650</color>
+    <color name="colorRoundedAmber">#FFC107</color>
+    <color name="colorRoundedAmberDark">#FFA000</color>
+    <color name="colorRoundedGreenSober">#4CAF50</color>
 </resources>

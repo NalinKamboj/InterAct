@@ -7,7 +7,20 @@ import com.comakeit.inter_act.sql.DatabaseHelper;
 import java.util.Calendar;
 
 public class Interaction {
-    private String fromUserEmail, toUserEmail, eventName, description;
+    private String fromUserEmail;
+    private String toUserEmail;
+    private String eventName;
+    private String description;
+
+    public String getContext() {
+        return mContext;
+    }
+
+    public void setContext(String context) {
+        mContext = context;
+    }
+
+    private String mContext;
     int IAType; //0 for FB and 1 for AP
     int interactionID;
     private boolean isAnonymous;

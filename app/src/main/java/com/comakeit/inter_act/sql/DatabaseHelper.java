@@ -223,16 +223,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 //Retrieving time stored as string and formatting it.
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
                 String IAtimestamp = cursor.getString(cursor.getColumnIndex(COLUMN_I_INTERACTION_TIMESTAMP));
-                Date IADate = null;
+                String eventTimeStamp = cursor.getString(cursor.getColumnIndex(COLUMN_I_EVENT_TIMESTAMP));
+                Date IADate;
+                Date eventDate;
                 //Writing date to Calendar
                 Calendar interactionCalendar = Calendar.getInstance();
+                Calendar eventCalendar = Calendar.getInstance();
                 try {
                     IADate = simpleDateFormat.parse(IAtimestamp);
                     interactionCalendar.setTime(IADate);
+                    interaction.setIACalendar(interactionCalendar);
                 } catch (ParseException e) {
                     IADate = null;
                 }
-                if(IADate!=null){
+
+                try {
+                    eventDate = simpleDateFormat.parse(eventTimeStamp);
+                    eventCalendar.setTime(eventDate);
+                    interaction.setEventCalendar(eventCalendar);
+                } catch (ParseException e1) {
+                    eventDate = null;
+                }
+
+                if(IADate != null  && eventDate != null){
                     interactionList.add(interaction);
                     Log.i("DB HELPER RECV", "Latest Report - " + interaction.getFromUserEmail() + " says " + interaction.getDescription() + " \n CONTEXT "
                             + interaction.getContext());

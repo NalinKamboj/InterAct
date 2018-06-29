@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInteractionAdapter.MyViewHolder> {
@@ -20,16 +17,18 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView fromEmail, eventName, message, iaContext, interactionDate;
-        public LinearLayout mLinearLayout;
+        public LinearLayout mLinearLayout, mBottomLinearLayout, mExpandingLayout;
 
         public MyViewHolder(View view){
             super(view);
+//            mExpandingLayout = view.findViewById(R.id.interaction_row_collapsing_linear_layout);
             iaContext = view.findViewById(R.id.interaction_row_context_text_view);
             interactionDate = view.findViewById(R.id.interaction_row_date);
             mLinearLayout = view.findViewById(R.id.received_interaction_row_layout);
             fromEmail = view.findViewById(R.id.interaction_row_from_text_view);
             eventName = view.findViewById(R.id.interaction_row_event_text_view);
             message = view.findViewById(R.id.interaction_row_description_text_view);
+            mBottomLinearLayout = view.findViewById(R.id.interaction_row_bottom_bar_linear_layout);
         }
     }
 
@@ -52,26 +51,15 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         holder.eventName.setText(interaction.getEventName());
         holder.message.setText(interaction.getDescription());
         holder.iaContext.setText(interaction.getContext());
-        Date date;
-        String iaDateString = interaction.getIACalendar().get(Calendar.YEAR) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
-                interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
+        String iaDateString = interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
+                + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
                 interaction.getIACalendar().get(Calendar.MINUTE);
-//        + ":" + interaction.getIACalendar().get(Calendar.SECOND);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
-        try{
-            date = simpleDateFormat.parse(iaDateString);
-        } catch (ParseException e) {
-            date = null;
-        }
-//        if(date!=null)
-//            holder.interactionDate.setText(date.toString());
         holder.interactionDate.setText(iaDateString);
 
         if(interaction.getIAType() == 1){
             holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
-            holder.interactionDate.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
+            holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
         }
-
     }
 
     @Override

@@ -37,10 +37,13 @@ import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
-public class ScrollingFormActivity extends AppCompatActivity {
+public class ScrollingFormActivity extends AppCompatActivity implements DateTimePickerFragment.OnDataPass{
     private Spinner mEventSpinner;
     private EditText mEventEditText, mDescriptionEditText, mSuggestionEditText, mEmailEditText, mContextEditText;
     private TextSwitcher mAnonymousTextSwitcher;
@@ -52,6 +55,8 @@ public class ScrollingFormActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
     private Menu appBarMenu;
     private Window window;
+    private String evenTime, evenDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +184,8 @@ public class ScrollingFormActivity extends AppCompatActivity {
     }
 
     private void initViews(){
+        evenDate = "";
+        evenTime = "";
 
         //Initialize all widgets and elements
         mContextEditText = findViewById(R.id.new_interaction_context_edit_text);
@@ -316,7 +323,23 @@ public class ScrollingFormActivity extends AppCompatActivity {
         report.setIAType(iatype);
         report.setEventName(event);
         report.setContext(context);
-        report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
+
+        if(!this.evenTime.equals("") && !this.evenDate.equals("")) {
+            String eventCalenderString = this.evenDate + " " + this.evenTime;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");   //TODO Add LOCALE. PRIORITY: LOW
+            Date date;
+            try{
+                date = simpleDateFormat.parse(eventCalenderString);
+            } catch (ParseException e) {
+                date = null;
+            }
+            Calendar calendar = Calendar.getInstance();
+            if(date != null) {
+                calendar.setTime(date);
+                report.setEventCalendar(calendar);
+            }
+        }
+
 
         if(report.validateReport(report, getApplicationContext()))
             Log.i("Report Validation: ", "Report successfully validated");
@@ -333,5 +356,23 @@ public class ScrollingFormActivity extends AppCompatActivity {
             finish();
         }
 //        showDialog();
+    }
+
+    public void setEventDate(String date) {
+        this.evenDate = date;
+    }
+
+    public void setEventTime(String time) {
+        this.evenTime = time;
+    }
+
+    @Override
+    public void onDataPass(String data, int type){
+        if (type == 1)
+            this.evenDate = data;
+        else if (type == 0)
+            this.evenTime = data;
+        else
+            Toast.makeText(getApplicationContext(), "Invalid ARG in onDataPass()", Toast.LENGTH_SHORT).show();
     }
 }

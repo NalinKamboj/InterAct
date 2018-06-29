@@ -21,7 +21,8 @@
         <activity
             android:name=".Activities.ScrollingFormActivity"
             android:label="@string/title_activity_scrolling_form"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -41,7 +42,7 @@
         <activity
             android:name=".Activities.ReceivedInteractionActivity"
             android:label="@string/title_activity_received_interaction"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

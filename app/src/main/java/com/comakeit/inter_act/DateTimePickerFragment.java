@@ -20,6 +20,16 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
     private TextView dateTextView, timeTextView;
     private int mYear, mMonth, mDay, mHour, mMinute;
     final Calendar mCalendar = Calendar.getInstance();
+    OnDataPass dataPasser;
+
+    public interface OnDataPass{
+        /** Interface which must be implemented by ever class using this fragment to retrieve the date and time set in the fragment
+         *
+         * @param data String containing date/time
+         * @param type 0 for TIME, 1 for DATE
+         */
+        void onDataPass(String data, int type);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -41,9 +51,10 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        dateTextView.setText(i2 + "-" + (i1 + 1) + "-" + i);
+                        String date = i2 + "-" + (i1 + 1) + "-" + i;
+                        dateTextView.setText(date);
                         mCalendar.set(i,i1,i2);
-//                        ((MainActivity)getActivity()).setDate(mCalendar);
+                        dataPasser.onDataPass(date, 1);
                     }
                 }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -60,7 +71,7 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
                         timeTextView.setText(display);     //TODO Fix warning. Priority: Low
                         mCalendar.set(Calendar.HOUR, i);
                         mCalendar.set(Calendar.MINUTE, i1);
-//                        ((MainActivity)getActivity()).setDate(mCalendar);
+                        dataPasser.onDataPass(display, 0);
                     }
                 }, mHour, mMinute, true);
                 timePickerDialog.show();
@@ -73,10 +84,7 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        //Checking if hosting activity implements necessary functionality
-//        if(!(context instanceof View.OnClickListener)){
-//            throw new ClassCastException(context.toString() + " must implement OnItemClickListener");
-//        }
+        dataPasser = (OnDataPass) context;
     }
 
 }

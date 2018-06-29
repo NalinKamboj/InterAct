@@ -60,6 +60,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+//        getWindow().setExitTransition(new Explode());       //Sets exit transition for the "CALLING" activity!
         setContentView(R.layout.activity_scrolling_form);
 
         /* NOT CHANGING STATUS BAR COLOR HERE EW

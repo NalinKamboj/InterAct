@@ -1,12 +1,15 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.comakeit.inter_act.Activities.InteractionDetailActivity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -45,7 +48,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Interaction interaction = mInteractionList.get(position);
         holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
@@ -55,6 +58,13 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
                 + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
                 interaction.getIACalendar().get(Calendar.MINUTE);
         holder.interactionDate.setText(iaDateString);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), InteractionDetailActivity.class);
+            }
+        });
 
         if(interaction.getIAType() == 1){
             holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));

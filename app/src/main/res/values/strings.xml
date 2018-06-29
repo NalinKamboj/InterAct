@@ -155,4 +155,6 @@
     <string name="navigation_drawer_close">Noopsie</string>
     <string name="main_context_hint">Enter Context</string>
     <string name="all_send">Send</string>
+    <string name="all_suggestions">Suggestions</string>
+    <string name="all_context">Context</string>
 </resources>

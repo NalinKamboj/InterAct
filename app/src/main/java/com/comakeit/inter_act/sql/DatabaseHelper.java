@@ -10,6 +10,7 @@ import android.util.Log;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.UserDetails;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,14 +39,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_INTERACTION_ID = "interaction_id";
     private static final String COLUMN_I_FROM_USER_EMAIL = "from_user_email";
     private static final String COLUMN_I_TO_USER_EMAIL = "to_user_email";
-    private static final String COLUMN_EVENT_NAME = "event_name";
-    private static final String COLUMN_EVENT_TIMESTAMP = "event_timestamp";
-    private static final String COLUMN_IS_ANONYMOUS = "is_anonymous";
-    private static final String COLUMN_INTERACTION_TYPE = "interaction_type";
-    private static final String COLUMN_DESCRIPTION = "description";     //Suggestion will be a part of description in case of feedback
-    private static final String COLUMN_INTERACTION_TIMESTAMP = "interaction_timestamp";
-    private static final String COLUMN_ACKNOWLEDGEMENT = "acknowledged";
-    private static final String COLUMN_ACK_TIMESTAMP = "ack_timestamp";
+    private static final String COLUMN_I_EVENT_NAME = "event_name";
+    private static final String COLUMN_I_EVENT_TIMESTAMP = "event_timestamp";
+    private static final String COLUMN_I_IS_ANONYMOUS = "is_anonymous";
+    private static final String COLUMN_I_CONTEXT = "context";
+    private static final String COLUMN_I_INTERACTION_TYPE = "interaction_type";
+    private static final String COLUMN_I_DESCRIPTION = "description";     //Suggestion will be a part of description in case of feedback
+    private static final String COLUMN_I_INTERACTION_TIMESTAMP = "interaction_timestamp";
+    private static final String COLUMN_I_ACKNOWLEDGEMENT = "acknowledged";
+    private static final String COLUMN_I_ACK_TIMESTAMP = "ack_timestamp";
 
     // create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -55,9 +57,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //create interaction table sql query
     private String CREATE_INTERACTION_TABLE = "CREATE TABLE " + TABLE_INTERACTION + "(" + COLUMN_INTERACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_I_FROM_USER_EMAIL
-            + " TEXT," + COLUMN_I_TO_USER_EMAIL + " TEXT," + COLUMN_EVENT_NAME + " TEXT," + COLUMN_EVENT_TIMESTAMP + " TIMESTAMP," + COLUMN_IS_ANONYMOUS + " INTEGER,"
-            + COLUMN_DESCRIPTION + " TEXT," + COLUMN_INTERACTION_TYPE + " INT DEFAULT 0," + COLUMN_INTERACTION_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
-            + COLUMN_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, " + COLUMN_ACK_TIMESTAMP + " DATETIME DEFAULT NULL)";
+            + " TEXT," + COLUMN_I_TO_USER_EMAIL + " TEXT," + COLUMN_I_EVENT_NAME + " TEXT," + COLUMN_I_EVENT_TIMESTAMP + " TIMESTAMP," + COLUMN_I_IS_ANONYMOUS + " INTEGER,"
+            + COLUMN_I_DESCRIPTION + " TEXT, " + COLUMN_I_CONTEXT + " TEXT, " + COLUMN_I_INTERACTION_TYPE + " INT DEFAULT 0," + COLUMN_I_INTERACTION_TIMESTAMP
+            + " DATETIME DEFAULT CURRENT_TIMESTAMP," + COLUMN_I_ACKNOWLEDGEMENT + " INTEGER DEFAULT 0, " + COLUMN_I_ACK_TIMESTAMP + " DATETIME DEFAULT NULL)";
     //drop interaction table sql query
     private String DROP_INTERACTION_TABLE = "DROP TABLE IF EXISTS " + TABLE_INTERACTION;
 
@@ -119,15 +121,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int isAnonymous = interaction.isAnonymous()?1:0;
         Log.i("DB HELPER IA TYPE", "Anonymous " + isAnonymous);
         String eventTime = extractTime(interaction.getEventCalendar());
+        String IATime = extractTime(interaction.getIACalendar());
 
         values.put(COLUMN_I_TO_USER_EMAIL, interaction.getToUser().toUpperCase());
         values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
-        values.put(COLUMN_EVENT_NAME, interaction.getEventName());
-        values.put(COLUMN_EVENT_TIMESTAMP, eventTime);
-        values.put(COLUMN_DESCRIPTION, interaction.getDescription());
-        values.put(COLUMN_IS_ANONYMOUS, isAnonymous);
-        values.put(COLUMN_INTERACTION_TYPE, interaction.getIAType());
-        values.put(COLUMN_INTERACTION_TIMESTAMP, interaction.getIACalendar().toString());
+        values.put(COLUMN_I_EVENT_NAME, interaction.getEventName());
+        values.put(COLUMN_I_EVENT_TIMESTAMP, eventTime);
+        values.put(COLUMN_I_DESCRIPTION, interaction.getDescription());
+        values.put(COLUMN_I_CONTEXT, interaction.getContext());
+        values.put(COLUMN_I_IS_ANONYMOUS, isAnonymous);
+        values.put(COLUMN_I_INTERACTION_TYPE, interaction.getIAType());
+        values.put(COLUMN_I_INTERACTION_TIMESTAMP, IATime);
         Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
         + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getDescription() + "BLA...");
 
@@ -153,8 +157,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String[] columns = {
                 COLUMN_I_FROM_USER_EMAIL,
-                COLUMN_DESCRIPTION,
-                COLUMN_EVENT_NAME,
+                COLUMN_I_DESCRIPTION,
+                COLUMN_I_CONTEXT,
+                COLUMN_I_EVENT_NAME,
+                COLUMN_I_EVENT_TIMESTAMP,
+                COLUMN_I_IS_ANONYMOUS,
+                COLUMN_I_INTERACTION_TYPE,
+                COLUMN_I_INTERACTION_TIMESTAMP,
+                COLUMN_I_ACKNOWLEDGEMENT,
+                COLUMN_I_ACK_TIMESTAMP
         };
 
         String[] args = {UserDetails.getUserEmail().toUpperCase()};
@@ -168,7 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             Log.i("DB RECEIVE ", "OMG WORKED! Interaction 1 FROM: " + cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL))
-                    + " DESC: " + cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                    + " DESC: " + cursor.getString(cursor.getColumnIndex(COLUMN_I_DESCRIPTION)));
         } else
             Log.i("DB RECEIVE", "NO ROWS IN IA DB");
         cursor.close();
@@ -179,11 +190,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getReadableDatabase();
         String[] columns = {
                 COLUMN_I_FROM_USER_EMAIL,
-                COLUMN_DESCRIPTION,
-                COLUMN_EVENT_NAME,
-                COLUMN_INTERACTION_TYPE
+                COLUMN_I_DESCRIPTION,
+                COLUMN_I_CONTEXT,
+                COLUMN_I_EVENT_NAME,
+                COLUMN_I_EVENT_TIMESTAMP,
+                COLUMN_I_IS_ANONYMOUS,
+                COLUMN_I_INTERACTION_TYPE,
+                COLUMN_I_INTERACTION_TIMESTAMP,
+                COLUMN_I_ACKNOWLEDGEMENT,
+                COLUMN_I_ACK_TIMESTAMP
         };
-        String order = "datetime(" + COLUMN_INTERACTION_TIMESTAMP + ") DESC";
+        String order = "datetime(" + COLUMN_I_INTERACTION_TIMESTAMP + ") DESC";
 
         String[] args = {UserDetails.getUserEmail().toUpperCase()};
         Log.i("CURRENT USER: ", UserDetails.getUserEmail().toUpperCase());
@@ -198,10 +215,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while(!cursor.isAfterLast()){
                 Interaction interaction = new Interaction();
                 interaction.setFromUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL)));
-                interaction.setEventName(cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_NAME)));
-                interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
-                interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_INTERACTION_TYPE)));
-                interactionList.add(interaction);
+                interaction.setEventName(cursor.getString(cursor.getColumnIndex(COLUMN_I_EVENT_NAME)));
+                interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_I_DESCRIPTION)));
+                interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_I_INTERACTION_TYPE)));
+                interaction.setContext(cursor.getString(cursor.getColumnIndex(COLUMN_I_CONTEXT)));
+
+                //Retrieving time stored as string and formatting it.
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
+                String IAtimestamp = cursor.getString(cursor.getColumnIndex(COLUMN_I_INTERACTION_TIMESTAMP));
+                Date IADate = null;
+                //Writing date to Calendar
+                Calendar interactionCalendar = Calendar.getInstance();
+                try {
+                    IADate = simpleDateFormat.parse(IAtimestamp);
+                    interactionCalendar.setTime(IADate);
+                } catch (ParseException e) {
+                    IADate = null;
+                }
+                if(IADate!=null){
+                    interactionList.add(interaction);
+                    Log.i("DB HELPER RECV", "Latest Report - " + interaction.getFromUserEmail() + " says " + interaction.getDescription() + " \n CONTEXT "
+                            + interaction.getContext());
+                }
                 cursor.moveToNext();
             }
         } else

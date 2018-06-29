@@ -162,8 +162,8 @@
                     android:layout_height="wrap_content" />
                 <!-- To Email Label -->
             </LinearLayout>
-
         </LinearLayout>
+
         <android.support.design.widget.TextInputLayout
             android:paddingStart="55dp"
             android:id="@+id/new_interaction_description_input_layout"
@@ -184,29 +184,11 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:paddingStart="55dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/new_interaction_suggestion_input_layout"
-            android:layout_width="match_parent"
-            android:hint="@string/main_suggestion_hint"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/colorSecondaryDark">
-            <EditText android:id="@+id/new_interaction_suggestion_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lines="2"
-                android:scrollbars="vertical"
-                android:scrollbarStyle="insideOverlay"
-                android:minLines="1"
-                android:maxLines="3"
-                android:inputType="textAutoComplete"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
             android:layout_marginBottom="8dp"
             android:paddingStart="55dp"
             android:id="@+id/new_interaction_context_input_layout"
             android:layout_width="match_parent"
-            android:hint="@string/main_context_hint"
+            android:hint="@string/all_context"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorSecondaryDark">
             <EditText android:id="@+id/new_interaction_context_edit_text"
@@ -218,9 +200,25 @@
                 android:minLines="1"
                 android:maxLines="3"
                 android:inputType="textAutoComplete"/>
+        </android.support.design.widget.TextInputLayout>
 
-            <!-- REMOVED DIVIDER FROM HERE -->
-
+        <android.support.design.widget.TextInputLayout
+            android:paddingStart="55dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/new_interaction_suggestion_input_layout"
+            android:layout_width="match_parent"
+            android:hint="@string/all_suggestions"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/colorSecondaryDark">
+            <EditText android:id="@+id/new_interaction_suggestion_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideOverlay"
+                android:minLines="1"
+                android:maxLines="3"
+                android:inputType="textAutoComplete"/>
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout

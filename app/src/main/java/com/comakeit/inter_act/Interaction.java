@@ -3,9 +3,12 @@ package com.comakeit.inter_act;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Interaction implements Parcelable {
@@ -45,6 +48,14 @@ public class Interaction implements Parcelable {
         dest.writeString(mContext);
         dest.writeInt(IAType);
         dest.writeByte((byte) (isAnonymous ? 1 : 0));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:MM");
+        String eventDateString = simpleDateFormat.format(eventCalendar);
+        String IADateString = simpleDateFormat.format(IACalendar);
+
+        dest.writeString(eventDateString);
+        dest.writeString(IADateString);
+
     }
 
     @Override
@@ -61,6 +72,22 @@ public class Interaction implements Parcelable {
         this.mContext = in.readString();
         this.IAType = in.readInt();
         this.isAnonymous = in.readByte() != 0;
+        String eventTime = in.readString();
+        String IATime = in.readString();
+
+        //Formatting the TIME strings and storing them in Calendar
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:MM");
+        Calendar eventCal = Calendar.getInstance();
+        Calendar IACal = Calendar.getInstance();
+        try{
+            eventCal.setTime(simpleDateFormat.parse(eventTime));
+            IACal.setTime(simpleDateFormat.parse(IATime));
+            this.eventCalendar = eventCal;
+            this.IACalendar = IACal;
+        } catch (ParseException e) {
+            Log.e("INTERACTION CONSTRUCTOR", "COULD NOT PARSE TIME STRING");
+        }
+
     }
 
     //De-serialize the object using Parcel

@@ -8,6 +8,7 @@
     android:background="@color/colorRoundedGreen"
     tools:context=".Activities.InteractionDetailActivity">
     <TextView
+        android:id="@+id/interaction_event_name_text_view"
         android:paddingEnd="30dp"
         android:paddingStart="30dp"
         android:layout_marginTop="20dp"
@@ -22,6 +23,7 @@
         android:textStyle="bold"
         android:textSize="22sp"/>
     <TextView
+        android:id="@+id/interaction_detail_context_text_view"
         android:paddingEnd="30dp"
         android:paddingStart="30dp"
         android:layout_marginBottom="@dimen/row_padding_vertical"
@@ -35,6 +37,7 @@
         android:textStyle="bold"
         android:textSize="22sp"/>
     <TextView
+        android:id="@+id/interaction_detail_description_text_view"
         android:paddingEnd="30dp"
         android:paddingStart="30dp"
         android:layout_marginBottom="@dimen/row_padding_vertical"
@@ -49,12 +52,13 @@
         android:textSize="22sp"/>
 
     <LinearLayout
-        android:gravity="bottom"
+        android:id="@+id/interaction_detail_bottom_bar_linear_layout"
         android:orientation="horizontal"
         android:background="@color/colorRoundedGreenDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/interaction_detail_from_text_view"
             android:textAlignment="textStart"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
@@ -63,6 +67,7 @@
             android:textSize="16sp"
             android:layout_weight="1"/>
         <TextView
+            android:id="@+id/interaction_detail_ia_date_text_view"
             android:textAlignment="textEnd"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
@@ -71,4 +76,19 @@
             android:textSize="16sp"
             android:layout_weight="1"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/interaction_detail_detail_linear_layout"
+        android:background="@color/colorRoundedGreenDark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/interaction_detail_suggestion_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -20,11 +20,10 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView fromEmail, eventName, message, iaContext, interactionDate;
-        public LinearLayout mLinearLayout, mBottomLinearLayout, mExpandingLayout;
+        public LinearLayout mLinearLayout, mBottomLinearLayout;
 
         public MyViewHolder(View view){
             super(view);
-//            mExpandingLayout = view.findViewById(R.id.interaction_row_collapsing_linear_layout);
             iaContext = view.findViewById(R.id.interaction_row_context_text_view);
             interactionDate = view.findViewById(R.id.interaction_row_date);
             mLinearLayout = view.findViewById(R.id.received_interaction_row_layout);
@@ -50,7 +49,10 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Interaction interaction = mInteractionList.get(position);
-        holder.fromEmail.setText(interaction.getFromUserEmail());
+        if(interaction.isAnonymous())
+            holder.fromEmail.setText("Anonymous");
+        else
+            holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
         holder.message.setText(interaction.getDescription());
         holder.iaContext.setText(interaction.getContext());

@@ -7,6 +7,9 @@ import com.comakeit.inter_act.R;
 
 public class InteractionDetailActivity extends AppCompatActivity {
 
+
+    //TODO SET STATUS BAR COLOR ACCORDINGLY PRIORITY- HIGH
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

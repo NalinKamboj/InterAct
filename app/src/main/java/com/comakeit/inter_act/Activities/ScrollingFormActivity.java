@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +48,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private TextSwitcher mAnonymousTextSwitcher;
     private ToggleButton mInteractionToggleButton;
     private FloatingActionButton mFloatingActionButton;
-    private TextInputLayout mInteractionTextInputLayout;
     private SwitchCompat mAnonymousSwitchCompat;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -201,7 +199,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mInteractionToggleButton = findViewById(R.id.new_interaction_interaction_toggle_button);
         mDescriptionEditText = findViewById(R.id.new_interaction_description_edit_text);
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
-        mInteractionTextInputLayout = findViewById(R.id.new_interaction_description_input_layout);
         mSuggestionEditText.setVisibility(View.VISIBLE);
 
 
@@ -220,12 +217,10 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(mInteractionToggleButton.isChecked()){
                     mTransition.startTransition(250);       //Start transition here because button is initially NOT CHECKED.
-                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_appreciation));
                     mSuggestionEditText.setVisibility(View.GONE);
                 } else{
                     mTransition.reverseTransition(250);
                     mSuggestionEditText.setVisibility(View.VISIBLE);
-                    mInteractionTextInputLayout.setHint(getResources().getString(R.string.all_feedback));
                 }
             }
         });

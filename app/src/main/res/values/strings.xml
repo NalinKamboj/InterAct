@@ -157,4 +157,5 @@
     <string name="all_send">Send</string>
     <string name="all_suggestions">Suggestions</string>
     <string name="all_context">Context</string>
+    <string name="all_observation">Observation</string>
 </resources>

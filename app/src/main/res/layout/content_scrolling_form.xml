@@ -124,7 +124,6 @@
             android:orientation="horizontal"
             android:layout_height="wrap_content">
             <ImageView
-                android:contentDescription="@string/to_email_content_description"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="15dp"
@@ -169,7 +168,7 @@
             android:id="@+id/new_interaction_description_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/all_feedback"
+            android:hint="@string/all_observation"
             android:layout_marginBottom="8dp"
             android:textColorHint="@color/colorSecondaryDark">
             <EditText android:id="@+id/new_interaction_description_edit_text"

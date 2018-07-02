@@ -1,25 +1,18 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.util.Calendar;
 
-public class Interaction {
+public class Interaction implements Parcelable {
     private String fromUserEmail;
     private String toUserEmail;
     private String eventName;
     private String description;
-
-    public String getContext() {
-        return mContext;
-    }
-
-    public void setContext(String context) {
-        mContext = context;
-    }
-
     private String mContext;
     int IAType; //0 for FB and 1 for AP
     int interactionID;
@@ -27,28 +20,8 @@ public class Interaction {
     private Calendar eventCalendar, IACalendar;
     protected UserDetails mUserDetails;
 
+    //Default constructor
     public Interaction(){
-        /*TODO Obtain username, hardcoding username for now. PRIORITY: HIGHEST
-        AccountManager accountManager = AccountManager.get(context);
-        Account[] accounts = accountManager.getAccounts();
-        List<String> possibleEmails = new LinkedList<>();
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-        for(Account account: accounts){
-            if(emailPattern.matcher(account.name).matches()){
-                possibleEmails.add(account.name);
-                Log.i("Report EMAIL: ",account.name);
-            }
-        }
-        if(!possibleEmails.isEmpty() && possibleEmails.get(0)!=null){
-            fromUser = possibleEmails.get(0);
-            IACalendar = Calendar.getInstance();
-            interactionID = fromUser + IACalendar.get(Calendar.DAY_OF_MONTH)+IACalendar.get(Calendar.MONTH) + IACalendar.get(Calendar.YEAR) + IACalendar.getTime();
-            Log.i("Reporting Report ID: ", interactionID);
-        }else{
-            Toast.makeText(context, "USERNAME NOT FOUND", Toast.LENGTH_SHORT).show();
-            fromUser = "";
-        }
-        */
         this.interactionID = -1;
         this.fromUserEmail = UserDetails.getUserEmail();
         String[] parts = fromUserEmail.split("@");
@@ -61,6 +34,47 @@ public class Interaction {
         this.isAnonymous = false;
         this.eventCalendar = null;
     }
+
+    //Parcel methods - TODO Passing TIME variables as an intent extra for now... (Maybe write a string and convert it back to Calendar :"( )
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(fromUserEmail);
+        dest.writeString(toUserEmail);
+        dest.writeString(eventName);
+        dest.writeString(description);
+        dest.writeString(mContext);
+        dest.writeInt(IAType);
+        dest.writeByte((byte) (isAnonymous ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    //Overloading constructor to implement parcel
+    public Interaction(Parcel in){
+        this.fromUserEmail = in.readString();
+        this.toUserEmail = in.readString();
+        this.eventName = in.readString();
+        this.description = in.readString();
+        this.mContext = in.readString();
+        this.IAType = in.readInt();
+        this.isAnonymous = in.readByte() != 0;
+    }
+
+    //De-serialize the object using Parcel
+    public static final Parcelable.Creator<Interaction> CREATOR = new Parcelable.Creator<Interaction>() {
+        public Interaction createFromParcel(Parcel in) {
+            return new Interaction(in);
+        }
+
+        @Override
+        public Interaction[] newArray(int i) {
+            return new Interaction[i];
+        }
+    };
+
 
     public boolean validateReport(Interaction report, Context context){
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -79,6 +93,14 @@ public class Interaction {
     /* All getters and setters */
     public String getToUser() {
         return toUserEmail;
+    }
+
+    public String getContext() {
+        return mContext;
+    }
+
+    public void setContext(String context) {
+        mContext = context;
     }
 
     public void setToUser(String toUser) {

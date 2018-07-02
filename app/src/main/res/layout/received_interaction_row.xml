@@ -7,7 +7,7 @@
     android:focusable="true"
     android:clickable="true"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corner_pink"
+    android:background="@drawable/rounded_corner_amber"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginTop="8dp"
@@ -60,7 +60,7 @@
     <LinearLayout
         android:id="@+id/interaction_row_bottom_bar_linear_layout"
         android:orientation="horizontal"
-        android:background="@drawable/rounded_bottom_pink"
+        android:background="@drawable/rounded_bottom_amber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView

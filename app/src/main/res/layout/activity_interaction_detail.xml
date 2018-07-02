@@ -2,92 +2,131 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/interaction_detail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorRoundedGreen"
+    android:orientation="vertical"
     tools:context=".Activities.InteractionDetailActivity">
+
     <TextView
-        android:id="@+id/interaction_event_name_text_view"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="@dimen/row_padding_vertical"
-        android:drawableStart="@drawable/ic_event"
-        android:drawablePadding="15dp"
-        android:drawableTint="@color/colorWhite"
+        android:id="@+id/interaction_detail_event_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:layout_marginTop="20dp"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_event"
+        android:drawableTint="@color/colorWhite"
         android:maxLines="2"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
         android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:textSize="22sp"/>
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/interaction_detail_context_text_view"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:layout_marginBottom="@dimen/row_padding_vertical"
-        android:drawableStart="@drawable/ic_question_mark"
-        android:drawablePadding="15dp"
-        android:drawableTint="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_question_mark"
+        android:drawableTint="@color/colorWhite"
         android:maxLines="3"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
         android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:textSize="22sp"/>
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/interaction_detail_description_text_view"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:layout_marginBottom="@dimen/row_padding_vertical"
-        android:drawableStart="@drawable/ic_feedback"
-        android:drawablePadding="15dp"
-        android:drawableTint="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_feedback"
+        android:drawableTint="@color/colorWhite"
         android:maxLines="4"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
         android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:textSize="22sp"/>
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/interaction_detail_bottom_bar_linear_layout"
-        android:orientation="horizontal"
-        android:background="@color/colorRoundedGreenDark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/colorRoundedGreenDark"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
         <TextView
             android:id="@+id/interaction_detail_from_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textAlignment="textStart"
             android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/interaction_detail_ia_date_text_view"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/interaction_detail_detail_linear_layout"
-        android:background="@color/colorRoundedGreenDark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorRoundedGreenDark"
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/interaction_detail_suggestion_text_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_padding_vertical"
+            android:drawablePadding="15dp"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_padding_vertical"
+            android:drawablePadding="15dp"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:text="@string/all_event_date"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/interaction_detail_event_date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_padding_vertical"
+            android:drawablePadding="15dp"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

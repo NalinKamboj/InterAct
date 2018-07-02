@@ -158,4 +158,5 @@
     <string name="all_suggestions">Suggestions</string>
     <string name="all_context">Context</string>
     <string name="all_observation">Observation</string>
+    <string name="all_event_date">Event Date: </string>
 </resources>

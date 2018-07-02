@@ -54,7 +54,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         else
             holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
-        holder.message.setText(interaction.getDescription());
+        holder.message.setText(interaction.getDescription().trim());
         holder.iaContext.setText(interaction.getContext());
         String iaDateString = interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
                 + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
@@ -73,6 +73,9 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         if(interaction.getIAType() == 1){
             holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
             holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
+        } else {
+            String parts[] = interaction.getDescription().split("Suggestion:");
+            holder.message.setText(parts[0].trim());
         }
     }
 

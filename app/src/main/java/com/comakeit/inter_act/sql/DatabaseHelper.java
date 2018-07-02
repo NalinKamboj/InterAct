@@ -129,7 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_I_EVENT_TIMESTAMP, eventTime);
         values.put(COLUMN_I_DESCRIPTION, interaction.getDescription());
         values.put(COLUMN_I_CONTEXT, interaction.getContext());
-        values.put(COLUMN_I_IS_ANONYMOUS, isAnonymous);
+        values.put(COLUMN_I_IS_ANONYMOUS, (interaction.isAnonymous() ? 1 : 0));
         values.put(COLUMN_I_INTERACTION_TYPE, interaction.getIAType());
         values.put(COLUMN_I_INTERACTION_TIMESTAMP, IATime);
         Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
@@ -219,6 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_I_DESCRIPTION)));
                 interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_I_INTERACTION_TYPE)));
                 interaction.setContext(cursor.getString(cursor.getColumnIndex(COLUMN_I_CONTEXT)));
+                interaction.setAnonymous(cursor.getInt(cursor.getColumnIndex(COLUMN_I_IS_ANONYMOUS)) == 1);
 
                 //Retrieving time stored as string and formatting it.
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW

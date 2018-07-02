@@ -10,6 +10,7 @@ import com.comakeit.inter_act.sql.DatabaseHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Interaction implements Parcelable {
     private String fromUserEmail;
@@ -49,10 +50,13 @@ public class Interaction implements Parcelable {
         dest.writeInt(IAType);
         dest.writeByte((byte) (isAnonymous ? 1 : 0));
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:MM");
-        String eventDateString = simpleDateFormat.format(eventCalendar);
-        String IADateString = simpleDateFormat.format(IACalendar);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
+        Date eventDate = eventCalendar.getTime();
+        Date IADate = IACalendar.getTime();
+        String eventDateString = simpleDateFormat.format(eventDate);
+        String IADateString = simpleDateFormat.format(IADate);
+        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDateString + "\n IA:" + IADateString);
         dest.writeString(eventDateString);
         dest.writeString(IADateString);
 
@@ -76,7 +80,7 @@ public class Interaction implements Parcelable {
         String IATime = in.readString();
 
         //Formatting the TIME strings and storing them in Calendar
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:MM");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
         Calendar eventCal = Calendar.getInstance();
         Calendar IACal = Calendar.getInstance();
         try{

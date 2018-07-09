@@ -2,6 +2,7 @@ package com.comakeit.inter_act.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -12,11 +13,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * A login screen that offers login via email/password.
@@ -26,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final AppCompatActivity mActivity = LoginActivity.this;
     private static final int REQUEST_SIGNUP = 0;
 
+    static final String LOGIN_URL = "http://10.0.2.2:8080/inter-act";
     private ScrollView mScrollView;
     private EditText mEmailEditText, mPasswordEditText;
     private TextInputLayout mEmailInputLayout, mPasswordInputLayout;
@@ -84,7 +97,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v){
         switch (v.getId()){
             case R.id.login_button:
-                verifyFromSQLite();
+//                verifyFromSQLite();
+                VerifyLogin verifyLogin = new VerifyLogin();
+                verifyLogin.execute();
+
                 break;
             case R.id.login_signup_text_view:
                 // Start the Signup activity
@@ -192,14 +208,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void onLoginSuccess() {
-        mLoginButton.setEnabled(true);
-        finish();
+        Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
+        startActivity(intent);
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        mLoginButton.setEnabled(true);
+//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//        mLoginButton.setEnabled(true);
     }
     /*
     private void populateAutoComplete() {
@@ -259,5 +274,62 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAutoCompleteTextView.setTextColor(Color.BLUE);
     }
     */
+
+    private class VerifyLogin extends AsyncTask<Boolean, Boolean, Boolean> {
+        private Boolean verify;
+        protected Boolean doInBackground(Boolean...values){
+            StringBuilder response = new StringBuilder();
+            HttpURLConnection httpURLConnection;
+            JSONObject jsonObject = null;
+            GeneralUser user = new GeneralUser();
+            verify = false;
+
+            try{
+                String MAIN_URL = LOGIN_URL + "/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
+
+                URL url = new URL(MAIN_URL);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                Log.e("GETTING USER", "POINT 1 REACHED + \n " + MAIN_URL);
+
+                httpURLConnection.setDoInput(true);
+
+                InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while((line = bufferedReader.readLine())!= null){
+                    response.append(line);
+                }
+                Log.i("VERIFY LOGIN RESPONSE", response.toString());
+                httpURLConnection.disconnect();
+
+            } catch (IOException ioException) {
+                Log.i("Retrieving User Details","IO Exception" + ioException.toString());
+            }
+
+            try{
+//                JSONArray jsonArray = new JSONArray(response.toString());
+                jsonObject = new JSONObject(response.toString());
+                Log.e("LOGIN CURRENT JSON", jsonObject.toString());
+
+                user.setEmail(jsonObject.getString("email").toUpperCase());
+                user.setPassword(jsonObject.getString("password"));
+                user.setID(jsonObject.getInt("id"));
+                user.setFirstName(jsonObject.getString("firstName").toUpperCase());
+                user.setLastName(jsonObject.getString("lastName").toUpperCase());
+            } catch (JSONException exception) {
+                Log.e("Getting User", "Malformed JSON ");
+            }
+            if(mPasswordEditText.getText().toString().matches(user.getPassword())
+                    && mEmailEditText.getText().toString().toUpperCase().matches(user.getEmail())){
+                onLoginSuccess();
+                UserDetails.setUserEmail(user.getEmail());
+                UserDetails.setUserID(user.getID());
+                UserDetails.setUserName(user.getFirstName() + " " + user.getLastName());
+            }
+            onLoginFailed();
+            return verify;
+        }
+    }
 }
 

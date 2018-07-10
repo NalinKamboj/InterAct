@@ -77,5 +77,5 @@
         app:itemTextColor="@color/menu_text_color"
         app:itemBackground="@drawable/rounded_menu_background"
         app:itemIconTint="@color/menu_text_color"
-        app:headerLayout="@layout/temp_navigation_header"/>
+        app:headerLayout="@layout/main_navigation_header"/>
 </android.support.v4.widget.DrawerLayout>

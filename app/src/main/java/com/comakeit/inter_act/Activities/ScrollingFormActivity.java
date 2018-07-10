@@ -34,6 +34,7 @@ import com.comakeit.inter_act.DateTimePickerFragment;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
+import com.comakeit.inter_act.Utilities;
 import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import java.text.ParseException;
@@ -84,8 +85,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-        String parts[] = UserDetails.getUserEmail().split("@");
-        String welcome = "Welcome " + parts[0];
+//        String parts[] = UserDetails.getUserName().split(" ");
+        String welcome = "Welcome " + Utilities.toCamelCase(UserDetails.getUserName());
         View headerView = mNavigationView.getHeaderView(0);
         TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
         navUserName.setText(welcome);

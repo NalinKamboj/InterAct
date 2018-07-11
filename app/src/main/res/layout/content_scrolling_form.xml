@@ -41,9 +41,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/all_email"
                 android:textColorHint="@color/colorSecondaryDark">
-                <EditText android:id="@+id/new_interaction_email_edit_text"
+                <AutoCompleteTextView android:id="@+id/new_interaction_email_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/all_email"
                     android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

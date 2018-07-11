@@ -129,7 +129,7 @@ public class Interaction implements Parcelable {
     }
 
     public void setContext(String context) {
-        context = context;
+        this.context = context;
     }
 
     public void setInteractionID(Long ID) {

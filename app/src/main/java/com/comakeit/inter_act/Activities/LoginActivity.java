@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final AppCompatActivity mActivity = LoginActivity.this;
     private static final int REQUEST_SIGNUP = 0;
 
-    static final String LOGIN_URL = "http://10.0.2.2:8080/inter-act";
+    static final String LOGIN_URL = "http://10.0.2.2:8080/interact-app";
     private ScrollView mScrollView;
     private EditText mEmailEditText, mPasswordEditText;
     private TextInputLayout mEmailInputLayout, mPasswordInputLayout;
@@ -220,7 +220,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void populateAutoComplete() {
         final List<String> names = new ArrayList<>();
         //TODO Listen to the warning and make this class static
-        class RetrieveEmployees extends AsyncTask<String, String, String> {
+        class RetrieveUsers extends AsyncTask<String, String, String> {
 //            private String[] employees;
             protected String doInBackground(String...values){
                 StringBuilder result = new StringBuilder();
@@ -266,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        RetrieveEmployees retrieveEmployees = new RetrieveEmployees();
+        RetrieveUsers retrieveEmployees = new RetrieveUsers();
         retrieveEmployees.execute();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, names);
         mAutoCompleteTextView.setAdapter(adapter);
@@ -285,7 +285,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             verify = false;
 
             try{
-                String MAIN_URL = LOGIN_URL + "/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
+                String MAIN_URL = LOGIN_URL + "/inter-act/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
 
                 URL url = new URL(MAIN_URL);
                 httpURLConnection = (HttpURLConnection) url.openConnection();

@@ -1,6 +1,7 @@
 package com.comakeit.inter_act.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -31,20 +33,29 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewSwitcher;
 
+import com.comakeit.inter_act.AsyncResult;
 import com.comakeit.inter_act.DateTimePickerFragment;
+import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.Utilities;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class ScrollingFormActivity extends AppCompatActivity implements DateTimePickerFragment.OnDataPass{
@@ -57,10 +68,14 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Menu appBarMenu;
+    private AutoCompleteTextView mAutoCompleteTextView;
 //    private Window window;
     private Calendar eventCalendar;
     private Interaction report;
-    private final String INTERACTION_URL = "http://10.0.2.2:8080/reports";
+    private final String INTERACTION_URL = "http://10.0.2.2:8080/interact-app/reports";
+    private final String APP_URL = "http://10.0.2.2:8080/interact-app";
+    final List<String> userEmails = new ArrayList<>();
+    ArrayList<GeneralUser> generalUsers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +97,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 
         initNavigationDrawer();
         initViews();
+        populateAutoComplete();
     }
 
     private void initNavigationDrawer(){
@@ -198,8 +214,9 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
         mEventEditText = findViewById(R.id.new_interaction_event_edit_text);
+        mAutoCompleteTextView = findViewById(R.id.new_interaction_email_text_view);
         mFloatingActionButton = findViewById(R.id.new_interaction_fab);
-        mEmailEditText = findViewById(R.id.new_interaction_email_edit_text);
+//        mEmailEditText = findViewById(R.id.new_interaction_email_edit_text);
         mDescriptionEditText = findViewById(R.id.new_interaction_description_edit_text);
         mInteractionToggleButton = findViewById(R.id.new_interaction_interaction_toggle_button);
         mDescriptionEditText = findViewById(R.id.new_interaction_description_edit_text);
@@ -245,7 +262,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mAnonymousTextSwitcher.setInAnimation(getApplicationContext(), android.R.anim.slide_in_left);
         mAnonymousTextSwitcher.setOutAnimation(getApplicationContext(), android.R.anim.slide_out_right);
 
-
         //Listener for Anonymous Switch
         mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
         mAnonymousSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -266,7 +282,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 if(mDescriptionEditText.getText().toString().trim().length() < 8)
                     Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank or less than 8 characters"
                             , Toast.LENGTH_SHORT).show();
-                else if(!Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches())
+                else if(!Patterns.EMAIL_ADDRESS.matcher(mAutoCompleteTextView.getText().toString()).matches())
                     Toast.makeText(ScrollingFormActivity.this, "Please enter a valid EMAIL", Toast.LENGTH_SHORT).show();
                 else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().length() < 8)
                     Toast.makeText(ScrollingFormActivity.this, "Suggestion must be at least 8 characters", Toast.LENGTH_SHORT).show();
@@ -275,11 +291,20 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 else if(eventCalendar == null)
                     Toast.makeText(ScrollingFormActivity.this, "Please enter date and time", Toast.LENGTH_SHORT).show();
                 else{
+                    int id = -1;
 //                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
+                    for(GeneralUser user: generalUsers) {
+                        if(user.getEmail().toUpperCase().matches(mAutoCompleteTextView.getText().toString().trim().toUpperCase()))
+                           id = user.getID();
+                        else {
+                            Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     String desc = mDescriptionEditText.getText().toString();;
                     String suggestion = "";
                     String context = mContextEditText.getText().toString().trim();
-                    String TO_EMAIL = mEmailEditText.getText().toString().toUpperCase();
+                    String TO_EMAIL = mAutoCompleteTextView.getText().toString().toUpperCase();
                     int type = mInteractionToggleButton.isChecked()?1:0;
                     if(type == 0){
                         suggestion = mSuggestionEditText.getText().toString();
@@ -289,7 +314,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         event = mEventEditText.getText().toString();
                     else
                         event = mEventSpinner.getSelectedItem().toString();
-                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, mAnonymousSwitchCompat.isChecked());
+                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, mAnonymousSwitchCompat.isChecked(), id);
                 }
             }
         });
@@ -317,10 +342,9 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mEventSpinner.setAdapter(eventAdapter);
     }
 
-    protected void sendReport(String toEmail, int iatype, String event, String observation, String recommendation, String context, boolean isAnonymous){
+    protected void sendReport(String toEmail, int iatype, String event, String observation, String recommendation, String context, boolean isAnonymous, int id){
 //        String message = description + "\n Suggestion: " + suggestion;
         report = new Interaction();
-
         //Validate email id
         if (toEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(toEmail).matches()){
             Snackbar.make(mDrawerLayout, "Please enter valid email", Snackbar.LENGTH_SHORT).show();
@@ -329,7 +353,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 
         //Create a report
         report.setToUserEmail(toEmail);
-        report.setToUserId((long) 26);
+        report.setToUserId((long)id);
         report.setFromUserId(UserDetails.getUserID());
         report.setAnonymous(isAnonymous);
         report.setObservation(observation);
@@ -337,6 +361,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         report.setRecommendation(recommendation);
         report.setEventName(event);
         report.setContext(context);
+        Log.i("Context and ID", context + " ID - " + id);
 
         Date eventDate = eventCalendar.getTime();
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
@@ -349,20 +374,14 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         else
             Log.i("Report Validation: ", "Report NOT validated");
 
+
+
+
+        //The code below this is working --
+
         PublishInterAction publishInterAction = new PublishInterAction();
         publishInterAction.execute();
 //        finish();
-
-//        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-//        if(databaseHelper.addTnterAction(report)==-1)
-//            Toast.makeText(this, "Could not send InterAction", Toast.LENGTH_SHORT).show();
-//        else {
-//            Toast.makeText(this, "InterAction Sent!", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//        showDialog();
     }
 
     @Override
@@ -375,6 +394,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     }
 
     private class PublishInterAction extends AsyncTask<Boolean, Boolean, Boolean> {
+        public AsyncResult taskResult = null;
         private Boolean sent;
         protected Boolean doInBackground(Boolean...values){
             HttpURLConnection httpURLConnection;
@@ -403,11 +423,102 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 //                String message = httpURLConnection.get;
                 Log.e("HTTP RESP CODE", "CODE - " + respCode);
                 sent = true;
-
             } catch (IOException ioException) {
                 Log.i("PUBLISH INTERACTION","IO Exception" + ioException.toString());
             }
             return sent;
         }
+    }
+
+
+    //Method which is run after PublishInteraction finishes...
+//    @Override
+//    public void processFinish(boolean result) {
+//        if(result) {
+//            Intent intent = new Intent(this, ScrollingFormActivity.class);
+//            startActivity(intent);
+//            finish();
+//        } else
+//            Snackbar.make(mDrawerLayout, "Could not sent InterAction", Snackbar.LENGTH_SHORT).show();
+//    }
+
+    /**
+     * Function for getting details of all users to whom an InterAction can be sent, and adding those users into autocomplete of the text view
+     */
+    private void populateAutoComplete() {
+        //TODO Listen to the warning and make this class static
+        class RetrieveUsers extends AsyncTask<String, String, String> {
+            protected String doInBackground(String...values){
+                StringBuilder result = new StringBuilder();
+                HttpURLConnection httpURLConnection = null;
+
+                try{
+                    URL usersURL = new URL(APP_URL + "/users");
+                    Log.i("EMPLOYEES", usersURL.toString());
+                    httpURLConnection = (HttpURLConnection) usersURL.openConnection();
+                    httpURLConnection.setRequestMethod("GET");
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setDoInput(true);
+//                    httpURLConnection.setRequestProperty("Accept", "application/json");
+//                    httpURLConnection.setRequestProperty("Connection", "keep-alive");
+
+                    InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while((line = bufferedReader.readLine())!= null){
+                        result.append(line);
+                    }
+//                    Log.i("EMPLOYEES",result.toString());
+                } catch(java.io.IOException IOException){
+                    Log.i("Retrieving Emp: ","IO Exception while retrieving emp");
+                } finally {
+                    assert httpURLConnection != null;
+                    httpURLConnection.disconnect();
+                }
+                Log.e("RESPONSE USERS", result.toString());
+                try{
+                    JSONObject outerObject = new JSONObject(result.toString());
+                    Log.e("OUTER OBJECT", outerObject.toString());
+                    JSONObject innerObject = outerObject.getJSONObject("_embedded");
+                    JSONArray mainArray = innerObject.getJSONArray("users");
+                    Log.i("JSON ARRAY", result.toString());
+//                    JSONObject mainObject = new JSONObject(result.toString());
+//                    if(mainObject!=null) {
+//                        JSONArray usersList = mainObject.getJSONArray();
+//
+//                    }
+                    Log.i("AC JSON ARRAY", mainArray.toString());
+//                    object = jsonArray.getJSONObject(0);
+                    JSONObject userObject = mainArray.getJSONObject(0);
+                    if(userObject != null) {
+                        Log.e("FIRST USER", userObject.toString());
+                        for(int i=1; userObject!=null; i++){
+                            if(userObject.getLong("id") != UserDetails.getUserID()) {
+                                Log.i("SCROLL AUTO-C OBJECT", userObject.toString());
+                                GeneralUser user = new GeneralUser();
+                                user.setFirstName(userObject.getString("firstName"));
+                                user.setLastName(userObject.getString("lastName"));
+                                user.setID(userObject.getInt("id"));
+                                user.setEmail(userObject.getString("email"));
+                                generalUsers.add(user);
+                                userEmails.add(user.getEmail());
+//                                userNames.add(object.getString("name"));
+                            }
+                            userObject = mainArray.getJSONObject(i);
+                        }
+                    }
+                } catch (org.json.JSONException e){
+                    Log.e("Getting Employees", "Malformed JSON");
+                }
+                return result.toString();
+            }
+        }
+
+        RetrieveUsers retrieveUsers = new RetrieveUsers();
+        retrieveUsers.execute();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, userEmails);
+        mAutoCompleteTextView.setAdapter(adapter);
+        mAutoCompleteTextView.setThreshold(1);
+        mAutoCompleteTextView.setTextColor(Color.BLUE);
     }
 }

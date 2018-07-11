@@ -38,7 +38,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if(interaction.getIAType() == 0)
+        if(interaction.getType() == 0)
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedAmberDark));      //Changing status bar color
         else
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedGreenDark));      //Changing status bar color
@@ -59,7 +59,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         mMiddleLayout = findViewById(R.id.interaction_detail_bottom_bar_linear_layout);
         mBottomLayout = findViewById(R.id.interaction_detail_detail_linear_layout);
 
-        if (interaction.getIAType() == 0){
+        if (interaction.getType() == 0){
             mUpperLayout.setBackground(getDrawable(R.color.colorRoundedAmber));
             mMiddleLayout.setBackground(getDrawable(R.color.colorRoundedAmberDark));
             mBottomLayout.setBackground(getDrawable(R.color.colorRoundedAmberDark));
@@ -72,13 +72,11 @@ public class InteractionDetailActivity extends AppCompatActivity {
         mContextTextView.setText(interaction.getContext());
 
         //Creating separate strings for OBS and SUGGESTION "IF" InterAction is a FEEDBACK.
-        if(interaction.getIAType() == 0) {
-            String parts[] = interaction.getDescription().split("Suggestion:");
-            Log.i("IA DETAIL ACTIVITY", "Description: " + interaction.getDescription());
-            mObservationTextView.setText(parts[0].trim());
-            mSuggestionTextView.setText(parts[1].trim());
+        if(interaction.getType() == 0) {
+            mObservationTextView.setText(interaction.getObservation());
+            mSuggestionTextView.setText(interaction.getRecommendation());
         } else {
-            mObservationTextView.setText(interaction.getDescription().trim());
+            mObservationTextView.setText(interaction.getObservation());
             mSuggestionTextView.setVisibility(View.GONE);
         }
 
@@ -89,9 +87,9 @@ public class InteractionDetailActivity extends AppCompatActivity {
 
         //Date objects for reading the date from Calendar objects
         Date eventDate, IADate;
-        eventDate = interaction.getEventCalendar().getTime();
+        eventDate = interaction.getEventDateDate();
         Log.i("IA DETAILS", "EVENT DATE: " + eventDate.toString());
-        IADate = interaction.getIACalendar().getTime();
+        IADate = interaction.getCreatedAt();
         Log.i("IA DETAILS", "IA DATE " + IADate.toString());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");   //TODO IMPLEMENT LOCALE CORRECTION

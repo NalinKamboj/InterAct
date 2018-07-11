@@ -121,20 +121,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         int isAnonymous = interaction.isAnonymous()?1:0;
         Log.i("DB HELPER IA TYPE", "Anonymous " + isAnonymous);
-        String eventTime = extractTime(interaction.getEventCalendar());
-        String IATime = extractTime(interaction.getIACalendar());
-
-        values.put(COLUMN_I_TO_USER_EMAIL, interaction.getToUser().toUpperCase());
-        values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
-        values.put(COLUMN_I_EVENT_NAME, interaction.getEventName());
-        values.put(COLUMN_I_EVENT_TIMESTAMP, eventTime);
-        values.put(COLUMN_I_DESCRIPTION, interaction.getDescription());
-        values.put(COLUMN_I_CONTEXT, interaction.getContext());
-        values.put(COLUMN_I_IS_ANONYMOUS, (interaction.isAnonymous() ? 1 : 0));
-        values.put(COLUMN_I_INTERACTION_TYPE, interaction.getIAType());
-        values.put(COLUMN_I_INTERACTION_TIMESTAMP, IATime);
-        Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
-        + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getDescription() + "BLA...");
+//        String eventTime = extractTime(interaction.getEventCalendar());
+//        String IATime = extractTime(interaction.getIACalendar());
+//
+//        values.put(COLUMN_I_TO_USER_EMAIL, interaction.getToUser().toUpperCase());
+//        values.put(COLUMN_I_FROM_USER_EMAIL, UserDetails.getUserEmail().toUpperCase());
+//        values.put(COLUMN_I_EVENT_NAME, interaction.getEventName());
+//        values.put(COLUMN_I_EVENT_TIMESTAMP, eventTime);
+//        values.put(COLUMN_I_DESCRIPTION, interaction.getDescription());
+//        values.put(COLUMN_I_CONTEXT, interaction.getContext());
+//        values.put(COLUMN_I_IS_ANONYMOUS, (interaction.isAnonymous() ? 1 : 0));
+//        values.put(COLUMN_I_INTERACTION_TYPE, interaction.getIAType());
+//        values.put(COLUMN_I_INTERACTION_TIMESTAMP, IATime);
+//        Log.i("DB HELPER GEN REPORT", "TO " + interaction.getToUser().toUpperCase() + " \n ,FROM: " + UserDetails.getUserEmail().toUpperCase() + "\n ,EVENT: "
+//        + interaction.getEventName().toUpperCase() + " \n ,EVENT TIME: " + eventTime + " \n ,DESC: " + interaction.getDescription() + "BLA...");
 
         long response = database.insert(TABLE_INTERACTION, null, values);
         database.close();
@@ -217,8 +217,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Interaction interaction = new Interaction();
                 interaction.setFromUserEmail(cursor.getString(cursor.getColumnIndex(COLUMN_I_FROM_USER_EMAIL)));
                 interaction.setEventName(cursor.getString(cursor.getColumnIndex(COLUMN_I_EVENT_NAME)));
-                interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_I_DESCRIPTION)));
-                interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_I_INTERACTION_TYPE)));
+//                interaction.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_I_DESCRIPTION)));
+//                interaction.setIAType(cursor.getInt(cursor.getColumnIndex(COLUMN_I_INTERACTION_TYPE)));
                 interaction.setContext(cursor.getString(cursor.getColumnIndex(COLUMN_I_CONTEXT)));
                 interaction.setAnonymous(cursor.getInt(cursor.getColumnIndex(COLUMN_I_IS_ANONYMOUS)) == 1);
 
@@ -234,7 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 try {
                     IADate = simpleDateFormat.parse(IAtimestamp);
                     interactionCalendar.setTime(IADate);
-                    interaction.setIACalendar(interactionCalendar);
+//                    interaction.setIACalendar(interactionCalendar);
                 } catch (ParseException e) {
                     IADate = null;
                 }
@@ -242,15 +242,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 try {
                     eventDate = simpleDateFormat.parse(eventTimeStamp);
                     eventCalendar.setTime(eventDate);
-                    interaction.setEventCalendar(eventCalendar);
+//                    interaction.setEventCalendar(eventCalendar);
                 } catch (ParseException e1) {
                     eventDate = null;
                 }
 
                 if(IADate != null  && eventDate != null){
                     interactionList.add(interaction);
-                    Log.i("DB HELPER RECV", "Latest Report - " + interaction.getFromUserEmail() + " says " + interaction.getDescription() + " \n CONTEXT "
-                            + interaction.getContext());
+//                    Log.i("DB HELPER RECV", "Latest Report - " + interaction.getFromUserEmail() + " says " + interaction.getDescription() + " \n CONTEXT "
+//                            + interaction.getContext());`
                 }
                 cursor.moveToNext();
             }

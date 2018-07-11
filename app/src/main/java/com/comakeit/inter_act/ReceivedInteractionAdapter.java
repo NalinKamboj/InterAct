@@ -1,7 +1,6 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.comakeit.inter_act.Activities.InteractionDetailActivity;
-
-import java.util.Calendar;
 import java.util.List;
 
 public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInteractionAdapter.MyViewHolder> {
@@ -54,29 +50,29 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         else
             holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
-        holder.message.setText(interaction.getDescription().trim());
-        holder.iaContext.setText(interaction.getContext());
-        String iaDateString = interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
-                + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
-                interaction.getIACalendar().get(Calendar.MINUTE);
-        holder.interactionDate.setText(iaDateString);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), InteractionDetailActivity.class);
-                intent.putExtra("parcel_interaction", interaction);
-                mContext.getApplicationContext().startActivity(intent);
-            }
-        });
-
-        if(interaction.getIAType() == 1){
-            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
-            holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
-        } else {
-            String parts[] = interaction.getDescription().split("Suggestion:");
-            holder.message.setText(parts[0].trim());
-        }
+//        holder.message.setText(interaction.getDescription().trim());
+//        holder.iaContext.setText(interaction.getContext());
+//        String iaDateString = interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
+//                + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
+//                interaction.getIACalendar().get(Calendar.MINUTE);
+//        holder.interactionDate.setText(iaDateString);
+//
+//        holder.itemView.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(v.getContext(), InteractionDetailActivity.class);
+//                intent.putExtra("parcel_interaction", interaction);
+//                mContext.getApplicationContext().startActivity(intent);
+//            }
+//        });
+//
+//        if(interaction.getIAType() == 1){
+//            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
+//            holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
+//        } else {
+//            String parts[] = interaction.getDescription().split("Suggestion:");
+//            holder.message.setText(parts[0].trim());
+//        }
     }
 
     @Override

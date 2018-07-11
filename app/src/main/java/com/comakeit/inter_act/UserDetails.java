@@ -5,7 +5,7 @@ import android.app.Application;
 public class UserDetails extends Application{
     private static String userName;
     private static String userEmail;
-    private static int userID;
+    private static Long userID;
     public static String ACCESS_TOKEN;
     private static String userPassword;
 //    private static int userID;
@@ -27,7 +27,7 @@ public class UserDetails extends Application{
     }
 
     public UserDetails(){
-        userID = -1;
+        userID = (long) -1;
         userName="";
         userEmail="";
         ACCESS_TOKEN = null;
@@ -41,11 +41,11 @@ public class UserDetails extends Application{
         userEmail = email;
     }
 
-    public static int getUserID() {
+    public static Long getUserID() {
         return userID;
     }
 
-    public static void setUserID(int id) {
+    public static void setUserID(long id) {
         userID = id;
     }
 

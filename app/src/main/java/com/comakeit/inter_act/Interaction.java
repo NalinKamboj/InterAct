@@ -5,61 +5,64 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.comakeit.inter_act.sql.DatabaseHelper;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Interaction implements Parcelable {
-    private String fromUserEmail;
-    private String toUserEmail;
+    private Long interactionID;
+    private Long fromUserId;
+    private Long toUserId;
     private String eventName;
-    private String description;
-    private String mContext;
-    int IAType; //0 for FB and 1 for AP
-    int interactionID;
-    private boolean isAnonymous;
-    private Calendar eventCalendar, IACalendar;
-    protected UserDetails mUserDetails;
+    private String observation;
+    private String context;
+    private String recommendation;
+    int type; //0 for FB and 1 for AP
+    private boolean isAnonymous, acknowledged;
+    private Date eventDateDate, createdAt, acknowledgementDate;     //eventDateDate is for DATE type format
+    private String eventDate;       //eventDate string is for passing to JSON
+    private String fromUserEmail, toUserEmail;
 
     //Default constructor
     public Interaction(){
-        this.interactionID = -1;
-        this.fromUserEmail = UserDetails.getUserEmail();
-        String[] parts = fromUserEmail.split("@");
-        this.IACalendar = Calendar.getInstance();
+        this.interactionID = (long) -1;
+        this.fromUserId = UserDetails.getUserID();
+        this.createdAt = null;
 //        Log.i("Reporting Report ID: ", interactionID);
-        this.toUserEmail = "";
+        this.toUserId = (long) -1;
         this.eventName = "";
-        this.IAType = 0;
-        this.description = "";
+        this.type = 0;
+        this.context = "";
+        this.recommendation = "";
+        this.observation = "";
         this.isAnonymous = false;
-        this.eventCalendar = null;
+        this.eventDateDate = null;
+        this.acknowledgementDate = null;
     }
 
     //Parcel methods - TODO Passing TIME variables as an intent extra for now... (Maybe write a string and convert it back to Calendar :"( )
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        String eventDateString = simpleDateFormat.format(eventDateDate);
+        String createdAtString = simpleDateFormat.format(createdAt);
+        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDateString + "\n IA:" + createdAtString);
+
+        dest.writeLong(fromUserId);
+        dest.writeLong(toUserId);
+        dest.writeString(createdAtString);
+        dest.writeString(observation);
+        dest.writeString(context);
+        dest.writeString(recommendation);
+        dest.writeInt(type);
+        dest.writeString(eventName);
+        dest.writeString(eventDateString);
+        dest.writeByte((byte) (isAnonymous ? 1 : 0));
+        dest.writeByte((byte) (acknowledged ? 1 : 0));
         dest.writeString(fromUserEmail);
         dest.writeString(toUserEmail);
-        dest.writeString(eventName);
-        dest.writeString(description);
-        dest.writeString(mContext);
-        dest.writeInt(IAType);
-        dest.writeByte((byte) (isAnonymous ? 1 : 0));
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-
-        Date eventDate = eventCalendar.getTime();
-        Date IADate = IACalendar.getTime();
-        String eventDateString = simpleDateFormat.format(eventDate);
-        String IADateString = simpleDateFormat.format(IADate);
-        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDateString + "\n IA:" + IADateString);
-        dest.writeString(eventDateString);
-        dest.writeString(IADateString);
-
+        dest.writeString(eventDate);
     }
 
     @Override
@@ -69,25 +72,30 @@ public class Interaction implements Parcelable {
 
     //Overloading constructor to implement parcel
     public Interaction(Parcel in){
+        this.fromUserId = in.readLong();
+        this.toUserId = in.readLong();
+        String createdAtString = in.readString();
+        this.observation = in.readString();
+        this.context = in.readString();
+        this.recommendation = in.readString();
+        this.type = in.readInt();
+        this.eventName = in.readString();
+        String eventDateString = in.readString();
+        this.isAnonymous = in.readByte() != 0;
+        this.acknowledged = in.readByte() != 0;
         this.fromUserEmail = in.readString();
         this.toUserEmail = in.readString();
-        this.eventName = in.readString();
-        this.description = in.readString();
-        this.mContext = in.readString();
-        this.IAType = in.readInt();
-        this.isAnonymous = in.readByte() != 0;
-        String eventTime = in.readString();
-        String IATime = in.readString();
+        this.eventDate = in.readString();
 
         //Formatting the TIME strings and storing them in Calendar
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar eventCal = Calendar.getInstance();
         Calendar IACal = Calendar.getInstance();
         try{
-            eventCal.setTime(simpleDateFormat.parse(eventTime));
-            IACal.setTime(simpleDateFormat.parse(IATime));
-            this.eventCalendar = eventCal;
-            this.IACalendar = IACal;
+            eventCal.setTime(simpleDateFormat.parse(eventDateString));
+            IACal.setTime(simpleDateFormat.parse(createdAtString));
+            this.eventDateDate = eventCal.getTime();
+            this.createdAt = IACal.getTime();
         } catch (ParseException e) {
             Log.e("INTERACTION CONSTRUCTOR", "COULD NOT PARSE TIME STRING");
         }
@@ -108,37 +116,23 @@ public class Interaction implements Parcelable {
 
 
     public boolean validateReport(Interaction report, Context context){
-        DatabaseHelper databaseHelper = new DatabaseHelper(context);
-        if(databaseHelper.checkUser(report.toUserEmail.toUpperCase()))
-            return !(report.eventName.equals("") || report.description.equals("") || eventCalendar == null);
-        else
-            return false;
-    }
 
-    public void publishReport(Context context, Interaction report){
-        //validating report again
-        if(!report.validateReport(report, context))
-            return;
+//        if(databaseHelper.checkUser(report.toUserEmail.toUpperCase()))
+//            return !(report.eventName.equals("") || report.description.equals("") || eventCalendar == null);
+//        else
+            return true;
     }
 
     /* All getters and setters */
-    public String getToUser() {
-        return toUserEmail;
-    }
-
     public String getContext() {
-        return mContext;
+        return context;
     }
 
     public void setContext(String context) {
-        mContext = context;
+        context = context;
     }
 
-    public void setToUser(String toUser) {
-        this.toUserEmail = toUser;
-    }
-
-    public void setInteractionID(int ID) {
+    public void setInteractionID(Long ID) {
         this.interactionID = ID;
     }
 
@@ -150,20 +144,20 @@ public class Interaction implements Parcelable {
         this.eventName = eventName;
     }
 
-    public int getIAType() {
-        return IAType;
+    public int getType() {
+        return type;
     }
 
-    public void setIAType(int IAType) {
-        this.IAType = IAType;
+    public void setType(int IAType) {
+        this.type = IAType;
     }
 
-    public String getDescription() {
-        return description;
+    public String getObservation() {
+        return observation;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 
     public boolean isAnonymous() {
@@ -174,31 +168,90 @@ public class Interaction implements Parcelable {
         isAnonymous = anonymous;
     }
 
-    public Calendar getEventCalendar() {
-        return eventCalendar;
+    public Date getEventDateDate() {
+        return eventDateDate;
     }
 
-    public void setEventCalendar(Calendar eventCalendar) {
-        this.eventCalendar = eventCalendar;
+    public void setEventDateDate(Date eventDateDate) {
+        this.eventDateDate = eventDateDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String date = simpleDateFormat.format(eventDateDate);
+        setEventDate(date);
     }
 
-    public void setFromUserEmail(String email) {
-        this.fromUserEmail = email;
+    public void setFromUserId(Long id) {
+        this.fromUserId = id;
     }
 
-    public void setToUserEmail(String email) {
-        this.toUserEmail = email;
+    public void setToUserId(Long id) {
+        this.toUserId = id;
     }
 
-    public Calendar getIACalendar() {
-        return IACalendar;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public String getFromUserEmail(){
-        return this.fromUserEmail;
+    public Long getFromUserId(){
+        return this.fromUserId;
     }
 
-    public void setIACalendar(Calendar IACalendar) {
-        this.IACalendar = IACalendar;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getInteractionID() {
+        return interactionID;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public boolean isAcknowledged() {
+        return acknowledged;
+    }
+
+    public void setAcknowledged(boolean acknowledged) {
+        this.acknowledged = acknowledged;
+    }
+
+    public Date getAcknowledgementDate() {
+        return acknowledgementDate;
+    }
+
+    public void setAcknowledgementDate(Date acknowledgementDate) {
+        this.acknowledgementDate = acknowledgementDate;
+    }
+
+    public String getFromUserEmail() {
+        return fromUserEmail;
+    }
+
+    public void setFromUserEmail(String fromUserEmail) {
+        this.fromUserEmail = fromUserEmail;
+    }
+
+    public String getToUserEmail() {
+        return toUserEmail;
+    }
+
+    public void setToUserEmail(String toUserEmail) {
+        this.toUserEmail = toUserEmail;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
     }
 }

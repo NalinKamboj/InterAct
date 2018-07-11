@@ -218,12 +218,12 @@ public class MainActivity extends AppCompatActivity {
     protected void sendReport(String toEmail, String iatype, String event, String description, String suggestion){
         String message = description + "\n Suggestion: " + suggestion;
         Interaction report = new Interaction();
-        report.setToUser(toEmail);
+        report.setToUserEmail(toEmail);
         report.setAnonymous(false);
-        report.setDescription(message);
+        report.setObservation(message);
 //        report.setIAType(iatype);
         report.setEventName(event);
-        report.setEventCalendar(Calendar.getInstance());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
+        report.setEventDateDate(Calendar.getInstance().getTime());    //TODO Take time from TIME PICKER AND DATE PICKER fragment. PRIORITY: VERY HIGH
 
         if(report.validateReport(report, getApplicationContext()))
             Log.i("Report Validation: ", "Report successfully validated");

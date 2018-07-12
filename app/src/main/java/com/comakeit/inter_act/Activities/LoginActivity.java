@@ -317,7 +317,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             if(mPasswordEditText.getText().toString().matches(user.getPassword())
                     && mEmailEditText.getText().toString().toUpperCase().matches(user.getEmail())){
-                onLoginSuccess();
+                verify = true;
                 UserDetails.setUserEmail(user.getEmail());
                 UserDetails.setUserID(user.getID());
                 UserDetails.setUserName(user.getFirstName() + " " + user.getLastName());

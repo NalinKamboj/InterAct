@@ -71,10 +71,9 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         /* DEBUG TASK */
         getReports getReports = new getReports();
         getReports.execute();
+        mAdapter = new ReceivedInteractionAdapter(getApplicationContext(),mInteractionList);
         mRecyclerView = findViewById(R.id.received_interaction_recycler_view);
 
-//        prepareReceivedInteraction();
-        mAdapter = new ReceivedInteractionAdapter(getApplicationContext(),mInteractionList);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -175,9 +174,9 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                 JSONObject userData = new JSONObject(response.toString());
                 JSONArray receivedReportsList = userData.getJSONArray("reportReceivedList");
                 JSONObject reportJSON = new JSONObject();
-                reportJSON = receivedReportsList.getJSONObject(0);
-
-                for(int i = 1; reportJSON!=null; i++) {
+                result = true;
+                for(int i = 0; i < receivedReportsList.length() ; i++) {
+                    reportJSON = receivedReportsList.getJSONObject(i);
                     Log.i("RECEIVED IA - REPORTS", reportJSON.toString());
                     Interaction interaction = new Interaction();
                     interaction.setToUserId(UserDetails.getUserID());
@@ -191,9 +190,8 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     interaction.setType(reportJSON.getInt("type"));
                     interaction.setAnonymous(reportJSON.getBoolean("anonymous"));
                     mInteractionList.add(interaction);
-                    reportJSON = receivedReportsList.getJSONObject(i);
+                    mAdapter.notifyDataSetChanged();
                 }
-
 
             } catch (IOException e) {
                 Log.e("RECEIVED IA ", e.toString());
@@ -201,6 +199,9 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                 Log.e("RECEIVED IA", e.toString());
             }
 
+            for(int i = 0; i < mInteractionList.size(); i++) {
+                Log.i("FROM IA ", mInteractionList.get(i).getObservation().toUpperCase());
+            }
 
             return result;
         }

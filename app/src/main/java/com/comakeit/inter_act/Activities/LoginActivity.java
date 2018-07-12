@@ -1,18 +1,20 @@
 package com.comakeit.inter_act.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.R;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button mLoginButton;
     private TextView mSignUpTextView;
     private DatabaseHelper mDatabaseHelper;
+    private LinearLayout mProgressBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +101,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.login_button:
 //                verifyFromSQLite();
-                VerifyLogin verifyLogin = new VerifyLogin();
-                verifyLogin.execute();
-
+                if (validate()) {
+                    VerifyLogin verifyLogin = new VerifyLogin();
+                    verifyLogin.execute();
+                }
                 break;
             case R.id.login_signup_text_view:
                 // Start the Signup activity
@@ -109,16 +113,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
         }
-    }
-
-    private void verifyFromSQLite(){
-        if(mDatabaseHelper.checkUser(mEmailEditText.getText().toString().trim().toUpperCase(), mPasswordEditText.getText().toString().trim())){
-            UserDetails.setUserEmail(mEmailEditText.getText().toString().trim().toUpperCase());
-            Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
-            startActivity(intent);
-            finish();
-        } else
-            Snackbar.make(mScrollView, getString(R.string.all_invalid_credentials), Snackbar.LENGTH_LONG).show();
     }
 
     public boolean validate() {
@@ -132,8 +126,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mEmailEditText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            mPasswordEditText.setError("Password must be between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4) {
+            mPasswordEditText.setError("Password must be greater than 4 characters");
             valid = false;
         } else {
             mPasswordEditText.setError(null);
@@ -142,39 +136,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return valid;
     }
 
-    public void login() {
-        Log.d(TAG, "Login");
-
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
-
-        mLoginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.LoginActivityStyle);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        String email = mEmailEditText.getText().toString();
-        String password = mPasswordEditText.getText().toString();
-
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
-    }
-
     private void initViews(){
+        mProgressBarLayout = findViewById(R.id.progress_bar_linear_layout);
+        mProgressBarLayout.setVisibility(View.INVISIBLE);
         mScrollView = findViewById(R.id.activity_login_scroll_view);
         mEmailEditText = findViewById(R.id.login_email_edit_text);
         mPasswordEditText = findViewById(R.id.login_password_edit_text);
@@ -189,6 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mSignUpTextView.setOnClickListener(this);
     }
 
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
@@ -199,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 this.finish();
             }
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -213,7 +178,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void onLoginFailed() {
-//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 //        mLoginButton.setEnabled(true);
     }
     /*
@@ -275,9 +240,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     */
 
-    private class VerifyLogin extends AsyncTask<Boolean, Boolean, Boolean> {
+    private class VerifyLogin extends AsyncTask<Void, Integer, Boolean> {
         private Boolean verify;
-        protected Boolean doInBackground(Boolean...values){
+        private LinearLayout mProgressBarLayout;
+        private ProgressBar mProgressBar;
+
+        @Override
+        protected void onPreExecute() {
+            mProgressBarLayout.setVisibility(View.VISIBLE);
+            mProgressBar.setProgress(10);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mProgressBarLayout.setVisibility(View.INVISIBLE);
+            if(result)
+                onLoginSuccess();
+            else
+                onLoginFailed();
+        }
+
+        VerifyLogin(){
+            mProgressBar = findViewById(R.id.progress_bar);
+            mProgressBarLayout = findViewById(R.id.progress_bar_linear_layout);
+            mProgressBarLayout.setVisibility(View.INVISIBLE);
+            mProgressBar.setIndeterminate(false);
+            mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorLightRed), PorterDuff.Mode.MULTIPLY);
+        }
+
+        protected Boolean doInBackground(Void...values){
             StringBuilder response = new StringBuilder();
             HttpURLConnection httpURLConnection;
             JSONObject jsonObject = null;
@@ -285,8 +276,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             verify = false;
 
             try{
-                String MAIN_URL = LOGIN_URL + "/inter-act/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
+                String MAIN_URL = getString(R.string.app_base_url) + "/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
 
+                mProgressBar.setProgress(30);
+                mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorLightRed), PorterDuff.Mode.MULTIPLY);
                 URL url = new URL(MAIN_URL);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("GET");
@@ -302,6 +295,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 Log.i("VERIFY LOGIN RESPONSE", response.toString());
                 httpURLConnection.disconnect();
+                mProgressBar.setProgress(60);
+                mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorRoundedAmber), PorterDuff.Mode.MULTIPLY);
 
             } catch (IOException ioException) {
                 Log.i("Retrieving User Details","IO Exception" + ioException.toString());
@@ -326,8 +321,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 UserDetails.setUserEmail(user.getEmail());
                 UserDetails.setUserID(user.getID());
                 UserDetails.setUserName(user.getFirstName() + " " + user.getLastName());
+                mProgressBar.setProgress(20);
+                mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorGreen), PorterDuff.Mode.MULTIPLY);
             }
-            onLoginFailed();
+//            onLoginFailed();
             return verify;
         }
     }

@@ -10,10 +10,10 @@ public class GeneralUser implements Parcelable {
 
     public GeneralUser() {
         ID = -1;
-        firstName = "";
-        lastName = "";
-        email = "";
-        password = "";
+        firstName = "-1";
+        lastName = "-1";
+        email = "-1";
+        password = "-1";
     }
 
     @Override

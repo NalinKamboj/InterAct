@@ -159,4 +159,6 @@
     <string name="all_context">Context</string>
     <string name="all_observation">Observation</string>
     <string name="all_event_date">Event Date: </string>
+    <string name="all_get_users_url">http://10.0.2.2:8080/interact-app/users</string>
+    <string name="app_base_url">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8001/interact-app</string>
 </resources>

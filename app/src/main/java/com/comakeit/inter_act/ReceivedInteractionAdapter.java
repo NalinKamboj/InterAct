@@ -1,6 +1,7 @@
 package com.comakeit.inter_act;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,26 +37,26 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.received_interaction_row, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Interaction interaction = mInteractionList.get(position);
         if(interaction.isAnonymous())
             holder.fromEmail.setText("Anonymous");
         else
             holder.fromEmail.setText(interaction.getFromUserEmail());
         holder.eventName.setText(interaction.getEventName());
-//        holder.message.setText(interaction.getDescription().trim());
-//        holder.iaContext.setText(interaction.getContext());
+        holder.message.setText(interaction.getObservation().trim());
+        holder.iaContext.setText(interaction.getContext());
 //        String iaDateString = interaction.getIACalendar().get(Calendar.DAY_OF_MONTH) + "-" + interaction.getIACalendar().get(Calendar.MONTH) + "-" +
 //                + interaction.getIACalendar().get(Calendar.YEAR) + " " + interaction.getIACalendar().get(Calendar.HOUR_OF_DAY) + ":" +
 //                interaction.getIACalendar().get(Calendar.MINUTE);
-//        holder.interactionDate.setText(iaDateString);
+        holder.interactionDate.setText(interaction.getEventDate());
 //
 //        holder.itemView.setOnClickListener(new View.OnClickListener(){
 //            @Override
@@ -66,13 +67,13 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
 //            }
 //        });
 //
-//        if(interaction.getIAType() == 1){
-//            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
-//            holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
+        if(interaction.getType() == 1){
+            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
+            holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
 //        } else {
 //            String parts[] = interaction.getDescription().split("Suggestion:");
 //            holder.message.setText(parts[0].trim());
-//        }
+        }
     }
 
     @Override

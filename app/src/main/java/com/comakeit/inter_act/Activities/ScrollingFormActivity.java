@@ -396,12 +396,24 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private class PublishInterAction extends AsyncTask<Boolean, Boolean, Boolean> {
         public AsyncResult taskResult = null;
         private Boolean sent;
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result) {
+                Intent intent = new Intent(getApplicationContext(),ScrollingFormActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Snackbar.make(mDrawerLayout, "Could not sent InterAction", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+
         protected Boolean doInBackground(Boolean...values){
             HttpURLConnection httpURLConnection;
             sent = false;
 
             try{
-                String MAIN_URL = INTERACTION_URL + "/interactions";
+                String MAIN_URL = getString(R.string.app_base_url) + "/reports/interactions";
                 URL url = new URL(MAIN_URL);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -453,7 +465,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 HttpURLConnection httpURLConnection = null;
 
                 try{
-                    URL usersURL = new URL(APP_URL + "/users");
+                    URL usersURL = new URL(getString(R.string.app_base_url) + "/users");
                     Log.i("EMPLOYEES", usersURL.toString());
                     httpURLConnection = (HttpURLConnection) usersURL.openConnection();
                     httpURLConnection.setRequestMethod("GET");
@@ -477,19 +489,21 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 }
                 Log.e("RESPONSE USERS", result.toString());
                 try{
-                    JSONObject outerObject = new JSONObject(result.toString());
-                    Log.e("OUTER OBJECT", outerObject.toString());
-                    JSONObject innerObject = outerObject.getJSONObject("_embedded");
-                    JSONArray mainArray = innerObject.getJSONArray("users");
-                    Log.i("JSON ARRAY", result.toString());
+//                    JSONObject outerObject = new JSONObject(result.toString());
+//                    Log.e("OUTER OBJECT", outerObject.toString());
+//                    JSONObject innerObject = outerObject.getJSONObject("_embedded");
+//                    JSONArray mainArray = innerObject.getJSONArray("users");
+//                    Log.i("JSON ARRAY", result.toString());
 //                    JSONObject mainObject = new JSONObject(result.toString());
 //                    if(mainObject!=null) {
 //                        JSONArray usersList = mainObject.getJSONArray();
 //
 //                    }
-                    Log.i("AC JSON ARRAY", mainArray.toString());
+                    JSONArray userJSONArray = new JSONArray(result.toString());
+
+                    Log.i("AC JSON ARRAY", userJSONArray.toString());
 //                    object = jsonArray.getJSONObject(0);
-                    JSONObject userObject = mainArray.getJSONObject(0);
+                    JSONObject userObject = userJSONArray.getJSONObject(0);
                     if(userObject != null) {
                         Log.e("FIRST USER", userObject.toString());
                         for(int i=1; userObject!=null; i++){
@@ -504,7 +518,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                                 userEmails.add(user.getEmail());
 //                                userNames.add(object.getString("name"));
                             }
-                            userObject = mainArray.getJSONObject(i);
+                            userObject = userJSONArray.getJSONObject(i);
                         }
                     }
                 } catch (org.json.JSONException e){

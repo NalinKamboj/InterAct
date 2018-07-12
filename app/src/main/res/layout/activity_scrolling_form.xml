@@ -64,7 +64,7 @@
             app:layout_anchor="@id/new_interaction_app_bar_layout"
             app:layout_anchorGravity="bottom|end"
             app:rippleColor="@color/colorPrimaryDark"
-            app:srcCompat="@android:drawable/ic_menu_send" />
+            android:src="@drawable/ic_sent_interaction" />
     </android.support.design.widget.CoordinatorLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/scrolling_navigation_view"

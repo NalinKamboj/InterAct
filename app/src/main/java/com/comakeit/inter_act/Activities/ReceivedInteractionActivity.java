@@ -136,6 +136,10 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
 
     private class getReports extends AsyncTask<Void, Integer, Boolean> {
 
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mAdapter.notifyDataSetChanged();
+        }
 
         protected Boolean doInBackground(Void...params) {
             Log.i("I AM RUNNING", "OH JEEZ");
@@ -190,7 +194,6 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     interaction.setType(reportJSON.getInt("type"));
                     interaction.setAnonymous(reportJSON.getBoolean("anonymous"));
                     mInteractionList.add(interaction);
-                    mAdapter.notifyDataSetChanged();
                 }
 
             } catch (IOException e) {

@@ -181,64 +181,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 //        mLoginButton.setEnabled(true);
     }
-    /*
-    private void populateAutoComplete() {
-        final List<String> names = new ArrayList<>();
-        //TODO Listen to the warning and make this class static
-        class RetrieveUsers extends AsyncTask<String, String, String> {
-//            private String[] employees;
-            protected String doInBackground(String...values){
-                StringBuilder result = new StringBuilder();
-                HttpURLConnection httpURLConnection = null;
-                try{
-                    String mainURL = EMPLOYEES_URL + UserDetails.ACCESS_TOKEN;
-                    URL authURL = new URL(mainURL);
-                    Log.i("EMPLOYEES",mainURL);
-                    httpURLConnection = (HttpURLConnection) authURL.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.setRequestProperty("Accept", "application/json");
-                    httpURLConnection.setRequestProperty("Connection", "keep-alive");
-
-                    InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    while((line = bufferedReader.readLine())!= null){
-                        result.append(line);
-                    }
-                    Log.i("EMPLOYEES",result.toString());
-                } catch(java.io.IOException IOException){
-                    Log.i("Retrieving Emp: ","IO Exception while retrieving emp");
-                } finally {
-                    assert httpURLConnection != null;
-                    httpURLConnection.disconnect();
-                }
-                JSONObject object = null;
-                try{
-                    JSONArray jsonArray = new JSONArray(result.toString());
-                    object = jsonArray.getJSONObject(0);
-                    for(int i=1; object!=null; i++){
-                        UserDetails.employeesMap.put(object.getString("name"),object.getInt("id"));
-                        Log.i("1 OBJECT", object.toString());
-                        names.add(object.getString("name"));
-                        object = jsonArray.getJSONObject(i);
-                    }
-                    Log.i("GETTING EMPS: ", jsonArray.toString());
-                } catch (org.json.JSONException e){
-                    Log.e("Getting Employees", "Malformed JSON " + object.toString());
-                }
-                return result.toString();
-            }
-        }
-
-        RetrieveUsers retrieveEmployees = new RetrieveUsers();
-        retrieveEmployees.execute();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, names);
-        mAutoCompleteTextView.setAdapter(adapter);
-        mAutoCompleteTextView.setThreshold(1);
-        mAutoCompleteTextView.setTextColor(Color.BLUE);
-    }
-    */
 
     private class VerifyLogin extends AsyncTask<Void, Integer, Boolean> {
         private Boolean verify;
@@ -294,6 +236,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     response.append(line);
                 }
                 Log.i("VERIFY LOGIN RESPONSE", response.toString());
+                inputStream.close();
                 httpURLConnection.disconnect();
                 mProgressBar.setProgress(60);
                 mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorRoundedAmber), PorterDuff.Mode.MULTIPLY);
@@ -324,7 +267,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mProgressBar.setProgress(20);
                 mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorGreen), PorterDuff.Mode.MULTIPLY);
             }
-//            onLoginFailed();
             return verify;
         }
     }

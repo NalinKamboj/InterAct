@@ -294,12 +294,13 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                     int id = -1;
 //                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
                     for(GeneralUser user: generalUsers) {
+                        Log.i("USERS IN SCROLL", "USER - " + user.getID() + " email - " + user.getEmail());
                         if(user.getEmail().toUpperCase().matches(mAutoCompleteTextView.getText().toString().trim().toUpperCase()))
                            id = user.getID();
-                        else {
-                            Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
-                            return;
-                        }
+                    }
+                    if (id == -1) {
+                        Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
+                        return;
                     }
                     String desc = mDescriptionEditText.getText().toString();;
                     String suggestion = "";
@@ -413,7 +414,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             sent = false;
 
             try{
-                String MAIN_URL = getString(R.string.app_base_url) + "/reports/interactions";
+                String MAIN_URL = getString(R.string.app_base_url) + "/interactions";
                 URL url = new URL(MAIN_URL);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");

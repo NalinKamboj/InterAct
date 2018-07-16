@@ -216,9 +216,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             JSONObject jsonObject = null;
             GeneralUser user = new GeneralUser();
             verify = false;
+            InputStream inputStream;
 
             try{
-                String MAIN_URL = getString(R.string.app_base_url) + "/user/" + mEmailEditText.getText().toString().trim().toUpperCase();
+                String MAIN_URL = getString(R.string.app_base_url) + "/users/email/" + mEmailEditText.getText().toString().trim().toUpperCase();
 
                 mProgressBar.setProgress(30);
                 mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorLightRed), PorterDuff.Mode.MULTIPLY);
@@ -229,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 httpURLConnection.setDoInput(true);
 
-                InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String line;
                 while((line = bufferedReader.readLine())!= null){
@@ -242,7 +243,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorRoundedAmber), PorterDuff.Mode.MULTIPLY);
 
             } catch (IOException ioException) {
-                Log.i("Retrieving User Details","IO Exception" + ioException.toString());
+                Log.i("Retrieving User Details","IO Exception - " + ioException.toString());
             }
 
             try{

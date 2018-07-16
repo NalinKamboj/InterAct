@@ -294,7 +294,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             try{
                 //Establish connection with server
-                URL url = new URL(getString(R.string.app_base_url) + "/users");
+                URL url = new URL(getString(R.string.app_base_url) + "/users/");
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

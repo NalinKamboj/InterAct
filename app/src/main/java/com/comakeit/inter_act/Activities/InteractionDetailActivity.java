@@ -29,7 +29,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_interaction_detail);
 
         //Retrieve data from the parcel
-        Interaction interaction = (Interaction) getIntent().getParcelableExtra("parcel_interaction");
+        Interaction interaction = getIntent().getParcelableExtra("parcel_interaction");
 
         //Check IA type and change STATUS BAR COLOR
             //Setting up flags to be able to change status bar color
@@ -67,7 +67,6 @@ public class InteractionDetailActivity extends AppCompatActivity {
 
 
         //SET ALL VIEWS
-
         mEventNameTextView.setText(interaction.getEventName());
         mContextTextView.setText(interaction.getContext());
 
@@ -89,7 +88,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         Date eventDate, IADate;
         eventDate = interaction.getEventDateDate();
         Log.i("IA DETAILS", "EVENT DATE: " + eventDate.toString());
-        IADate = interaction.getCreatedAt();
+        IADate = interaction.getCreatedAtDate();
         Log.i("IA DETAILS", "IA DATE " + IADate.toString());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");   //TODO IMPLEMENT LOCALE CORRECTION

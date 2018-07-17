@@ -394,25 +394,27 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             Toast.makeText(getApplicationContext(), "Invalid ARG in onDataPass()", Toast.LENGTH_SHORT).show();
     }
 
-    private class PublishInterAction extends AsyncTask<Boolean, Boolean, Boolean> {
+    private class PublishInterAction extends AsyncTask<Boolean, Boolean, Integer> {
         public AsyncResult taskResult = null;
         private Boolean sent;
 
         @Override
-        protected void onPostExecute(Boolean result){
-            if(result) {
-                Intent intent = new Intent(getApplicationContext(),ScrollingFormActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Snackbar.make(mDrawerLayout, "Could not sent InterAction", Snackbar.LENGTH_SHORT).show();
+        protected void onPostExecute(Integer result){
+            switch (result) {
+                case 200:
+                    Toast.makeText(getApplicationContext(), "InterAction sent!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(),ScrollingFormActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+                default:
+                    Toast.makeText(getApplicationContext(), "Sending failed (unknown error)", Toast.LENGTH_SHORT).show();
             }
         }
 
-        protected Boolean doInBackground(Boolean...values){
+        protected Integer doInBackground(Boolean...values){
             HttpURLConnection httpURLConnection;
-            sent = false;
-
+            Integer code = -1;
             try{
                 String MAIN_URL = getString(R.string.app_base_url) + "/interactions";
                 URL url = new URL(MAIN_URL);
@@ -429,17 +431,18 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 if(reportJSON != null)
                     outputStream.write(reportJSON.toString().getBytes());
-                else return false;
+                else return code;
+
                 outputStream.close();
-                int respCode = httpURLConnection.getResponseCode();
+                code = httpURLConnection.getResponseCode();
                 httpURLConnection.disconnect();
 //                String message = httpURLConnection.get;
-                Log.e("HTTP RESP CODE", "CODE - " + respCode);
+                Log.i("PUBLISH INTERACTION", "RESPONSE CODE - " + code);
                 sent = true;
             } catch (IOException ioException) {
                 Log.i("PUBLISH INTERACTION","IO Exception" + ioException.toString());
             }
-            return sent;
+            return code;
         }
     }
 

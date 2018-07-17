@@ -24,7 +24,6 @@ import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.ReceivedInteractionAdapter;
 import com.comakeit.inter_act.UserDetails;
-import com.comakeit.inter_act.sql.DatabaseHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReceivedInteractionActivity extends AppCompatActivity {
+    private String TAG = "ReceivedInteractionAct";
     private List<Interaction> mInteractionList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ReceivedInteractionAdapter mAdapter;
@@ -59,16 +59,7 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         window = this.getWindow();
         window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTranslucent));      //Changing status bar color
 
-//        FloatingActionButton fab = findViewById(R.id.received_interaction_fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-        /* DEBUG TASK */
+        /* FETCH DATA TO POPULATE THE RECYCLER VIEW */
         getReports getReports = new getReports();
         getReports.execute();
         mAdapter = new ReceivedInteractionAdapter(getApplicationContext(),mInteractionList);
@@ -128,12 +119,6 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         );
     }
 
-    private void prepareReceivedInteraction() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-        mInteractionList = databaseHelper.getReceivedInteraction();
-//        Log.i("RECV INTERACTION", "FROM " + mInteractionList.get(2).getFromUserEmail() + " ,DESC " + mInteractionList.get(2).getDescription());
-    }
-
     private class getReports extends AsyncTask<Void, Integer, Boolean> {
 
         @Override
@@ -188,6 +173,11 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     interaction.setFromUserId(reportJSON.getLong("fromUserId"));
                     interaction.setEventName(reportJSON.getString("eventName"));
                     interaction.setEventDate(reportJSON.getString("eventDate"));
+                    interaction.setCreatedAt(reportJSON.getString("createdAt"));
+
+                    //Hardcoded FROM EMAIL (temporary)
+                    interaction.setFromUserEmail("Unknown user");   //TODO FIX TABLE STRUCTURE TO GET USER EMAIL AS WELL.... PRIORITY - HIGH
+
                     interaction.setObservation(reportJSON.getString("observation"));
                     interaction.setContext(reportJSON.getString("context"));
                     interaction.setRecommendation(reportJSON.getString("recommendation"));

@@ -37,10 +37,10 @@ import java.net.URL;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "LoginActivity";
-    private final AppCompatActivity mActivity = LoginActivity.this;
-    private static final int REQUEST_SIGNUP = 0;
+//    private final AppCompatActivity mActivity = LoginActivity.this;
+//    private static final int REQUEST_SIGNUP = 0;
 
-    static final String LOGIN_URL = "http://10.0.2.2:8080/interact-app";
+//    static final String LOGIN_URL = "http://10.0.2.2:8080/interact-app";
     private ScrollView mScrollView;
     private EditText mEmailEditText, mPasswordEditText;
     private TextInputLayout mEmailInputLayout, mPasswordInputLayout;
@@ -173,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void onLoginSuccess() {
+        Toast.makeText(getApplicationContext(), "Welcome back " + UserDetails.getUserName() + "!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
         startActivity(intent);
     }

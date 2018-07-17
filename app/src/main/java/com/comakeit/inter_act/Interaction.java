@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Interaction implements Parcelable {
+    private static final String TAG = "Interaction Class";
     private Long interactionID;
     private Long fromUserId;
     private Long toUserId;
@@ -20,15 +21,15 @@ public class Interaction implements Parcelable {
     private String recommendation;
     int type; //0 for FB and 1 for AP
     private boolean isAnonymous, acknowledged;
-    private Date eventDateDate, createdAt, acknowledgementDate;     //eventDateDate is for DATE type format
-    private String eventDate;       //eventDate string is for passing to JSON
+    private Date eventDateDate, createdAtDate, acknowledgementDate;     //eventDateDate is for DATE type format
+    private String eventDate, createdAt;       //eventDate string is for passing to JSON
     private String fromUserEmail, toUserEmail;
 
     //Default constructor
     public Interaction(){
         this.interactionID = (long) -1;
         this.fromUserId = UserDetails.getUserID();
-        this.createdAt = null;
+        this.createdAtDate = null;
 //        Log.i("Reporting Report ID: ", interactionID);
         this.toUserId = (long) -1;
         this.eventName = "";
@@ -45,9 +46,11 @@ public class Interaction implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-        String eventDateString = simpleDateFormat.format(eventDateDate);
-        String createdAtString = simpleDateFormat.format(createdAt);
-        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDateString + "\n IA:" + createdAtString);
+        Log.i(TAG, "DATE STRINGS - \n   EVENT - " + eventDate + "\n     CREATED AT - " + createdAtDate);
+
+//        String eventDateString = simpleDateFormat.format(eventDateDate);
+        String createdAtString = simpleDateFormat.format(createdAtDate);
+        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDate + "\n IA:" + createdAtString);
 
         dest.writeLong(fromUserId);
         dest.writeLong(toUserId);
@@ -57,12 +60,13 @@ public class Interaction implements Parcelable {
         dest.writeString(recommendation);
         dest.writeInt(type);
         dest.writeString(eventName);
-        dest.writeString(eventDateString);
+        dest.writeString(eventDate);
         dest.writeByte((byte) (isAnonymous ? 1 : 0));
         dest.writeByte((byte) (acknowledged ? 1 : 0));
         dest.writeString(fromUserEmail);
         dest.writeString(toUserEmail);
         dest.writeString(eventDate);
+        dest.writeString(createdAt);
     }
 
     @Override
@@ -86,6 +90,7 @@ public class Interaction implements Parcelable {
         this.fromUserEmail = in.readString();
         this.toUserEmail = in.readString();
         this.eventDate = in.readString();
+        this.createdAt = in.readString();
 
         //Formatting the TIME strings and storing them in Calendar
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -95,7 +100,7 @@ public class Interaction implements Parcelable {
             eventCal.setTime(simpleDateFormat.parse(eventDateString));
             IACal.setTime(simpleDateFormat.parse(createdAtString));
             this.eventDateDate = eventCal.getTime();
-            this.createdAt = IACal.getTime();
+            this.createdAtDate = IACal.getTime();
         } catch (ParseException e) {
             Log.e("INTERACTION CONSTRUCTOR", "COULD NOT PARSE TIME STRING");
         }
@@ -187,16 +192,19 @@ public class Interaction implements Parcelable {
         this.toUserId = id;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreatedAtDate() {
+        return createdAtDate;
     }
 
     public Long getFromUserId(){
         return this.fromUserId;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedAtDate(Date createdAtDate) {
+        this.createdAtDate = createdAtDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String date = simpleDateFormat.format(createdAtDate);
+        setCreatedAt(date);
     }
 
     public Long getInteractionID() {
@@ -251,7 +259,27 @@ public class Interaction implements Parcelable {
         return eventDate;
     }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try{
+            this.createdAtDate = simpleDateFormat.parse(createdAt);
+        } catch (ParseException ex) {
+            Log.e(TAG, ex.toString());
+        }
+    }
+
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try{
+            this.eventDateDate = simpleDateFormat.parse(eventDate);
+        } catch (ParseException ex) {
+            Log.e(TAG, ex.toString());
+        }
     }
 }

@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -46,6 +48,10 @@ public class OnboardingActivity extends AppCompatActivity {
 //        window.setAttributes(winParams);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        if(hasSoftKeys(getWindowManager()) > 0){
+            mRelativeLayout.setPadding(0,0,0, hasSoftKeys(getWindowManager()));
+        }
 
         //Animate background
         AnimationDrawable animationDrawable = (AnimationDrawable) mRelativeLayout.getBackground();
@@ -90,14 +96,14 @@ public class OnboardingActivity extends AppCompatActivity {
                     mBackButton.setEnabled(true);
                     mBackButton.setVisibility(View.VISIBLE);
                     mBackButton.setText(R.string.button_back_text);
-                    mNextButton.setText(R.string.button_next_text);
+                    mNextButton.setText(R.string.all_finish);
                 } else{
 //                    mSlideViewPager.setBackgroundColor(color3);
                     mNextButton.setEnabled(true);
                     mBackButton.setEnabled(true);
                     mBackButton.setVisibility(View.VISIBLE);
                     mBackButton.setText(R.string.button_back_text);
-                    mNextButton.setText(R.string.all_finish);
+                    mNextButton.setText(R.string.button_next_text);
                 }
             }
 
@@ -123,6 +129,22 @@ public class OnboardingActivity extends AppCompatActivity {
                     finishOnboarding();
             }
         });
+    }
+
+    public int hasSoftKeys(WindowManager windowManager){
+        Display display = getWindowManager().getDefaultDisplay();
+
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        display.getRealMetrics(realDisplayMetrics);
+
+        int realHeight = realDisplayMetrics.heightPixels;
+        //We dont need width for now...
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        display.getMetrics(displayMetrics);
+
+        int displayHeight = displayMetrics.heightPixels;
+        return (realHeight - displayHeight);
     }
 
     public void addDotsIndicator(int position){

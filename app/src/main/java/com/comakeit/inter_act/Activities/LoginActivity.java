@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comakeit.inter_act.GeneralUser;
+import com.comakeit.inter_act.PreferenceHelper;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
 import com.comakeit.inter_act.sql.DatabaseHelper;
@@ -53,6 +54,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (!PreferenceHelper.getInstance().getPreference(this, PreferenceHelper.PREFERENCE_ONBOARDING, false)) {
+            Intent onBoarding = new Intent(this, OnboardingActivity.class);
+            startActivity(onBoarding);
+            finish();
+            return;
+        }
+
+
 
         initViews();
         initListeners();

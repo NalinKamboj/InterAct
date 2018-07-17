@@ -45,6 +45,7 @@
             android:theme="@style/AppTheme.TransparentTheme" />
         <activity android:name=".Activities.InteractionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Activities.OnboardingActivity"/>
     </application>
 
 </manifest>

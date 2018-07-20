@@ -35,6 +35,8 @@ public class OnboardingActivity extends AppCompatActivity {
     private Window mWindow;
     private int mCurrentPage;
 
+
+    //TODO add onResume and onPause and stop/resume background animation to manage resources efficiently
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

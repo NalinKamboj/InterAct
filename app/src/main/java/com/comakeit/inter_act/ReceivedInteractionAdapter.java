@@ -16,13 +16,14 @@ import java.util.List;
 
 public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInteractionAdapter.MyViewHolder> {
     private List<Interaction> mInteractionList;
-    public Context mContext;
+    private Context mContext;
+    private int type;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView fromEmail, eventName, message, iaContext, interactionDate;
-        public LinearLayout mLinearLayout, mBottomLinearLayout;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView fromEmail, eventName, message, iaContext, interactionDate;
+        LinearLayout mLinearLayout, mBottomLinearLayout;
 
-        public MyViewHolder(View view){
+        MyViewHolder(View view){
             super(view);
             iaContext = view.findViewById(R.id.interaction_row_context_text_view);
             interactionDate = view.findViewById(R.id.interaction_row_date);
@@ -34,9 +35,10 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         }
     }
 
-    public ReceivedInteractionAdapter(Context context, List<Interaction> interactionList) {
+    public ReceivedInteractionAdapter(Context context, List<Interaction> interactionList, int type) {
         this.mInteractionList = interactionList;
         this.mContext = context;
+        this.type = type;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
         if(interaction.isAnonymous())
             holder.fromEmail.setText("Anonymous");
         else
-            holder.fromEmail.setText(interaction.getFromUserEmail());
+            holder.fromEmail.setText((type == 0) ? interaction.getFromUserEmail(): interaction.getToUserEmail());
         holder.eventName.setText(interaction.getEventName());
         holder.message.setText(interaction.getObservation().trim());
         holder.iaContext.setText(interaction.getContext());

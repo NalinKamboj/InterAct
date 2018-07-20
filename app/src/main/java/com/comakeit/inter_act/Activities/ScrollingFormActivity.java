@@ -1,5 +1,6 @@
 package com.comakeit.inter_act.Activities;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
@@ -26,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewSwitcher;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.comakeit.inter_act.AsyncResult;
 import com.comakeit.inter_act.DateTimePickerFragment;
 import com.comakeit.inter_act.GeneralUser;
@@ -76,6 +79,10 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private final String APP_URL = "http://10.0.2.2:8080/interact-app";
     final List<String> userEmails = new ArrayList<>();
     ArrayList<GeneralUser> generalUsers = new ArrayList<>();
+
+    //For animation
+    private LottieAnimationView mLottieAnimationView;
+    private LinearLayout mAnonymousLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +158,14 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                                 finish();
                                 break;
                             case R.id.menu_received_interaction:
-//                                DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-//                                databaseHelper.tempFunc(getApplicationContext());
-//                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
                                 Intent receivedInteractionIntent = new Intent(getApplicationContext(), ReceivedInteractionActivity.class);
                                 startActivity(receivedInteractionIntent);
                                 break;
                             case R.id.menu_sent_interaction:
+                                Intent sentInteractionIntent = new Intent(getApplicationContext(), SentInteractionActivity.class);
+                                startActivity(sentInteractionIntent);
+                                break;
+                            case R.id.menu_settings:
                                 Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
                                 break;
                         }
@@ -210,7 +218,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         eventCalendar = null;
         //Initialize all widgets and elements
         mContextEditText = findViewById(R.id.new_interaction_context_edit_text);
-        mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
+//        mAnonymousSwitchCompat = findViewById(R.id.new_interaction_anonymous_switch);
         mAnonymousTextSwitcher = findViewById(R.id.new_interaction_anonymous_text_switcher);
         mEventSpinner = findViewById(R.id.new_interaction_event_spinner);
         mEventEditText = findViewById(R.id.new_interaction_event_edit_text);
@@ -223,6 +231,9 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
         mSuggestionEditText.setVisibility(View.VISIBLE);
 
+        //Animation stuff
+        mAnonymousLinearLayout = findViewById(R.id.new_interaction_anonymous_layout);
+        mLottieAnimationView = findViewById(R.id.new_interaction_anonymous_lottie);
 
         //Create the Date and Time picker fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -264,15 +275,15 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 
         //Listener for Anonymous Switch
         mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
-        mAnonymousSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(mAnonymousSwitchCompat.isChecked())
-                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_anonymous));
-                else
-                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
-            }
-        });
+//        mAnonymousSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if(mAnonymousSwitchCompat.isChecked())
+//                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_anonymous));
+//                else
+//                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
+//            }
+//        });
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +326,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         event = mEventEditText.getText().toString();
                     else
                         event = mEventSpinner.getSelectedItem().toString();
-                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, mAnonymousSwitchCompat.isChecked(), id);
+                    boolean anonmyous = !(mLottieAnimationView.getProgress() == 0);
+                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, anonmyous, id);
                 }
             }
         });
@@ -341,6 +353,34 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             }
         });
         mEventSpinner.setAdapter(eventAdapter);
+
+        //Listener for anonymous switch
+        mAnonymousLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startCheckAnimation();
+
+            }
+        });
+    }
+
+    /**
+     * Function for anonymous toggle lottie animation
+     */
+    private void startCheckAnimation() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 0.46f).setDuration(1000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mLottieAnimationView.setProgress((Float) valueAnimator.getAnimatedValue());
+            }
+        });
+
+        if(mLottieAnimationView.getProgress() == 0f)
+            valueAnimator.start();
+        else
+            valueAnimator.reverse();
+//            mLottieAnimationView.setProgress(0f);
     }
 
     protected void sendReport(String toEmail, int iatype, String event, String observation, String recommendation, String context, boolean isAnonymous, int id){

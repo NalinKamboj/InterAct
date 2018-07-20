@@ -40,8 +40,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceivedInteractionActivity extends AppCompatActivity {
-    private String TAG = "ReceivedInteractionAct";
+public class SentInteractionActivity extends AppCompatActivity {
+    private String TAG = "SentInteracionList";
     private List<Interaction> mInteractionList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ReceivedInteractionAdapter mAdapter;
@@ -60,10 +60,11 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTranslucent));      //Changing status bar color
 
         /* FETCH DATA TO POPULATE THE RECYCLER VIEW */
-        int type = 0;
         getReports getReports = new getReports();
         getReports.execute();
-        mAdapter = new ReceivedInteractionAdapter(getApplicationContext(),mInteractionList, type);
+
+        int type = 1;
+        mAdapter = new ReceivedInteractionAdapter(getApplicationContext(), mInteractionList, type);
         mRecyclerView = findViewById(R.id.received_interaction_recycler_view);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
@@ -129,7 +130,7 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
         }
 
         protected Boolean doInBackground(Void...params) {
-            Log.i("I AM RUNNING", "OH JEEZ");
+            Log.i(TAG + "ASYNC", "DoInBackground running....");
             Boolean result = false;
             URL getInteractionURL = null;
             HttpURLConnection httpURLConnection;
@@ -138,7 +139,7 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
             try{
                 getInteractionURL = new URL(getString(R.string.app_base_url) + "/users/" + UserDetails.getUserID());
             } catch (MalformedURLException e) {
-                Log.e("RECEIVED IA (ASYNC)", "Malformed URL " + e.toString());
+                Log.e(TAG + "ASYNC", "Malformed URL " + e.toString());
             }
             //Increase progress here...
 
@@ -158,28 +159,26 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                 while((line = bufferedReader.readLine())!= null){
                     response.append(line);
                 }
-                Log.i("RECEIVED IA RESPONSE", response.toString());
+                Log.i(TAG + "ASYNC", "Response - " + response.toString());
                 httpURLConnection.disconnect();
 
                 //Extract InterActions from the received response
                 JSONObject userData = new JSONObject(response.toString());
-                JSONArray receivedReportsList = userData.getJSONArray("reportReceivedList");
+                JSONArray receivedReportsList = userData.getJSONArray("reportSentList");
                 JSONObject reportJSON = new JSONObject();
                 result = true;
                 for(int i = 0; i < receivedReportsList.length() ; i++) {
                     reportJSON = receivedReportsList.getJSONObject(i);
-                    Log.i("RECEIVED IA - REPORTS", reportJSON.toString());
+                    Log.i(TAG + "ASYNC", "REPORTS -" + reportJSON.toString());
                     Interaction interaction = new Interaction();
-                    interaction.setToUserId(UserDetails.getUserID());
-                    interaction.setToUserEmail(UserDetails.getUserEmail());
-                    interaction.setFromUserId(reportJSON.getLong("fromUserId"));
+                    interaction.setToUserId(reportJSON.getLong("toUserId"));
+                    interaction.setToUserEmail(reportJSON.getString("toUserEmail"));
+                    interaction.setFromUserId(UserDetails.getUserID());
                     interaction.setEventName(reportJSON.getString("eventName"));
                     interaction.setEventDate(reportJSON.getString("eventDate"));
                     interaction.setCreatedAt(reportJSON.getString("createdAt"));
-
+                    interaction.setFromUserEmail(UserDetails.getUserEmail());
                     //Hardcoded FROM EMAIL (temporary)
-                    interaction.setFromUserEmail("Unknown user");   //TODO FIX TABLE STRUCTURE TO GET USER EMAIL AS WELL.... PRIORITY - HIGH
-
                     interaction.setObservation(reportJSON.getString("observation"));
                     interaction.setContext(reportJSON.getString("context"));
                     interaction.setRecommendation(reportJSON.getString("recommendation"));
@@ -188,14 +187,12 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     mInteractionList.add(interaction);
                 }
 
-            } catch (IOException e) {
-                Log.e("RECEIVED IA ", e.toString());
-            } catch (JSONException e) {
-                Log.e("RECEIVED IA", e.toString());
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, e.toString());
             }
 
             for(int i = 0; i < mInteractionList.size(); i++) {
-                Log.i("FROM IA ", mInteractionList.get(i).getObservation().toUpperCase());
+                Log.i(TAG, "FROM IA" +  mInteractionList.get(i).getObservation().toUpperCase());
             }
 
             return result;

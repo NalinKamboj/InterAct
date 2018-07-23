@@ -369,7 +369,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
      * Function for anonymous toggle lottie animation
      */
     private void startCheckAnimation() {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 0.46f).setDuration(1000);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 0.46f).setDuration(500);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

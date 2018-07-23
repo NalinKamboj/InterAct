@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ScrollingFormActivity extends AppCompatActivity implements DateTimePickerFragment.OnDataPass{
@@ -559,6 +560,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                                 user.setID(userObject.getInt("id"));
                                 user.setEmail(userObject.getString("email"));
                                 generalUsers.add(user);
+                                GeneralUser.sUserHashMap.put((long)user.getID(), user);
                                 userEmails.add(user.getEmail());
 //                                userNames.add(object.getString("name"));
                             }
@@ -568,6 +570,13 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 } catch (org.json.JSONException e){
                     Log.e("Getting Employees", "Malformed JSON");
                 }
+
+                //HASH MAP TEST
+                for(Map.Entry map : GeneralUser.sUserHashMap.entrySet()){
+                    GeneralUser generalUser = (GeneralUser) map.getValue();
+                    Log.i("HASH MAP TEST", " User - " + map.getKey() + " " + ((GeneralUser) map.getValue()).getFirstName() + "\n");
+                }
+
                 return result.toString();
             }
         }

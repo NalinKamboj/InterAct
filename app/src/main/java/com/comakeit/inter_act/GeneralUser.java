@@ -3,9 +3,12 @@ package com.comakeit.inter_act;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+
 public class GeneralUser implements Parcelable {
     private String firstName, lastName, email, password;
     private int ID;
+    public static HashMap <Long, GeneralUser> sUserHashMap = new HashMap<>();
 //    private List<Interaction> sentInteractions, receivedInteractions;
 
     public GeneralUser() {

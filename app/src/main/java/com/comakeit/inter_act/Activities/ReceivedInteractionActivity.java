@@ -178,7 +178,7 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     interaction.setCreatedAt(reportJSON.getString("createdAt"));
 
                     //Hardcoded FROM EMAIL (temporary)
-                    interaction.setFromUserEmail("Unknown user");   //TODO FIX TABLE STRUCTURE TO GET USER EMAIL AS WELL.... PRIORITY - HIGH
+                    interaction.setFromUserEmail(reportJSON.getString("fromUserEmail"));   //TODO FIX TABLE STRUCTURE TO GET USER EMAIL AS WELL.... PRIORITY - HIGH
 
                     interaction.setObservation(reportJSON.getString("observation"));
                     interaction.setContext(reportJSON.getString("context"));

@@ -10,16 +10,20 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
+import com.comakeit.inter_act.UserDetails;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InteractionDetailActivity extends AppCompatActivity {
-    private TextView mEventNameTextView, mContextTextView, mObservationTextView, mSuggestionTextView, mFromUserTextView, mEventDateTextView, mInteractionDateTextView;
+    private static final String TAG = "InterAction Detail Act";
+    private TextView mEventNameTextView, mContextTextView, mObservationTextView, mSuggestionTextView, userNameTextView, mEventDateTextView, mInteractionDateTextView;
     private LinearLayout mUpperLayout, mMiddleLayout, mBottomLayout;
     private Window window;
+    private int FLAG = 0;       //0 for received and 1 for sent InterActions
 
     //TODO SET STATUS BAR COLOR ACCORDINGLY PRIORITY- HIGH
 
@@ -31,12 +35,15 @@ public class InteractionDetailActivity extends AppCompatActivity {
         //Retrieve data from the parcel
         Interaction interaction = getIntent().getParcelableExtra("parcel_interaction");
 
+        //Check IA type (sent or received) and set the flag
+        FLAG = interaction.getFromUserId().equals(UserDetails.getUserID()) ? 1 : 0;
+
         //Check IA type and change STATUS BAR COLOR
-            //Setting up flags to be able to change status bar color
+        //Setting up flags to be able to change status bar color
         window = this.getWindow();
-            // clear FLAG_TRANSLUCENT_STATUS flag:
+        // clear FLAG_TRANSLUCENT_STATUS flag
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if(interaction.getType() == 0)
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedAmberDark));      //Changing status bar color
@@ -52,7 +59,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         mContextTextView = findViewById(R.id.interaction_detail_context_text_view);
         mObservationTextView = findViewById(R.id.interaction_detail_description_text_view);
         mSuggestionTextView = findViewById(R.id.interaction_detail_suggestion_text_view);
-        mFromUserTextView = findViewById(R.id.interaction_detail_from_text_view);
+        userNameTextView = findViewById(R.id.interaction_detail_from_text_view);
         mEventDateTextView = findViewById(R.id.interaction_detail_event_date_text_view);
         mInteractionDateTextView = findViewById(R.id.interaction_detail_ia_date_text_view);
         mUpperLayout = findViewById(R.id.interaction_detail_layout);
@@ -79,10 +86,21 @@ public class InteractionDetailActivity extends AppCompatActivity {
             mSuggestionTextView.setVisibility(View.GONE);
         }
 
-        if(interaction.isAnonymous())
-            mFromUserTextView.setText(R.string.all_anonymous);
-        else
-            mFromUserTextView.setText(interaction.getFromUserEmail().toUpperCase());
+        if(FLAG == 1){
+            //noinspection SuspiciousMethodCalls
+            String name = GeneralUser.sUserHashMap.get(interaction.getToUserId()).getFirstName() + " "
+                    + GeneralUser.sUserHashMap.get(interaction.getToUserId()).getLastName();
+            userNameTextView.setText(name);
+        }
+        else {
+            if(interaction.isAnonymous())
+                userNameTextView.setText(R.string.all_anonymous);
+            else{
+                String name = GeneralUser.sUserHashMap.get(interaction.getFromUserId()).getFirstName() + " "
+                        + GeneralUser.sUserHashMap.get(interaction.getFromUserId()).getLastName();
+                userNameTextView.setText(name);
+            }
+        }
 
         //Date objects for reading the date from Calendar objects
         Date eventDate, IADate;

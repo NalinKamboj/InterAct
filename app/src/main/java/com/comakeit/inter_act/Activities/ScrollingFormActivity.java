@@ -383,11 +383,11 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 
         if(mLottieAnimationView.getProgress() == 0f){
             valueAnimator.start();
-                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_anonymous));
+            mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_anonymous));
         }
         else{
             valueAnimator.reverse();
-                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
+            mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
         }
 //            mLottieAnimationView.setProgress(0f);
     }
@@ -451,7 +451,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         protected void onPostExecute(Integer result){
             switch (result) {
                 case 200:
-                    Intent intent = new Intent(getApplicationContext(),SuccessAnimation.class);
+                    Intent intent = new Intent(getApplicationContext(),SuccessAnimationActivity.class);
                     startActivity(intent);
                     finish();
                     break;

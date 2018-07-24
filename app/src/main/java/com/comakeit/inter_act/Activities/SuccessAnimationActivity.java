@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.comakeit.inter_act.R;
 
-public class SuccessAnimation extends AppCompatActivity {
+public class SuccessAnimationActivity extends AppCompatActivity {
 
     private LottieAnimationView mLottieAnimationView;
     private ValueAnimator mValueAnimator;

@@ -50,7 +50,8 @@
 
         <activity android:name=".Activities.SentInteractionActivity"/>
 
-        <activity android:name=".Activities.SuccessAnimation"
+        <activity android:name=".Activities.SuccessAnimationActivity"/>
+        <activity android:name=".Activities.TestingActivity"
             android:exported="true"/>
     </application>
 

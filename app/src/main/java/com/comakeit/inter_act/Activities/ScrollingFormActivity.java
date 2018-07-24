@@ -381,10 +381,14 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             }
         });
 
-        if(mLottieAnimationView.getProgress() == 0f)
+        if(mLottieAnimationView.getProgress() == 0f){
             valueAnimator.start();
-        else
+                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_anonymous));
+        }
+        else{
             valueAnimator.reverse();
+                    mAnonymousTextSwitcher.setText(getResources().getString(R.string.all_not_anonymous));
+        }
 //            mLottieAnimationView.setProgress(0f);
     }
 

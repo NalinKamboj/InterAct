@@ -1,6 +1,7 @@
 package com.comakeit.inter_act.Activities;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
@@ -84,6 +85,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     //For animation
     private LottieAnimationView mLottieAnimationView;
     private LinearLayout mAnonymousLinearLayout;
+    private LottieAnimationView mDialogLottieAnimationView;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +235,9 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
         mSuggestionEditText.setVisibility(View.VISIBLE);
 
+
         //Animation stuff
+        mDialogLottieAnimationView = findViewById(R.id.sent_lottie);
         mAnonymousLinearLayout = findViewById(R.id.new_interaction_anonymous_layout);
         mLottieAnimationView = findViewById(R.id.new_interaction_anonymous_lottie);
 
@@ -360,7 +365,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             @Override
             public void onClick(View view) {
                 startCheckAnimation();
-
             }
         });
     }
@@ -443,8 +447,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         protected void onPostExecute(Integer result){
             switch (result) {
                 case 200:
-                    Toast.makeText(getApplicationContext(), "InterAction sent!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),ScrollingFormActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),SuccessAnimation.class);
                     startActivity(intent);
                     finish();
                     break;

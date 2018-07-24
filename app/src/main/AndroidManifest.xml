@@ -47,7 +47,11 @@
             android:name=".Activities.InteractionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.OnboardingActivity" />
-        <activity android:name=".Activities.SentInteractionActivity"></activity>
+
+        <activity android:name=".Activities.SentInteractionActivity"/>
+
+        <activity android:name=".Activities.SuccessAnimation"
+            android:exported="true"/>
     </application>
 
 </manifest>

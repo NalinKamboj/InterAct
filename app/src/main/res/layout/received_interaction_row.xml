@@ -7,7 +7,7 @@
     android:focusable="true"
     android:clickable="true"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corner_amber"
+    android:background="@drawable/rounded_corner_grey"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginTop="8dp"
@@ -56,6 +56,13 @@
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         android:textSize="22sp"/>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        layout="@layout/rating_layout"/>
 
     <LinearLayout
         android:id="@+id/interaction_row_bottom_bar_linear_layout"

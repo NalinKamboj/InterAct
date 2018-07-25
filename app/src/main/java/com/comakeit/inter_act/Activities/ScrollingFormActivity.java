@@ -1,7 +1,6 @@
 package com.comakeit.inter_act.Activities;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
@@ -74,6 +73,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private NavigationView mNavigationView;
     private Menu appBarMenu;
     private AutoCompleteTextView mAutoCompleteTextView;
+    private Toolbar mToolbar;
 //    private Window window;
     private Calendar eventCalendar;
     private Interaction report;
@@ -85,8 +85,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     //For animation
     private LottieAnimationView mLottieAnimationView;
     private LinearLayout mAnonymousLinearLayout;
-    private LottieAnimationView mDialogLottieAnimationView;
-    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +112,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     private void initNavigationDrawer(){
         mNavigationView = findViewById(R.id.scrolling_navigation_view);
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        Toolbar toolbar = findViewById(R.id.new_interaction_toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.new_interaction_toolbar);
+        setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
 //        String parts[] = UserDetails.getUserName().split(" ");
@@ -202,7 +200,33 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_send) {
-            return true;
+            if(checkData()){
+                int uid = -1;
+                for(GeneralUser user: generalUsers) {
+                    Log.i("USERS IN SCROLL", "USER - " + user.getID() + " email - " + user.getEmail());
+                    if(user.getEmail().toUpperCase().matches(mAutoCompleteTextView.getText().toString().trim().toUpperCase()))
+                        uid = user.getID();
+                }
+                if (uid == -1) {
+                    Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
+                } else{
+                    String desc = mDescriptionEditText.getText().toString();
+                    String suggestion = "";
+                    String context = mContextEditText.getText().toString().trim();
+                    String TO_EMAIL = mAutoCompleteTextView.getText().toString().toUpperCase();
+                    int type = mInteractionToggleButton.isChecked()?1:0;
+                    if(type == 0){
+                        suggestion = mSuggestionEditText.getText().toString();
+                    }
+                    String event;
+                    if(mEventEditText.getVisibility()==View.VISIBLE)
+                        event = mEventEditText.getText().toString();
+                    else
+                        event = mEventSpinner.getSelectedItem().toString();
+                    boolean anonymous = !(mLottieAnimationView.getProgress() == 0);
+                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, anonymous, uid);
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -235,9 +259,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mSuggestionEditText = findViewById(R.id.new_interaction_suggestion_edit_text);
         mSuggestionEditText.setVisibility(View.VISIBLE);
 
-
         //Animation stuff
-        mDialogLottieAnimationView = findViewById(R.id.sent_lottie);
         mAnonymousLinearLayout = findViewById(R.id.new_interaction_anonymous_layout);
         mLottieAnimationView = findViewById(R.id.new_interaction_anonymous_lottie);
 
@@ -294,22 +316,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //Check data entered in all fields and send report
-                if(mDescriptionEditText.getText().toString().trim().length() < 8)
-                    Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank or less than 8 characters"
-                            , Toast.LENGTH_SHORT).show();
-                else if(!Patterns.EMAIL_ADDRESS.matcher(mAutoCompleteTextView.getText().toString()).matches())
-                    Toast.makeText(ScrollingFormActivity.this, "Please enter a valid EMAIL", Toast.LENGTH_SHORT).show();
-                else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().length() < 8)
-                    Toast.makeText(ScrollingFormActivity.this, "Suggestion must be at least 8 characters", Toast.LENGTH_SHORT).show();
-                else if(mContextEditText.getText().toString().length() < 8)
-                    Toast.makeText(ScrollingFormActivity.this, "Context must be at least 8 characters", Toast.LENGTH_SHORT).show();
-                else if(eventCalendar == null)
-                    Toast.makeText(ScrollingFormActivity.this, "Please enter date and time", Toast.LENGTH_SHORT).show();
-                else{
+                if(checkData()){
                     int id = -1;
-//                    mSendButton.setClickable(true);       TODO Make the button NOT CLICKABLE until all fields are filled.
                     for(GeneralUser user: generalUsers) {
                         Log.i("USERS IN SCROLL", "USER - " + user.getID() + " email - " + user.getEmail());
                         if(user.getEmail().toUpperCase().matches(mAutoCompleteTextView.getText().toString().trim().toUpperCase()))
@@ -319,7 +327,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
-                    String desc = mDescriptionEditText.getText().toString();;
+                    String desc = mDescriptionEditText.getText().toString();
                     String suggestion = "";
                     String context = mContextEditText.getText().toString().trim();
                     String TO_EMAIL = mAutoCompleteTextView.getText().toString().toUpperCase();
@@ -332,12 +340,11 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         event = mEventEditText.getText().toString();
                     else
                         event = mEventSpinner.getSelectedItem().toString();
-                    boolean anonmyous = !(mLottieAnimationView.getProgress() == 0);
-                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, anonmyous, id);
+                    boolean anonymous = !(mLottieAnimationView.getProgress() == 0);
+                    sendReport(TO_EMAIL, type, event, desc, suggestion, context, anonymous, id);
                 }
             }
         });
-
 
         //Adapter for Spinner
         ArrayAdapter<CharSequence> eventAdapter = ArrayAdapter.createFromResource(this, R.array.event_types, android.R.layout.simple_spinner_item);
@@ -367,6 +374,33 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 startCheckAnimation();
             }
         });
+    }
+
+    private boolean checkData(){
+
+        if(mDescriptionEditText.getText().toString().trim().length() < 8){
+            Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank or less than 8 characters"
+                    , Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(!Patterns.EMAIL_ADDRESS.matcher(mAutoCompleteTextView.getText().toString()).matches()){
+            Toast.makeText(ScrollingFormActivity.this, "Please enter a valid EMAIL", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().length() < 8){
+            Toast.makeText(ScrollingFormActivity.this, "Suggestion must be at least 8 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(mContextEditText.getText().toString().length() < 8){
+            Toast.makeText(ScrollingFormActivity.this, "Context must be at least 8 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(eventCalendar == null){
+            Toast.makeText(ScrollingFormActivity.this, "Please enter date and time", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else
+            return true;
     }
 
     /**
@@ -541,19 +575,8 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 }
                 Log.e("RESPONSE USERS", result.toString());
                 try{
-//                    JSONObject outerObject = new JSONObject(result.toString());
-//                    Log.e("OUTER OBJECT", outerObject.toString());
-//                    JSONObject innerObject = outerObject.getJSONObject("_embedded");
-//                    JSONArray mainArray = innerObject.getJSONArray("users");
-//                    Log.i("JSON ARRAY", result.toString());
-//                    JSONObject mainObject = new JSONObject(result.toString());
-//                    if(mainObject!=null) {
-//                        JSONArray usersList = mainObject.getJSONArray();
-//
-//                    }
                     JSONArray userJSONArray = new JSONArray(result.toString());
 
-                    Log.i("AC JSON ARRAY", userJSONArray.toString());
 //                    object = jsonArray.getJSONObject(0);
                     JSONObject userObject = userJSONArray.getJSONObject(0);
                     if(userObject != null) {
@@ -569,7 +592,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                                 generalUsers.add(user);
                                 GeneralUser.sUserHashMap.put((long)user.getID(), user);
                                 userEmails.add(user.getEmail());
-//                                userNames.add(object.getString("name"));
                             }
                             userObject = userJSONArray.getJSONObject(i);
                         }

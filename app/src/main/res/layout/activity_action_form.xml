@@ -73,7 +73,6 @@
             android:drawableTint="@color/colorPrimary"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
-            android:text="@string/all_anonymous"
             android:textColor="@color/colorGreyDark"
             android:textSize="20sp" />
 
@@ -97,7 +96,7 @@
             android:textColorHint="@color/colorGreyDark">
 
             <EditText
-                android:id="@+id/action_decription_edit_text"
+                android:id="@+id/action_description_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"

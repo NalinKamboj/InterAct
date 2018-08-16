@@ -67,7 +67,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
 
         //Initialize all view objects
         initViews(interaction);
-
+        Log.e(TAG, "INTERACTION ID - " + interaction.getInteractionID());
     }
 
     private void initViews(final Interaction interaction) {
@@ -155,6 +155,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         intent.putExtra(ActionFormActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
         intent.putExtra(ActionFormActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
         intent.putExtra("parcel_interaction", interaction);
+        intent.putExtra("user_name", userNameTextView.getText());
 
         ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
     }

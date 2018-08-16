@@ -47,12 +47,9 @@ public class Interaction implements Parcelable {
     //Parcel methods - TODO Passing TIME variables as an intent extra for now... (Maybe write a string and convert it back to Calendar :"( )
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-        Log.i(TAG, "DATE STRINGS - \n   EVENT - " + eventDate + "\n     CREATED AT - " + createdAtDate);
-
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 //        String eventDateString = simpleDateFormat.format(eventDateDate);
         String createdAtString = simpleDateFormat.format(createdAtDate);
-        Log.i("PARCEL BEFORE WRITE", "EVENT:" + eventDate + "\n IA:" + createdAtString);
 
         dest.writeLong(fromUserId);
         dest.writeLong(toUserId);
@@ -69,6 +66,7 @@ public class Interaction implements Parcelable {
         dest.writeString(eventDate);
         dest.writeString(createdAt);
         dest.writeInt(rating);
+        dest.writeLong(interactionID);
     }
 
     @Override
@@ -93,6 +91,7 @@ public class Interaction implements Parcelable {
         this.eventDate = in.readString();
         this.createdAt = in.readString();
         this.rating = in.readInt();
+        this.interactionID = in.readLong();
         //Formatting the TIME strings and storing them in Calendar
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar eventCal = Calendar.getInstance();

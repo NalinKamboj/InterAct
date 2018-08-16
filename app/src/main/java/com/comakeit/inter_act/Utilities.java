@@ -80,4 +80,18 @@ public class Utilities {
         }
     }
 
+    //More overloading for Action object
+    public static JSONObject createJsonReport(Action action){
+        JSONObject actionJSON = new JSONObject();
+        try{
+            actionJSON.put("actionDescription", action.getDescription());
+            actionJSON.put("progress", action.getProgress());
+            actionJSON.put("reportId", action.getInteractionID());
+            return actionJSON;
+        } catch (JSONException e){
+            Log.e("UTILITY JSON CREATOR", e.toString());
+            return null;
+        }
+    }
+
 }

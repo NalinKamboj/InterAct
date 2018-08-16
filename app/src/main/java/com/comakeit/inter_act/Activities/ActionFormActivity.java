@@ -4,16 +4,24 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.comakeit.inter_act.Action;
+import com.comakeit.inter_act.AddActionAsync;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.Utilities;
+
+import es.dmoral.toasty.Toasty;
 
 public class ActionFormActivity extends AppCompatActivity {
 
@@ -23,6 +31,8 @@ public class ActionFormActivity extends AppCompatActivity {
     View rootView;
     private TextView mEventNameTextView, mEventDateTextView, mProgressTextView, mReviewerTextView;
     private SeekBar mProgressSeekbar;
+    private EditText mDescriptionEditText;
+    private Button mAddButton;
 
     private int revealX;
     private int revealY;
@@ -58,18 +68,23 @@ public class ActionFormActivity extends AppCompatActivity {
 
         //Retrieve data from parcel
         Interaction interaction = getIntent().getParcelableExtra("parcel_interaction");
-        initViews(interaction);
+        String name = getIntent().getStringExtra("user_name");
+        initViews(interaction, name);
+        Log.e("ACTION FORM IMPP", "INTERACTION ID - " + interaction.getInteractionID());
     }
 
-    private void initViews(Interaction interaction){
+    private void initViews(final Interaction interaction, String name){
         mEventNameTextView = findViewById(R.id.action_event_name_text_view);
         mEventDateTextView = findViewById(R.id.action_event_date_text_view);
         mProgressTextView = findViewById(R.id.action_progress_text_view);
         mReviewerTextView = findViewById(R.id.action_reviewer_text_view);
         mProgressSeekbar = findViewById(R.id.action_seek_bar);
+        mAddButton = findViewById(R.id.create_action_button);
+        mDescriptionEditText = findViewById(R.id.action_description_edit_text);
 
         mEventNameTextView.setText(Utilities.toCamelCase(interaction.getEventName()));
         mEventDateTextView.setText(String.format("on %s", interaction.getEventDate()));
+        mReviewerTextView.setText(name);
 
         //Set seek bar values and listners
 //        mProgressSeekbar.incrementProgressBy(1);
@@ -111,6 +126,48 @@ public class ActionFormActivity extends AppCompatActivity {
 
             }
         });
+
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(validateInput()){
+                    Action action = new Action();
+                    action.setDescription(mDescriptionEditText.getText().toString());
+                    action.setProgress(mProgressSeekbar.getProgress());
+                    action.setInteractionID(interaction.getInteractionID());
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("MAIN_URL", getString(R.string.app_base_url));
+                    bundle.putParcelable("action", action);
+                    AddActionAsync addActionAsync = new AddActionAsync(new AddActionAsync.ActionSendInterface() {
+                        @Override
+                        public void processFinish(int response){
+                            switch (response){
+                                case 200:
+                                    Toasty.success(getApplicationContext(), "Action added!", Toast.LENGTH_SHORT, true).show();
+                                    finish();
+                                    break;
+//                                case 204:
+//                                    Toasty.success(getApplicationContext(), "Rating Sent!", Toast.LENGTH_SHORT, true).show();
+//                                    break;
+                                case 500:
+                                    Toasty.error(getApplicationContext(), "Action couldn't be added - Internal Server Error", Toast.LENGTH_LONG, true).show();
+                                    break;
+                                default:
+                                    Toasty.error(getApplicationContext(), "Action couldn't be added - Unknown Error (" + response + ")", Toast.LENGTH_SHORT, true).show();
+                                    break;
+                            }
+                        }
+                    });
+                    addActionAsync.execute(bundle);
+                } else
+                    Toasty.error(getApplicationContext(), "Description cannot be less than 8 characters", Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    private boolean validateInput(){
+        return mDescriptionEditText.getText().toString().length() >= 8;
     }
 
     protected void revealActivity(int x, int y){
@@ -124,6 +181,16 @@ public class ActionFormActivity extends AppCompatActivity {
         //make view visible and start animation
         rootView.setVisibility(View.VISIBLE);
         circularReveal.start();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
     }
 
 }

@@ -155,6 +155,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Interaction interaction = mInteractionList.get(position);
+
         if(interaction.isAnonymous())
             holder.userName.setText("Anonymous");
         else{
@@ -172,6 +173,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), InteractionDetailActivity.class);
+                Log.e("RECV ADAPTER", "INTERACTION ID - " + interaction.getInteractionID());
                 intent.putExtra("parcel_interaction", interaction);
                 mContext.getApplicationContext().startActivity(intent);
             }

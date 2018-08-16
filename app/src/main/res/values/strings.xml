@@ -61,28 +61,6 @@
 
         "3D world.\n\n"
 
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
         "Component elevations.\n\n"
 
         "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
@@ -130,10 +108,6 @@
         completions."
     </string>
     <string name="prompt_username">Username</string>
-    <string name="authentication_url"><![CDATA[http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/oauth/token?grant_type=password&username=tosadminuser&password=tosadminuser]]></string>
-    <string name="authentication_key_basic">Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0</string>
-    <string name="url_employees">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/employees/?access_token=</string>
-    <string name="url_feedbacks">http://ec2-13-232-93-147.ap-south-1.compute.amazonaws.com:8080/tos-app/tos/feedbacks/?access_token=</string>
     <string name="menu_new_interaction">New InterAction</string>
     <string name="menu_received_interaction">Received InterActions</string>
     <string name="menu_sent_interaction">Sent InterActions</string>
@@ -166,4 +140,14 @@
     <string name="slide_description_text">Sample random text bla bla</string>
     <string name="slide_heading_text">Random heading lol</string>
     <string name="all_finish">Finish</string>
+    <string name="add_action">Add Action</string>
+    <string name="all_my_actions">My Actions</string>
+    <string name="all_action_description">Action Description</string>
+    <string name="all_create">Create</string>
+    <string name="progress_started">Progress: Started</string>
+    <string name="progress_ongoing">Progress: Ongoing</string>
+    <string name="progress_finished">Progress: Finished</string>
+    <string name="progress_reviewed">Progress: Reviewed</string>
+    <string name="progress_not_started">Progress: Not Started</string>
+
 </resources>

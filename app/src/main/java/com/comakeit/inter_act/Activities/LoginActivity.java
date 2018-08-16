@@ -33,6 +33,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+//TODO change background to gradient anim background PRIORITY - LOW
+
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -271,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("Getting User", "Malformed JSON ");
             }
             if(mPasswordEditText.getText().toString().matches(user.getPassword())
-                    && mEmailEditText.getText().toString().toUpperCase().matches(user.getEmail())){
+                    && mEmailEditText.getText().toString().trim().toUpperCase().matches(user.getEmail())){
                 verify = true;
                 UserDetails.setUserEmail(user.getEmail());
                 UserDetails.setUserID(user.getID());
@@ -281,6 +284,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             return verify;
         }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
     }
 }
 

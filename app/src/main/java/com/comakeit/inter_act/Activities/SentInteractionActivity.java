@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,16 +13,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.ReceivedInteractionAdapter;
 import com.comakeit.inter_act.UserDetails;
+import com.comakeit.inter_act.Utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,8 +42,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class SentInteractionActivity extends AppCompatActivity {
-    private String TAG = "SentInteracionList";
+    private String TAG = "SentInteractionList";
     private List<Interaction> mInteractionList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ReceivedInteractionAdapter mAdapter;
@@ -79,14 +83,13 @@ public class SentInteractionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String parts[] = UserDetails.getUserEmail().split("@");
-        String welcome = "Welcome " + parts[0];
+        String welcome = "Welcome " + Utilities.toCamelCase(UserDetails.getUserName());
         View headerView = mNavigationView.getHeaderView(0);
         TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
         navUserName.setText(welcome);
 
         Menu menu = mNavigationView.getMenu();
-        menu.findItem(R.id.menu_received_interaction).setChecked(true);
+        menu.findItem(R.id.menu_sent_interaction).setChecked(true);
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -108,11 +111,13 @@ public class SentInteractionActivity extends AppCompatActivity {
                                 startActivity(receivedInteractionIntent);
                                 break;
                             case R.id.menu_sent_interaction:
-                                Intent sentInteractionIntent = new Intent(getApplicationContext(), SentInteractionActivity.class);
-                                startActivity(sentInteractionIntent);
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                             case R.id.menu_settings:
-                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
+                                break;
+                            case R.id.menu_my_actions:
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
                                 break;
                         }
 
@@ -184,6 +189,8 @@ public class SentInteractionActivity extends AppCompatActivity {
                     interaction.setRecommendation(reportJSON.getString("recommendation"));
                     interaction.setType(reportJSON.getInt("type"));
                     interaction.setAnonymous(reportJSON.getBoolean("anonymous"));
+                    interaction.setInteractionID(reportJSON.getLong("id"));
+                    interaction.setRating(reportJSON.getInt("rating"));
                     mInteractionList.add(interaction);
                 }
 
@@ -197,5 +204,11 @@ public class SentInteractionActivity extends AppCompatActivity {
 
             return result;
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (mDrawerLayout.isDrawerOpen(mNavigationView))
+            mDrawerLayout.closeDrawer(Gravity.START);
     }
 }

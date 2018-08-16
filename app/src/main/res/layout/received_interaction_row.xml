@@ -54,7 +54,6 @@
         android:layout_height="wrap_content"
         android:maxLines="4"
         android:textColor="@color/colorWhite"
-        android:textStyle="bold"
         android:textSize="22sp"/>
 
     <include

@@ -42,17 +42,17 @@
         <activity
             android:name=".Activities.ReceivedInteractionActivity"
             android:label="@string/title_activity_received_interaction"
-            android:theme="@style/AppTheme.TransparentTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.InteractionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.OnboardingActivity" />
-
-        <activity android:name=".Activities.SentInteractionActivity"/>
-
-        <activity android:name=".Activities.SuccessAnimationActivity"/>
-        <activity android:name=".Activities.TestingActivity"
-            android:exported="true"/>
+        <activity android:name=".Activities.SentInteractionActivity" />
+        <activity android:name=".Activities.SuccessAnimationActivity" />
+        <activity
+            android:name=".Activities.TestingActivity"
+            android:exported="true" />
+        <activity android:name=".Activities.ActionFormActivity" android:theme="@style/AppTheme.TransparentTheme"/>
     </application>
 
 </manifest>

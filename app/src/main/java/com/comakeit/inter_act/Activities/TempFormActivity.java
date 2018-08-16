@@ -31,7 +31,7 @@ public class TempFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp_form);
 
-        FEEDBACK_URL = getResources().getString(R.string.url_feedbacks);
+//        FEEDBACK_URL = getResources().getString(R.string.url_feedbacks);
 
 
         mNavigationView.setNavigationItemSelectedListener(

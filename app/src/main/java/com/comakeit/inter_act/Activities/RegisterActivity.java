@@ -334,4 +334,15 @@ public class RegisterActivity extends AppCompatActivity {
             return result;
         }
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+    }
+
 }

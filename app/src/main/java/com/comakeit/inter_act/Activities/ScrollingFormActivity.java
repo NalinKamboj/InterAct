@@ -36,7 +36,6 @@ import android.widget.ToggleButton;
 import android.widget.ViewSwitcher;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.comakeit.inter_act.AsyncResult;
 import com.comakeit.inter_act.DateTimePickerFragment;
 import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.Interaction;
@@ -61,6 +60,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import es.dmoral.toasty.Toasty;
 
 public class ScrollingFormActivity extends AppCompatActivity implements DateTimePickerFragment.OnDataPass{
     private Spinner mEventSpinner;
@@ -116,7 +117,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-//        String parts[] = UserDetails.getUserName().split(" ");
         String welcome = "Welcome " + Utilities.toCamelCase(UserDetails.getUserName());
         View headerView = mNavigationView.getHeaderView(0);
         TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
@@ -150,9 +150,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         item.setChecked(true);
                         switch (item.getItemId()){
                             case R.id.menu_new_interaction:
-                                Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
-                                startActivity(intent);
-                                finish();
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                             case R.id.menu_logout:
                                 Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -162,22 +160,24 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                             case R.id.menu_received_interaction:
                                 Intent receivedInteractionIntent = new Intent(getApplicationContext(), ReceivedInteractionActivity.class);
                                 startActivity(receivedInteractionIntent);
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                             case R.id.menu_sent_interaction:
                                 Intent sentInteractionIntent = new Intent(getApplicationContext(), SentInteractionActivity.class);
                                 startActivity(sentInteractionIntent);
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                             case R.id.menu_settings:
-                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
+                                break;
+                            case R.id.menu_my_actions:
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
                                 break;
                         }
-
                         return true;
                     }
                 }
         );
-
-
     }
 
     @Override
@@ -208,7 +208,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                         uid = user.getID();
                 }
                 if (uid == -1) {
-                    Snackbar.make(mDrawerLayout, "Invalid Recipient", Snackbar.LENGTH_SHORT).show();
+                    Toasty.error(getApplicationContext(), "Invalid Recipient", Toast.LENGTH_LONG, true).show();
                 } else{
                     String desc = mDescriptionEditText.getText().toString();
                     String suggestion = "";
@@ -376,27 +376,28 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         });
     }
 
+    /*
+        Checks whether the data entered by the users in all fields meets the requirements.
+     */
     private boolean checkData(){
-
         if(mDescriptionEditText.getText().toString().trim().length() < 8){
-            Toast.makeText(ScrollingFormActivity.this, "Feedback/Appreciation can't be left blank or less than 8 characters"
-                    , Toast.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Feedback/Appreciation can't be left blank or less than 8 characters", Toast.LENGTH_LONG, true).show();
             return false;
         }
         else if(!Patterns.EMAIL_ADDRESS.matcher(mAutoCompleteTextView.getText().toString()).matches()){
-            Toast.makeText(ScrollingFormActivity.this, "Please enter a valid EMAIL", Toast.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Please enter a valid EMAIL", Toast.LENGTH_LONG, true).show();
             return false;
         }
         else if(!mInteractionToggleButton.isChecked() && mSuggestionEditText.getText().toString().trim().length() < 8){
-            Toast.makeText(ScrollingFormActivity.this, "Suggestion must be at least 8 characters", Toast.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Suggestion must be at least 8 characters", Toast.LENGTH_LONG, true).show();
             return false;
         }
         else if(mContextEditText.getText().toString().length() < 8){
-            Toast.makeText(ScrollingFormActivity.this, "Context must be at least 8 characters", Toast.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Context must be at least 8 characters", Toast.LENGTH_LONG, true).show();
             return false;
         }
         else if(eventCalendar == null){
-            Toast.makeText(ScrollingFormActivity.this, "Please enter date and time", Toast.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Please enter date and time", Toast.LENGTH_LONG, true).show();
             return false;
         }
         else
@@ -431,7 +432,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         report = new Interaction();
         //Validate email id
         if (toEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(toEmail).matches()){
-            Snackbar.make(mDrawerLayout, "Please enter valid email", Snackbar.LENGTH_SHORT).show();
+            Toasty.error(getApplicationContext(), "Please Enter a valid Email", Toast.LENGTH_SHORT, true).show();
             return;
         }
 
@@ -478,19 +479,19 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     }
 
     private class PublishInterAction extends AsyncTask<Boolean, Boolean, Integer> {
-        public AsyncResult taskResult = null;
-        private Boolean sent;
 
         @Override
         protected void onPostExecute(Integer result){
             switch (result) {
+                case 500:
+                    Toasty.error(getApplicationContext(), "Sending Failed - Internal Server Error (500)", Toast.LENGTH_LONG, true).show();
                 case 200:
                     Intent intent = new Intent(getApplicationContext(),SuccessAnimationActivity.class);
                     startActivity(intent);
                     finish();
                     break;
                 default:
-                    Toast.makeText(getApplicationContext(), "Sending failed (unknown error)", Toast.LENGTH_SHORT).show();
+                    Toasty.error(getApplicationContext(), "Sending Failed: Error Code - " + result, Toast.LENGTH_LONG, true).show();
             }
         }
 
@@ -520,7 +521,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                 httpURLConnection.disconnect();
 //                String message = httpURLConnection.get;
                 Log.i("PUBLISH INTERACTION", "RESPONSE CODE - " + code);
-                sent = true;
             } catch (IOException ioException) {
                 Log.i("PUBLISH INTERACTION","IO Exception" + ioException.toString());
             }
@@ -616,5 +616,11 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         mAutoCompleteTextView.setAdapter(adapter);
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setTextColor(Color.BLUE);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (mDrawerLayout.isDrawerOpen(mNavigationView))
+            mDrawerLayout.closeDrawer(Gravity.START);
     }
 }

@@ -1,65 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/interaction_detail_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorRoundedGreen"
-    android:orientation="vertical"
-    tools:context=".Activities.InteractionDetailActivity">
-
-    <TextView
-        android:id="@+id/interaction_detail_event_name_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/row_padding_vertical"
-        android:layout_marginTop="20dp"
-        android:drawablePadding="15dp"
-        android:drawableStart="@drawable/ic_event"
-        android:drawableTint="@color/colorWhite"
-        android:maxLines="2"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:textColor="@color/colorWhite"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/interaction_detail_context_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/row_padding_vertical"
-        android:drawablePadding="15dp"
-        android:drawableStart="@drawable/ic_question_mark"
-        android:drawableTint="@color/colorWhite"
-        android:maxLines="3"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:textColor="@color/colorWhite"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/interaction_detail_description_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:drawablePadding="15dp"
-        android:drawableStart="@drawable/ic_feedback"
-        android:drawableTint="@color/colorWhite"
-        android:maxLines="4"
-        android:paddingEnd="30dp"
-        android:paddingStart="30dp"
-        android:textColor="@color/colorWhite"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/interaction_detail_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorWhite"
+android:orientation="vertical"
+tools:context=".Activities.InteractionDetailActivity">
 
     <LinearLayout
-        android:id="@+id/interaction_detail_bottom_bar_linear_layout"
+        android:id="@+id/interaction_detail_top_bar_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorRoundedGreenDark"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -81,16 +34,77 @@
             android:textAlignment="textEnd"
             android:textColor="@color/colorWhite"
             android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textStyle="italic" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/interaction_detail_event_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_event"
+        android:drawableTint="@color/colorPrimary"
+        android:maxLines="2"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
+        android:textColor="@color/colorGreyDark"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/interaction_detail_event_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/colorGreyDark"
+        android:textSize="16sp"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/interaction_detail_context_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_question_mark"
+        android:drawableTint="@color/colorPrimary"
+        android:maxLines="3"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
+        android:textColor="@color/colorGreyDark"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- Divider -->
+    <View
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
     <LinearLayout
         android:id="@+id/interaction_detail_detail_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorRoundedGreenDark"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/interaction_detail_description_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_padding_vertical"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/ic_feedback"
+            android:drawableTint="@color/colorPrimary"
+            android:maxLines="4"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:textColor="@color/colorGreyDark"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/interaction_detail_suggestion_text_view"
@@ -100,33 +114,21 @@
             android:drawablePadding="15dp"
             android:paddingEnd="30dp"
             android:paddingStart="30dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorGreyDark"
+            android:textSize="24sp"/>
 
-        <TextView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/add_action_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_padding_vertical"
-            android:drawablePadding="15dp"
-            android:paddingEnd="30dp"
-            android:paddingStart="30dp"
-            android:text="@string/all_event_date"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
+            android:text="@string/add_action"
+            android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/interaction_detail_event_date_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_padding_vertical"
-            android:drawablePadding="15dp"
-            android:paddingEnd="30dp"
-            android:paddingStart="30dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:transitionName="button"
+            android:textSize="16sp"
+            android:theme="@style/ButtonTheme" />
 
     </LinearLayout>
 

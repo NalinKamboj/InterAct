@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
@@ -39,6 +40,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class ReceivedInteractionActivity extends AppCompatActivity {
     private String TAG = "ReceivedInteractionAct";
@@ -103,15 +106,17 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                                 finish();
                                 break;
                             case R.id.menu_received_interaction:
-                                Intent receivedInteractionIntent = new Intent(getApplicationContext(), ReceivedInteractionActivity.class);
-                                startActivity(receivedInteractionIntent);
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                             case R.id.menu_sent_interaction:
                                 Intent sentInteractionIntent = new Intent(getApplicationContext(), SentInteractionActivity.class);
                                 startActivity(sentInteractionIntent);
                                 break;
                             case R.id.menu_settings:
-                                Snackbar.make(mDrawerLayout, getString(R.string.all_under_dev), Snackbar.LENGTH_LONG).show();
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
+                                break;
+                            case R.id.menu_my_actions:
+                                Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
                                 break;
                         }
 
@@ -170,14 +175,17 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
                     reportJSON = receivedReportsList.getJSONObject(i);
                     Log.i("RECEIVED IA - REPORTS", reportJSON.toString());
                     Interaction interaction = new Interaction();
+
+                    interaction.setInteractionID(reportJSON.getLong("id"));
                     interaction.setToUserId(UserDetails.getUserID());
                     interaction.setToUserEmail(UserDetails.getUserEmail());
                     interaction.setFromUserId(reportJSON.getLong("fromUserId"));
                     interaction.setEventName(reportJSON.getString("eventName"));
                     interaction.setEventDate(reportJSON.getString("eventDate"));
                     interaction.setCreatedAt(reportJSON.getString("createdAt"));
-
-                    //Hardcoded FROM EMAIL (temporary)
+                    interaction.setRating(reportJSON.getInt("rating"));
+                    if(interaction.getRating()<0 || interaction.getRating()>3)
+                        interaction.setRating(0);
                     interaction.setFromUserEmail(reportJSON.getString("fromUserEmail"));   //TODO FIX TABLE STRUCTURE TO GET USER EMAIL AS WELL.... PRIORITY - HIGH
 
                     interaction.setObservation(reportJSON.getString("observation"));
@@ -200,5 +208,11 @@ public class ReceivedInteractionActivity extends AppCompatActivity {
 
             return result;
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (mDrawerLayout.isDrawerOpen(mNavigationView))
+            mDrawerLayout.closeDrawer(Gravity.START);
     }
 }

@@ -29,6 +29,10 @@ public class Utilities {
         return ret.toString();
     }
 
+    /** Utility function for converting an Interaction into a JSON object
+     * @param interaction Interaction to be converted to JSON Object
+     * @return
+     */
     public static JSONObject createJsonReport(Interaction interaction) {
         JSONObject report = new JSONObject();
         try {
@@ -42,7 +46,7 @@ public class Utilities {
             report.put("context", interaction.getContext());
             report.put("recommendation", interaction.getRecommendation());
             report.put("type", interaction.getType());
-            report.put("acknowledged", interaction.isAcknowledged());
+            report.put("rating", interaction.getRating());
             report.put("anonymous", interaction.isAnonymous());
             return report;
         } catch (JSONException e) {
@@ -50,4 +54,30 @@ public class Utilities {
             return null;
         }
     }
+
+    //Overloading above method to include id
+    public static JSONObject createJsonReport(Interaction interaction, Long id){
+        JSONObject report = new JSONObject();
+        try {
+            report.put("id", id);
+            report.put("toUserId", interaction.getToUserId());
+            report.put("fromUserId", interaction.getFromUserId());
+            report.put("toUserEmail", interaction.getToUserEmail());
+            report.put("fromUserEmail", interaction.getFromUserEmail());
+            report.put("createdAt", interaction.getCreatedAt());
+            report.put("eventDate", interaction.getEventDate());
+            report.put("eventName", interaction.getEventName());
+            report.put("observation", interaction.getObservation());
+            report.put("context", interaction.getContext());
+            report.put("recommendation", interaction.getRecommendation());
+            report.put("type", interaction.getType());
+            report.put("rating", interaction.getRating());
+            report.put("anonymous", interaction.isAnonymous());
+            return report;
+        } catch (JSONException e) {
+            Log.e("UTILITY JSON CREATOR", "Exception " + e.toString());
+            return null;
+        }
+    }
+
 }

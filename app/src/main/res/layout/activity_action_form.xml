@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/action_form_root_layout"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ActionFormActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/action_activity_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:text="Create Action"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/action_event_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/ic_event"
+            android:drawableTint="@color/colorPrimary"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:textColor="@color/colorGreyDark"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/action_event_date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_padding_vertical"
+            android:layout_marginStart="80dp"
+            android:layout_marginEnd="25dp"
+            android:textColor="@color/colorGreyDark"
+            android:textSize="16sp"
+            android:textStyle="italic"/>
+
+        <TextView
+            android:id="@+id/action_reviewer_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/ic_contact"
+            android:drawableTint="@color/colorPrimary"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:text="@string/all_anonymous"
+            android:textColor="@color/colorGreyDark"
+            android:textSize="20sp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/action_description_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:hint="@string/all_action_description"
+            android:textColorHint="@color/colorGreyDark">
+
+            <EditText
+                android:id="@+id/action_decription_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/action_progress_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/progress_not_started"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/action_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp" />
+
+        <Button
+            android:id="@+id/create_action_button"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/ButtonTheme"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:text="@string/add_action"
+            android:transitionName="button"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

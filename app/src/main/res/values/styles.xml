@@ -37,9 +37,10 @@
         <item name="android:textColorSecondary">@color/colorGrey</item>
     </style>
 
-    <style name="AppTheme.TransparentTheme">
+    <style name="AppTheme.TransparentTheme" parent="AppTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/colorTranslucent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -50,6 +51,11 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="ButtonTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorRoundedAmber</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

@@ -14,6 +14,10 @@
             android:id="@+id/menu_sent_interaction"
             android:icon="@drawable/ic_sent_interaction"
             android:title="@string/menu_sent_interaction" />
+        <item
+            android:id="@+id/menu_my_actions"
+            android:title="@string/all_my_actions"
+            />
     </group>
     <group android:id="@+id/menu_group_settings"
         android:checkableBehavior="single">

@@ -1,4 +1,4 @@
-package com.comakeit.inter_act.Activities;
+package com.comakeit.inter_act.activities;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
@@ -90,20 +90,15 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-//        getWindow().setExitTransition(new Explode());       //Sets exit transition for the "CALLING" activity!
         setContentView(R.layout.activity_scrolling_form);
 
-        /* NOT CHANGING STATUS BAR COLOR HERE EW
-
-        //Setting up flags to be able to change status bar color
-        window = this.getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedAmberDark));      //Changing status bar color
-        */
+        //Ensures that the app has a valid instance of UserDetails
+        if(!Utilities.runSafetyNet()){
+            Toasty.warning(getApplicationContext(), "Please Login Again", Toast.LENGTH_LONG, true).show();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         initNavigationDrawer();
         initViews();
@@ -117,6 +112,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
+        Log.e("SCROLLING FORM", "USER ID - " + UserDetails.getUserID());
         String welcome = "Welcome " + Utilities.toCamelCase(UserDetails.getUserName());
         View headerView = mNavigationView.getHeaderView(0);
         TextView navUserName = headerView.findViewById(R.id.navigation_view_header_text_view);
@@ -172,6 +168,11 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
                                 break;
                             case R.id.menu_my_actions:
                                 Toasty.info(getApplicationContext(), getString(R.string.all_under_dev), Toast.LENGTH_LONG, true).show();
+                                break;
+                            case R.id.menu_about:
+                                Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
+                                startActivity(intent);
+                                mDrawerLayout.closeDrawer(Gravity.START);
                                 break;
                         }
                         return true;
@@ -449,7 +450,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         Log.i("Context and ID", context + " ID - " + id);
 
         Date eventDate = eventCalendar.getTime();
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");   //TODO Add LOCALE. PRIORITY: LOW
 
         report.setEventDateDate(eventDate);
 
@@ -623,4 +624,5 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
         if (mDrawerLayout.isDrawerOpen(mNavigationView))
             mDrawerLayout.closeDrawer(Gravity.START);
     }
+
 }

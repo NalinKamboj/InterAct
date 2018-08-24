@@ -1,4 +1,4 @@
-package com.comakeit.inter_act.Activities;
+package com.comakeit.inter_act.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +30,6 @@ public class InteractionDetailActivity extends AppCompatActivity {
     private Button mActionButton;
     private int FLAG = 0;       //0 for received and 1 for sent InterActions
 
-    //TODO SET STATUS BAR COLOR ACCORDINGLY PRIORITY- HIGH
-
     @Override
     protected void onPause(){
         super.onPause();
@@ -48,10 +46,10 @@ public class InteractionDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_interaction_detail);
 
         //Retrieve data from the parcel
-        Interaction interaction = getIntent().getParcelableExtra("parcel_interaction");
+        Interaction parcel_interaction = getIntent().getParcelableExtra("parcel_interaction");
 
         //Check IA type (sent or received) and set the flag
-        FLAG = interaction.getFromUserId().equals(UserDetails.getUserID()) ? 1 : 0;
+        FLAG = parcel_interaction.getFromUserId().equals(UserDetails.getUserID()) ? 1 : 0;
 
         //Check IA type and change STATUS BAR COLOR
         //Setting up flags to be able to change status bar color
@@ -60,14 +58,14 @@ public class InteractionDetailActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if(interaction.getType() == 0)
+        if(parcel_interaction.getType() == 0)
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedPurpleDark));      //Changing status bar color
         else
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRoundedGreenDark));      //Changing status bar color
 
         //Initialize all view objects
-        initViews(interaction);
-        Log.e(TAG, "INTERACTION ID - " + interaction.getInteractionID());
+        initViews(parcel_interaction);
+        Log.e(TAG, "INTERACTION ID - " + parcel_interaction.getInteractionID());
     }
 
     private void initViews(final Interaction interaction) {
@@ -138,7 +136,7 @@ public class InteractionDetailActivity extends AppCompatActivity {
         IADate = interaction.getCreatedAtDate();
         Log.i("IA DETAILS", "IA DATE " + IADate.toString());
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");   //TODO IMPLEMENT LOCALE CORRECTION
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");   //TODO IMPLEMENT LOCALE CORRECTION
         mEventDateTextView.setText(String.format("on %s", simpleDateFormat.format(eventDate)));
         mInteractionDateTextView.setText(simpleDateFormat.format(IADate));
     }

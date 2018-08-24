@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.comakeit.inter_act.Activities.InteractionDetailActivity;
+import com.comakeit.inter_act.activities.InteractionDetailActivity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
     private LottieAnimationView mLottieStarView1, mLottieStarView2, mLottieStarView3;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView userName, eventName, message, iaContext, interactionDate;
+        TextView userName, eventName, message, iaContext, interactionDate, actionsTaken;
         LinearLayout mLinearLayout, mBottomLinearLayout;
         LinearLayout starLayout1, starLayout2, starLayout3;
         ValueAnimator mValueAnimator1, mValueAnimator2, mValueAnimator3;
@@ -45,6 +45,7 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
             eventName = view.findViewById(R.id.interaction_row_event_text_view);
             message = view.findViewById(R.id.interaction_row_description_text_view);
             mBottomLinearLayout = view.findViewById(R.id.interaction_row_bottom_bar_linear_layout);
+            actionsTaken = view.findViewById(R.id.interaction_row_action_text_view);
 
             ///Get lottie animation views
             mLottieStarView1 = view.findViewById(R.id.rating_lottie_star_1);
@@ -178,13 +179,19 @@ public class ReceivedInteractionAdapter extends RecyclerView.Adapter<ReceivedInt
                 mContext.getApplicationContext().startActivity(intent);
             }
         });
-//
+
         if(interaction.getType() == 1){
-//            holder.mLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_corner_green));
             holder.mBottomLinearLayout.setBackground(mContext.getDrawable(R.drawable.rounded_bottom_green));
         }
 
-//        TODO Enable this code when Server is updated to support ratings...
+        //Check and set number of actions taken in InterAction
+        if(interaction.getActionList().size() > 0){
+            holder.actionsTaken.setVisibility(View.VISIBLE);
+            String text = interaction.getActionList().size() + " action(s) taken";
+            holder.actionsTaken.setText(text);
+        }
+
+        //Check and set the rating
         if(FLAG == 1){
             Log.i("IA ADAPTER", "ID - " + interaction.getInteractionID() + "Rating  -  " + interaction.getRating());
             switch (interaction.getRating()){

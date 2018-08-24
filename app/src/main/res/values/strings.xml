@@ -149,5 +149,7 @@
     <string name="progress_finished">Progress: Finished</string>
     <string name="progress_reviewed">Progress: Reviewed</string>
     <string name="progress_not_started">Progress: Not Started</string>
+    <string name="all_about">About</string>
+    <string name="all_logout">Logout</string>
 
 </resources>

@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+//TODO Modify this as per new InterAct REST API (after new API is deployed)
 public class RetrieveTokenTask extends AsyncTask<String, String, String> {
     private String AUTH_KEY;
     private String AUTH_URL;

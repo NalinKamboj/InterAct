@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:theme="@style/AppTheme.NoActionBar"
-    tools:context=".Activities.ReceivedInteractionActivity"
+    tools:context=".activities.ReceivedInteractionActivity"
     tools:showIn="@layout/activity_received_interaction">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/received_interaction_recycler_view"

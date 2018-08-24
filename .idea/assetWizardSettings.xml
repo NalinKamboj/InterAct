@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -14,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_star" />
-                            <entry key="sourceFile" value="C:\Users\nalin\Desktop\Work\coMakeIT\Graphics\ic_star.svg" />
+                            <entry key="outputName" value="ic_info" />
+                            <entry key="sourceFile" value="C:\Users\nalin\Desktop\Work\coMakeIT\Graphics\ic_info.svg" />
                           </map>
                         </option>
                       </PersistentState>

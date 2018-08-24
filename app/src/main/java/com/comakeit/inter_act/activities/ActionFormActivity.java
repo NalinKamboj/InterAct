@@ -1,4 +1,4 @@
-package com.comakeit.inter_act.Activities;
+package com.comakeit.inter_act.activities;
 
 import android.animation.Animator;
 import android.content.Intent;

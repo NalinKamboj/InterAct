@@ -7,7 +7,7 @@
     android:background="@color/colorWhite"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ActionFormActivity">
+    tools:context=".activities.ActionFormActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

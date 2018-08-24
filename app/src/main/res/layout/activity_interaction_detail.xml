@@ -7,7 +7,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@color/colorWhite"
 android:orientation="vertical"
-tools:context=".Activities.InteractionDetailActivity">
+tools:context=".activities.InteractionDetailActivity">
 
     <LinearLayout
         android:id="@+id/interaction_detail_top_bar_linear_layout"

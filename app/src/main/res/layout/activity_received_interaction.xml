@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activities.ReceivedInteractionActivity">
+    tools:context=".activities.ReceivedInteractionActivity">
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,21 +15,20 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:fitsSystemWindows="true"
-        tools:context=".Activities.ReceivedInteractionActivity">
+        tools:context=".activities.ReceivedInteractionActivity">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/received_interaction_loading_lottie"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            app:lottie_repeatMode="restart"
+            app:lottie_fileName="loading_box.json"
+            android:visibility="gone"/>
 
         <include layout="@layout/content_received_interaction" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/received_interaction_fab"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:elevation="8dp"
-            android:tint="@color/colorWhite"
-            app:srcCompat="@drawable/ic_add"
-            tools:ignore="RtlHardcoded" />
     </android.support.design.widget.CoordinatorLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/received_interaction_navigation_view"

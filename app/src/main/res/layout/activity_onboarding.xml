@@ -7,7 +7,7 @@
     android:background="@drawable/gradient_list"
     android:fitsSystemWindows="false"
     android:theme="@style/OnboardingTheme"
-    tools:context="com.comakeit.inter_act.Activities.OnboardingActivity">
+    tools:context="com.comakeit.inter_act.activities.OnboardingActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/slideViewPager"

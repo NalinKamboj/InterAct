@@ -16,15 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.ScrollingFormActivity"
+            android:name=".activities.ScrollingFormActivity"
             android:label="@string/title_activity_scrolling_form"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/LoginActivityStyle">
             <intent-filter>
@@ -34,25 +34,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:theme="@style/LoginActivityStyle" />
         <activity
-            android:name=".Activities.TempFormActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.ReceivedInteractionActivity"
+            android:name=".activities.ReceivedInteractionActivity"
             android:label="@string/title_activity_received_interaction"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.InteractionDetailActivity"
+            android:name=".activities.InteractionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.OnboardingActivity" />
-        <activity android:name=".Activities.SentInteractionActivity" />
-        <activity android:name=".Activities.SuccessAnimationActivity" />
+        <activity android:name=".activities.OnboardingActivity" />
+        <activity android:name=".activities.SentInteractionActivity" />
+        <activity android:name=".activities.SuccessAnimationActivity" />
         <activity
-            android:name=".Activities.TestingActivity"
+            android:name=".activities.TestingActivity"
             android:exported="true" />
-        <activity android:name=".Activities.ActionFormActivity" android:theme="@style/AppTheme.TransparentTheme"/>
+        <activity
+            android:name=".activities.ActionFormActivity"
+            android:theme="@style/AppTheme.TransparentTheme" />
+        <activity android:name=".activities.AboutActivity"></activity>
     </application>
 
 </manifest>

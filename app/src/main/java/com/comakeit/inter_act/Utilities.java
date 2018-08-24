@@ -94,4 +94,13 @@ public class Utilities {
         }
     }
 
+    //Parse String containing Actions
+//    public static List<Action> getActions(String jsonString){
+//    }
+
+    //Run this function in any activity to ensure that the application contains the details of the user who is currently using the app. If not, redirect them to the logout screen
+    public static boolean runSafetyNet(){
+        return UserDetails.getUserID() != -1;
+    }
+
 }

@@ -14,127 +14,238 @@
         android:text="Development Team"
         android:textAlignment="center"
         android:padding="5dp"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/colorGreyDark"/>
 
     <LinearLayout
+        android:id="@+id/nalin_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:orientation="horizontal"
         android:background="@drawable/rounded_corner_light_grey"
+        android:foreground="?selectableItemBackground"
         android:focusable="true"
+        android:clickable="true"
         android:elevation="5dp">
 
         <ImageView
             android:id="@+id/dev_image_view"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="90dp"
             android:layout_weight="1"
             android:src="@drawable/dev_image"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/dev_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="NAMES NAMES"
+                android:layout_gravity="end"
+                android:text="Nalin Kamboj"
                 android:textColor="@color/colorGreyDark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="Strategy and Development"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/dev_email_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:text="nalin.1997@gmail.com"
                 android:textColor="@color/colorGreyDark"
+                android:textSize="16sp"
                 android:textStyle="italic" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/nalin_email_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_mail" />
+                <ImageView
+                    android:id="@+id/nalin_linkedin_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_linkedin"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/soum_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:orientation="horizontal"
-        android:focusable="true"
         android:background="@drawable/rounded_corner_light_grey"
+        android:foreground="?selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
         android:elevation="5dp">
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="90dp"
             android:layout_weight="1"
-            android:src="@drawable/dev_image"
+            android:src="@drawable/soum_image"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="NAMES NAMES"
+                android:text="Soumyendu Banerjee"
+                android:layout_gravity="end"
                 android:textColor="@color/colorGreyDark"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="nalin.1997@gmail.com"
+                android:text="Strategy and High Level Flow"
+                android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textSize="16sp"
+                android:text="soumyendu.b@coMakeIT.com"
                 android:textColor="@color/colorGreyDark"
                 android:textStyle="italic" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/soum_email_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_mail" />
+                <ImageView
+                    android:id="@+id/soum_linkedin_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_linkedin"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/abhi_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:orientation="horizontal"
-        android:focusable="true"
         android:background="@drawable/rounded_corner_light_grey"
+        android:foreground="?selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
         android:elevation="5dp">
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="90dp"
             android:layout_weight="1"
-            android:src="@drawable/dev_image"
+            android:src="@drawable/abhi_image"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="NAMES NAMES"
+                android:text="Abhinav Gupta"
+                android:layout_gravity="end"
                 android:textColor="@color/colorGreyDark"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="nalin.1997@gmail.com"
+                android:text="Strategy and Technical Design"
+                android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textSize="16sp"
+                android:text="abhinav.g@coMakeIT.com"
                 android:textColor="@color/colorGreyDark"
                 android:textStyle="italic" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/abhi_email_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_mail" />
+                <ImageView
+                    android:id="@+id/abhi_linkedin_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_linkedin"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

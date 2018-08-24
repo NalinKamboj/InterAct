@@ -1,6 +1,9 @@
 package com.comakeit.inter_act.activities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +14,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,74 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         initNavigationDrawer();
+
+
+        ImageView nalinLinkedIn, nalinEmail, soumLinkedIn, soumEmail, abhiLinkedIn, abhiEmail;
+
+        nalinEmail = findViewById(R.id.nalin_email_image);
+        nalinLinkedIn = findViewById(R.id.nalin_linkedin_image);
+        soumEmail = findViewById(R.id.soum_email_image);
+        soumLinkedIn = findViewById(R.id.soum_linkedin_image);
+        abhiLinkedIn = findViewById(R.id.abhi_linkedin_image);
+        abhiEmail = findViewById(R.id.abhi_email_image);
+
+        //TODO Add linkedIn and email icons and add respective click events
+        nalinLinkedIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/nalin-kamboj-662118123/"));
+                startActivity(intent);
+            }
+        });
+
+        soumLinkedIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/soumyendu-banerjee-2487a415/"));
+                startActivity(intent);
+            }
+        });
+
+        abhiLinkedIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/abhinav3414/"));
+                startActivity(intent);
+            }
+        });
+
+        nalinEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("email", "nalin.1997@gmail.com");
+                assert clipboardManager != null;
+                clipboardManager.setPrimaryClip(clipData);
+                Toasty.info(getApplicationContext(), "Email copied to clipboard", Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
+        soumEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("email", "soumyendu.b@comakeit.com");
+                assert clipboardManager != null;
+                clipboardManager.setPrimaryClip(clipData);
+                Toasty.info(getApplicationContext(), "Email copied to clipboard", Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
+        abhiEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("email", "abhinav.g@comakeit.com");
+                assert clipboardManager != null;
+                clipboardManager.setPrimaryClip(clipData);
+                Toasty.info(getApplicationContext(), "Email copied to clipboard", Toast.LENGTH_SHORT, true).show();
+            }
+        });
     }
 
     @Override

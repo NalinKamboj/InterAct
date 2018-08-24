@@ -30,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import es.dmoral.toasty.Toasty;
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private final AppCompatActivity mActivity = RegisterActivity.this;
@@ -276,11 +278,12 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result){
+                Toasty.success(getApplicationContext(), "Registration Complete!", Toast.LENGTH_SHORT, true).show();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
             } else
-                Toast.makeText(getApplicationContext(), "Couldn't complete registration", Toast.LENGTH_SHORT).show();
+                Toasty.error(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT, true).show();
         }
 
         @Override

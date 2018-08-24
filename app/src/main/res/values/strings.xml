@@ -151,5 +151,6 @@
     <string name="progress_not_started">Progress: Not Started</string>
     <string name="all_about">About</string>
     <string name="all_logout">Logout</string>
+    <string name="all_actions_taken">Actions Taken</string>
 
 </resources>

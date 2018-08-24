@@ -103,4 +103,21 @@ public class Utilities {
         return UserDetails.getUserID() != -1;
     }
 
+    public static String getProgress(int progress){
+        switch (progress){
+            case 0:
+                return "Not Started";
+            case 1:
+                return "Started";
+            case 2:
+                return "Ongoing";
+            case 3:
+                return "Finished";
+            case 4:
+                return "Reviewed";
+            default:
+                return "No Status";
+        }
+    }
+
 }

@@ -136,6 +136,9 @@ public class ActionFormActivity extends AppCompatActivity {
                     action.setProgress(mProgressSeekbar.getProgress());
                     action.setInteractionID(interaction.getInteractionID());
 
+                    //Adding action to interaction object locally...
+                    interaction.addActionToList(action);
+
                     Bundle bundle = new Bundle();
                     bundle.putString("MAIN_URL", getString(R.string.app_base_url));
                     bundle.putParcelable("action", action);
@@ -145,6 +148,9 @@ public class ActionFormActivity extends AppCompatActivity {
                             switch (response){
                                 case 200:
                                     Toasty.success(getApplicationContext(), "Action added!", Toast.LENGTH_SHORT, true).show();
+                                    Intent intent = new Intent(getApplicationContext(), InteractionDetailActivity.class);
+                                    intent.putExtra("parcel_interaction", interaction);
+                                    startActivity(intent);
                                     finish();
                                     break;
 //                                case 204:

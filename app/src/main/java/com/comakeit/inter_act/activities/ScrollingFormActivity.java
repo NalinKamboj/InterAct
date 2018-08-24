@@ -479,7 +479,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             Toast.makeText(getApplicationContext(), "Invalid ARG in onDataPass()", Toast.LENGTH_SHORT).show();
     }
 
-    private class PublishInterAction extends AsyncTask<Boolean, Boolean, Integer> {
+    private class PublishInterAction extends AsyncTask<Boolean, Boolean, Integer> {     //TODO Pass data as bundle (App context in bundle) and make class static PRIORITY LOW
 
         @Override
         protected void onPostExecute(Integer result){
@@ -528,18 +528,6 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
             return code;
         }
     }
-
-
-    //Method which is run after PublishInteraction finishes...
-//    @Override
-//    public void processFinish(boolean result) {
-//        if(result) {
-//            Intent intent = new Intent(this, ScrollingFormActivity.class);
-//            startActivity(intent);
-//            finish();
-//        } else
-//            Snackbar.make(mDrawerLayout, "Could not sent InterAction", Snackbar.LENGTH_SHORT).show();
-//    }
 
     /**
      * Function for getting details of all users to whom an InterAction can be sent, and adding those users into autocomplete of the text view
@@ -613,7 +601,7 @@ public class ScrollingFormActivity extends AppCompatActivity implements DateTime
 
         RetrieveUsers retrieveUsers = new RetrieveUsers();
         retrieveUsers.execute();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, userEmails);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.autocomplete_list_item, userEmails);
         mAutoCompleteTextView.setAdapter(adapter);
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setTextColor(Color.BLUE);

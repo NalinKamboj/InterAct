@@ -1,12 +1,14 @@
 package com.comakeit.inter_act.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,20 +16,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.comakeit.inter_act.Action;
 import com.comakeit.inter_act.GeneralUser;
 import com.comakeit.inter_act.Interaction;
 import com.comakeit.inter_act.R;
 import com.comakeit.inter_act.UserDetails;
+import com.comakeit.inter_act.Utilities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InteractionDetailActivity extends AppCompatActivity {
     private static final String TAG = "InterAction Detail Act";
-    private TextView mEventNameTextView, mContextTextView, mObservationTextView, mSuggestionTextView, userNameTextView, mEventDateTextView, mInteractionDateTextView;
+    private TextView mEventNameTextView, mContextTextView, mObservationTextView, mSuggestionTextView, userNameTextView, mEventDateTextView, mInteractionDateTextView, mActionTitle;
     private LinearLayout mUpperLayout, mBottomLayout;
     private Window window;
     private Button mActionButton;
+    private LinearLayout mActionDescLayout, mActionStatusLayout, mActionsLayout;
+    private View actionDivider;
     private int FLAG = 0;       //0 for received and 1 for sent InterActions
 
     @Override
@@ -80,12 +86,71 @@ public class InteractionDetailActivity extends AppCompatActivity {
         mUpperLayout = findViewById(R.id.interaction_detail_top_bar_linear_layout);
         mBottomLayout = findViewById(R.id.interaction_detail_detail_linear_layout);
         mActionButton = findViewById(R.id.add_action_button);
+        actionDivider = findViewById(R.id.interaction_detail_action_divider);
+        mActionTitle = findViewById(R.id.interaction_detail_action_title);
+        mActionsLayout = findViewById(R.id.interaction_detail_actions_layout);
+        mActionDescLayout = findViewById(R.id.interaction_detail_action_desc_layout);
+        mActionStatusLayout = findViewById(R.id.interaction_detail_action_status_layout);
+
+        //Display actions taken by Receiver
+        if(interaction.getActionList().size() > 0){
+            //First make the divider, view and title visible
+            actionDivider.setVisibility(View.VISIBLE);
+            mActionTitle.setVisibility(View.VISIBLE);
+            mActionsLayout.setVisibility(View.VISIBLE);
+
+            final int size = interaction.getActionList().size();
+
+            //Create all textviews
+            for(int i = 0; i<size; i++){
+                Action action = (Action) interaction.getActionList().get(i);
+                final TextView actionView = new TextView(this);
+                final TextView actionProgress = new TextView(this);
+                final String desc = Utilities.toCamelCase(action.getDescription());
+                final String progress = Utilities.getProgress(action.getProgress());
+                actionView.setText(desc);
+                actionView.setTextColor(getColor(R.color.colorGreyDark));
+                actionView.setTextSize(20);
+                actionView.setPadding(5, 5, 5, 5);
+                actionView.setTypeface(null, Typeface.BOLD);
+
+                actionProgress.setGravity(Gravity.RIGHT);
+                actionProgress.setText(progress);
+                actionProgress.setTextColor(getColor(R.color.colorGreyDark));
+                actionProgress.setTextSize(20);
+                actionProgress.setPadding(5, 5, 5, 5);
+                actionProgress.setTypeface(null, Typeface.BOLD);
+                //Finally, change the color of progress text...
+                switch (action.getProgress()){
+                    case 0:
+                        actionProgress.setTextColor(getColor(android.R.color.black));
+                        break;
+                    case 1:
+                        actionProgress.setTextColor(getColor(R.color.colorRoundedBabyPinkDark));
+                        break;
+                    case 2:
+                        actionProgress.setTextColor(getColor(R.color.colorRoundedAmberDark));
+                        break;
+                    case 3:
+                        actionProgress.setTextColor(getColor(R.color.colorRoundedGreenDark));
+                        break;
+                    case 4:
+                        actionProgress.setTextColor(getColor(R.color.colorRoundedPurpleDark));
+                        break;
+                }
+
+
+                mActionDescLayout.addView(actionView);
+                mActionStatusLayout.addView(actionProgress);
+            }
+
+            Log.e(TAG, "NUMBER OF ACTIONS - " + interaction.getActionList().size());
+        }
 
         //Set background color of layout after checking interaction type
         if (interaction.getType() == 0){
-//            mUpperLayout.setBackground(getDrawable(R.color.colorRoundedAmber));
             mUpperLayout.setBackground(getDrawable(R.color.colorRoundedPurpleDark));
-//            mBottomLayout.setBackground(getDrawable(R.color.colorRoundedAmberDark));
+            mSuggestionTextView.setVisibility(View.VISIBLE);
         } else
             mUpperLayout.setBackground(getDrawable(R.color.colorRoundedGreenDark));
 
@@ -156,5 +221,6 @@ public class InteractionDetailActivity extends AppCompatActivity {
         intent.putExtra("user_name", userNameTextView.getText());
 
         ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
+        finish();
     }
 }

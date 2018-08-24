@@ -16,6 +16,7 @@
             android:title="@string/menu_sent_interaction" />
         <item
             android:id="@+id/menu_my_actions"
+            android:icon="@drawable/ic_action"
             android:title="@string/all_my_actions"
             />
     </group>

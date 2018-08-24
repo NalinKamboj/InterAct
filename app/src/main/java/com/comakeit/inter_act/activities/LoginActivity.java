@@ -33,6 +33,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import es.dmoral.toasty.Toasty;
+
 //TODO change background to gradient anim background PRIORITY - LOW
 
 
@@ -70,43 +72,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initViews();
         initListeners();
         mDatabaseHelper = new DatabaseHelper(this);
-        /*
-        EMPLOYEES_URL = getResources().getString(R.string.url_employees);
-        AUTH_URL = getResources().getString(R.string.authentication_url);
-        AUTH_KEY = getResources().getString(R.string.authentication_key_basic);
-
-        //Retrieve unique token from server on creation
-        RetrieveTokenTask retrieveTokenTask = new RetrieveTokenTask(AUTH_KEY, AUTH_URL);
-        retrieveTokenTask.execute();
-
-         Set up the login form.
-        mAutoCompleteTextView = findViewById(R.id.login_username_textview);
-        mAutoCompleteTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateAutoComplete();
-            }
-        });
-        mLoginButton = findViewById(R.id.email_sign_in_button);
-
-        mLoginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mAutoCompleteTextView.getText().toString().trim().equals(""))
-                    Toast.makeText(getApplicationContext(), "Please enter a valid Username", Toast.LENGTH_SHORT).show();
-                else {
-                    if(!UserDetails.employeesMap.isEmpty()){
-                        UserDetails.userID = UserDetails.employeesMap.get(mAutoCompleteTextView.getText().toString().trim());
-                        UserDetails.setUserName(mAutoCompleteTextView.getText().toString().trim());
-                        Intent intent = new Intent(getApplicationContext(), TempFormActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else
-                        Toast.makeText(getApplicationContext(), "Could not find users", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        */
     }
 
     @Override
@@ -186,13 +151,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void onLoginSuccess() {
-        Toast.makeText(getApplicationContext(), "Welcome back " + UserDetails.getUserName() + "!", Toast.LENGTH_LONG).show();
+        Toasty.success(getApplicationContext(), "Welcome back " + UserDetails.getUserName() + "!", Toast.LENGTH_SHORT, true).show();
         Intent intent = new Intent(getApplicationContext(), ScrollingFormActivity.class);
         startActivity(intent);
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toasty.error(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT, true).show();
 //        mLoginButton.setEnabled(true);
     }
 

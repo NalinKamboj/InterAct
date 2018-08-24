@@ -91,7 +91,7 @@ public class DateTimePickerFragment extends android.support.v4.app.Fragment {
                         mCalendar.set(Calendar.MINUTE, minute);
                         dataPasser.onDataPass(mCalendar);
                     }
-                }, mHour, mMinute, false);
+                }, mHour, mMinute, true);
         timePickerDialog.show();
     }
 
